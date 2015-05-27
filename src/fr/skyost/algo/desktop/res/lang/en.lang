@@ -1,0 +1,138 @@
+language.name=English
+language.version=1
+
+
+console.title=Console
+
+console.button.run=Run
+console.button.stop=Stop
+console.actionrequired.dialog.title=Enter a value for a variable
+console.actionrequired.dialog.message=Enter the value of "%s" :
+console.actionrequired.dialog.tip=You can use variables here.
+
+
+editor.title=%s%s by %s - %s v%s
+
+editor.defaultalgorithm.untitled=Untitled
+editor.defaultalgorithm.anonymous=Anonymous
+
+editor.line.keyword.variables=VARIABLES
+editor.line.keyword.beginning=BEGINNING
+editor.line.keyword.end=END
+
+editor.line.instruction.createvariable=CREATE_VARIABLE
+editor.line.instruction.createvariable.type=TYPE
+editor.line.instruction.createvariable.type.string=String
+editor.line.instruction.createvariable.type.number=Number
+editor.line.instruction.assignvaluetovariable=ASSIGN_VALUE_TO_VARIABLE
+editor.line.instruction.showvariable=SHOW_VARIABLE
+editor.line.instruction.readvariable=READ_VARIABLE
+editor.line.instruction.showmessage=SHOW_MESSAGE
+editor.line.instruction.if=IF
+editor.line.instruction.while=WHILE
+editor.line.instruction.else=ELSE
+editor.line.instruction.for=FOR
+editor.line.instruction.for.from=FROM
+editor.line.instruction.for.to=TO
+
+editor.button.addline=Add line...
+editor.button.removeline=Remove line
+editor.button.editline=Edit line...
+editor.button.up=Up
+editor.button.down=Down
+editor.button.test=Test...
+
+editor.menu.file=File
+editor.menu.file.filter=Algogo Algorithm File (*.agg)
+editor.menu.file.new=New
+editor.menu.file.open=Open...
+editor.menu.file.saveas=Save as...
+editor.menu.file.save=Save...
+editor.menu.file.print=Print...
+editor.menu.file.close=Close
+
+editor.menu.edit=Edit
+editor.menu.edit.options=Options...
+
+editor.menu.help=Help
+editor.menu.help.checkforupdates=Check for updates...
+editor.menu.help.about=About...
+
+editor.closedialog=Do you want to save the changes of %s ?
+
+
+about.title=%s v%s - By %s
+
+about.desktopinfos=<html><b>%s</b> <i>v%s - By %s</i></html>
+about.coreinfos=<html><b>%s</b> <i>v%s - By %s</i></html>
+about.builtusing=Built using %s, %s and %s.
+
+
+addline.title=Add line...
+
+addline.createvariable=Create a variable...
+addline.createvariable.dialog.title=Create a variable...
+addline.createvariable.dialog.message=Name your variable :
+addline.createvariable.dialog.object.string=String
+addline.createvariable.dialog.object.number=Number
+addline.createvariable.dialog.tip=You can only define a variable here.<br>By default, the value of a number is 0.
+addline.createvariable.error.alreadyexists=This variable already exists !
+addline.createvariable.error.notalpha=A variable name must only contain alpha characters.
+addline.assignvaluetovariable=Assign a value to a variable...
+addline.assignvaluetovariable.dialog.title=Assign a value to a variable...
+addline.assignvaluetovariable.dialog.message=The variable :
+addline.assignvaluetovariable.dialog.object.value=The value :
+addline.assignvaluetovariable.dialog.tip=You can use variables here.
+addline.showvariable=Show a variable...
+addline.showvariable.dialog.title=Show a variable...
+addline.showvariable.dialog.message=Show the variable :
+addline.showvariable.dialog.object.linebreak=Add a line break
+addline.showvariable.dialog.tip=The variable will be print on the console.
+addline.readvariable=Read a variable...
+addline.readvariable.dialog.title=Read a variable...
+addline.readvariable.dialog.message=Read the variable :
+addline.readvariable.dialog.tip=The user will be prompted to enter a value for the selected variable.
+addline.showmessage=Show a message...
+addline.showmessage.dialog.title=Show a message...
+addline.showmessage.dialog.message=Your message :
+addline.showmessage.dialog.object.linebreak=Add a line break
+addline.showmessage.dialog.tip=If you put a variable here, it will not be read.
+addline.ifelse=If... Else...
+addline.ifelse.dialog.title=Add a condition...
+addline.ifelse.dialog.message=If :
+addline.ifelse.dialog.object.addelse=Add Else
+addline.ifelse.dialog.tip=At the moment, you can only compare numbers.
+addline.while=While...
+addline.while.dialog.title=Add a loop...
+addline.while.dialog.message=While :
+addline.while.dialog.tip=At the moment, you can only compare numbers.<br>You can put a simple boolean here too.
+addline.for=For...
+addline.for.dialog.title=Add a for loop...
+addline.for.dialog.message=For :
+addline.for.dialog.object.from=From :
+addline.for.dialog.object.to=To :
+addline.for.dialog.tip=You must only use numbers here.
+
+
+options.title=Options
+
+options.algorithm.options=Algorithm's Options
+options.algorithm.title=Title :
+options.algorithm.author=Author :
+options.save=Save
+
+
+utils.tip=Tip
+
+
+jlabellink.tooltip=Visit %s.
+
+
+joptionpane.error=Error !
+joptionpane.invalidtitle=Invalid title "%s" !
+joptionpane.invalidauthor=Invalid author "%s" !
+joptionpane.updateavailable.title=Update available !
+joptionpane.updateavailable.objects.donotautocheckagain=Do not automatically check for updates again.
+joptionpane.updateavailable.message=<html><b>An update is available : v%s.</b><br>Please go on <i>%s</i> to get the latest release.</html>
+joptionpane.updatenotavailable.title=No update
+joptionpane.updatenotavailable.message=There is currently no update available.
