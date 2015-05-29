@@ -19,7 +19,7 @@ import fr.skyost.algo.desktop.frames.EditorFrame;
 public class AlgogoDesktop {
 	
 	public static final String APP_NAME = "Algogo Desktop";
-	public static final String APP_VERSION = "0.1";
+	public static final String APP_VERSION = "0.1.1";
 	public static final String[] APP_AUTHORS = new String[]{"Skyost"};
 	public static final String APP_WEBSITE = "http://www.algogo.xyz";
 	

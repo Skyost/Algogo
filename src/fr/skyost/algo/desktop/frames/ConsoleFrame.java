@@ -9,8 +9,7 @@ import java.awt.Container;
 import javax.swing.JTextField;
 
 import fr.skyost.algo.core.AlgoLine;
-import fr.skyost.algo.core.AlgoThread;
-import fr.skyost.algo.core.Algorithm;
+import fr.skyost.algo.core.AlgoRunnable;
 import fr.skyost.algo.core.AlgorithmListener.AlgorithmThreadListener;
 import fr.skyost.algo.core.utils.VariableHolder.VariableValue;
 import fr.skyost.algo.desktop.AlgogoDesktop;
@@ -40,10 +39,9 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	private final JTextArea output = new JTextArea();
 	private final JButton btnRun = changeButtonState(null, true);
 	
-	private AlgoThread currentThread;
+	private AlgoRunnable currentThread;
 
 	public ConsoleFrame() {
-		EditorFrame.algorithm.addLaunchingListener(this);
 		this.setTitle(LanguageManager.getString("console.title"));
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
 		this.setSize(500, 376);
@@ -66,7 +64,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 			public final void actionPerformed(final ActionEvent event) {
 				if(currentThread == null) {
 					output.setText(null);
-					currentThread = EditorFrame.algorithm.createNewThread();
+					currentThread = EditorFrame.algorithm.createNewRunnable(ConsoleFrame.this);
 					currentThread.start();
 					return;
 				}
@@ -78,7 +76,9 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 			
 			@Override
 			public final void windowClosing(final WindowEvent event) {
-				EditorFrame.algorithm.removeLaunchingListener(ConsoleFrame.this);
+				if(currentThread != null) {
+					currentThread.interrupt();
+				}
 			}
 
 			@Override
@@ -107,7 +107,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	}
 
 	@Override
-	public final void threadLaunched(final AlgoThread thread, final Algorithm algorithm) {
+	public final void threadLaunched(final AlgoRunnable thread) {
 		if(thread != currentThread) {
 			return;
 		}
@@ -115,7 +115,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	}
 
 	@Override
-	public final void lineOutputed(final AlgoThread thread, final String line, final boolean lineBreak) {
+	public final void lineOutputed(final AlgoRunnable thread, final String line, final boolean lineBreak) {
 		if(thread != currentThread) {
 			return;
 		}
@@ -123,7 +123,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	}
 
 	@Override
-	public final String actionRequired(final AlgoThread thread, final AlgoLine line, final VariableValue variable) {
+	public final String actionRequired(final AlgoRunnable thread, final AlgoLine line, final VariableValue variable) {
 		if(thread != currentThread) {
 			return null;
 		}
@@ -139,7 +139,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	}
 
 	@Override
-	public final void threadInterrupted(final AlgoThread thread, final Algorithm algorithm, final Exception ex) {
+	public final void threadInterrupted(final AlgoRunnable thread, final Exception ex) {
 		if(thread != currentThread) {
 			return;
 		}

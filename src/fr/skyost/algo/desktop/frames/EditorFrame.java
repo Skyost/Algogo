@@ -175,9 +175,14 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				final AlgoTreeNode line = (AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
-				line.removeFromParent();
-				Utils.reloadTree(tree, line.getParent());
+				final AlgoTreeNode node = (AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
+				final AlgoLine line = node.getAlgoLine();
+				if(line.getInstruction() == Instruction.IF && Boolean.valueOf(line.getArgs()[1])) {
+					final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
+					((AlgoTreeNode)parent.getChildAt(parent.getIndex(node) + 1)).removeFromParent();;
+				}
+				node.removeFromParent();
+				Utils.reloadTree(tree, node.getParent());
 				algorithmChanged(true);
 			}
 
@@ -194,7 +199,18 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				moveNode((AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent(), -1);
+				final AlgoTreeNode node = (AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
+				final AlgoLine line = node.getAlgoLine();
+				if(line.getInstruction() == Instruction.ELSE) {
+					return;
+				}
+				final AlgoTreeNode els = (AlgoTreeNode)((AlgoTreeNode)node.getParent()).getChildAfter(node);
+				if(!moveNode(node, -1, line.getInstruction() != Instruction.IF)) {
+					return;
+				}
+				if(line.getInstruction() == Instruction.IF) {
+					moveNode(els, -1, true);
+				}
 			}
 
 		});
@@ -202,7 +218,20 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				moveNode((AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent(), 1);
+				final AlgoTreeNode node = (AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
+				final AlgoLine line = node.getAlgoLine();
+				if(line.getInstruction() == Instruction.ELSE) {
+					return;
+				}
+				final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
+				final AlgoTreeNode els = (AlgoTreeNode)parent.getChildAfter(node);
+				if(els != null && parent.getIndex(els) == parent.getChildCount() - 1) {
+					return;
+				}
+				if(line.getInstruction() == Instruction.IF) {
+					moveNode(els, 1, false);
+				}
+				moveNode(node, 1, true);
 			}
 
 		});
@@ -253,7 +282,18 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 	@Override
 	public final void lineEdited(final AlgoTreeNode node, final String... args) {
-		node.getAlgoLine().setArgs(args);
+		final AlgoLine line = node.getAlgoLine();
+		final String[] currentArgs = line.getArgs();
+		if(currentArgs.equals(args)) {
+			return;
+		}
+		if(line.getInstruction() == Instruction.IF && (Boolean.valueOf(currentArgs[1]) && !Boolean.valueOf(args[1]))) {
+			final AlgoTreeNode els = ((AlgoTreeNode)((AlgoTreeNode)node.getParent()).getChildAfter(node));
+			if(els != null && els.getAlgoLine().getInstruction() == Instruction.ELSE) {
+				els.removeFromParent();
+			}
+		}
+		line.setArgs(args);
 		Utils.reloadTree(tree, node.getParent());
 		algorithmChanged(true);
 	}
@@ -609,21 +649,29 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * 
 	 * @param node The node.
 	 * @param step Steps (forward or backward).
+	 * @param reload Reload the tree and sets the selection path.
+	 * 
+	 * @return <b>true</b> If the node has successfully moved.
+	 * <br><b>false</b> Otherwise.
 	 */
 
-	private final void moveNode(final AlgoTreeNode node, final int step) {
+	private final boolean moveNode(final AlgoTreeNode node, final int step, final boolean reload) {
+		if(step == 0) {
+			return false;
+		}
 		final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
 		final int index = parent.getIndex(node) + step;
 		if(index > parent.getChildCount() - 1 || index < 0) {
-			return;
+			return false;
 		}
-		final DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
 		final TreePath path = tree.getSelectionPath();
-		model.insertNodeInto(node, parent, index);
-		model.reload();
-		Utils.reloadTree(tree, parent);
-		tree.setSelectionPath(path);
-		algorithmChanged(true);
+		((DefaultTreeModel)tree.getModel()).insertNodeInto(node, parent, index);
+		if(reload) {
+			Utils.reloadTree(tree, parent);
+			tree.setSelectionPath(path);
+			algorithmChanged(true);
+		}
+		return true;
 	}
 	
 	/**
