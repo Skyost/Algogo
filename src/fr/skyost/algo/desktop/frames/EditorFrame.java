@@ -204,12 +204,19 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				if(line.getInstruction() == Instruction.ELSE) {
 					return;
 				}
-				final AlgoTreeNode els = (AlgoTreeNode)((AlgoTreeNode)node.getParent()).getChildAfter(node);
-				if(!moveNode(node, -1, line.getInstruction() != Instruction.IF)) {
+				int step = -1;
+				final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
+				final AlgoTreeNode before = (AlgoTreeNode)parent.getChildBefore(node);
+				if(before != null && before.getAlgoLine().getInstruction() == Instruction.ELSE) {
+					step--;
+				}
+				final AlgoTreeNode after = (AlgoTreeNode)parent.getChildAfter(node);
+				boolean refreshAfter = after != null && line.getInstruction() == Instruction.IF && after.getAlgoLine().getInstruction() == Instruction.ELSE;
+				if(!moveNode(node, step, !refreshAfter)) {
 					return;
 				}
-				if(line.getInstruction() == Instruction.IF) {
-					moveNode(els, -1, true);
+				if(refreshAfter) {
+					moveNode(after, step, true);
 				}
 			}
 
@@ -223,15 +230,29 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				if(line.getInstruction() == Instruction.ELSE) {
 					return;
 				}
+				int step = 1;
 				final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
-				final AlgoTreeNode els = (AlgoTreeNode)parent.getChildAfter(node);
-				if(els != null && parent.getIndex(els) == parent.getChildCount() - 1) {
-					return;
+				final AlgoTreeNode after = (AlgoTreeNode)parent.getChildAfter(node);
+				if(after != null) {
+					final Instruction afterInstruction = after.getAlgoLine().getInstruction();
+					if(line.getInstruction() == Instruction.IF && afterInstruction == Instruction.ELSE) {
+						final AlgoTreeNode afterAfter = (AlgoTreeNode)parent.getChildAfter(after);
+						if(afterAfter == null) {
+							return;
+						}
+						else if(afterAfter.getAlgoLine().getInstruction() == Instruction.IF && ((AlgoTreeNode)parent.getChildAfter(afterAfter)).getAlgoLine().getInstruction() == Instruction.ELSE) {
+							step++;
+						}
+						moveNode(after, step, false);
+					}
+					else if(afterInstruction == Instruction.IF) {
+						final AlgoTreeNode afterAfter = (AlgoTreeNode)parent.getChildAfter(after);
+						if(afterAfter != null && afterAfter.getAlgoLine().getInstruction() == Instruction.ELSE) {
+							step++;
+						}
+					}
 				}
-				if(line.getInstruction() == Instruction.IF) {
-					moveNode(els, 1, false);
-				}
-				moveNode(node, 1, true);
+				moveNode(node, step, true);
 			}
 
 		});
