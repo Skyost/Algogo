@@ -124,23 +124,5 @@ public class Utils {
 		}
 		return true;
 	}
-	
-	/**
-	 * Checks if a String is a number.
-	 * 
-	 * @param string The String.
-	 * 
-	 * @return <b>true</b> If the String is a number.
-	 * <br><b>false</b> Otherwise.
-	 */
-
-	public static final boolean isNumber(final String string) {
-		try {
-			Integer.parseInt(string);
-			return true;
-		}
-		catch(final Exception ex) {}
-		return false;
-	}
 
 }

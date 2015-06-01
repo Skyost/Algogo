@@ -386,17 +386,11 @@ public class AddLineDialog extends JDialog {
 						to.setText(args[2]);
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.for.dialog.title"), LanguageManager.getString("addline.for.dialog.message"), LanguageManager.getString("addline.for.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.for.dialog.object.from")), from, new JLabel(LanguageManager.getString("addline.for.dialog.object.to")), to)) {
-						final String fromText = from.getText();
-						final String toText = to.getText();
-						if(!Utils.isNumber(fromText) || !Utils.isNumber(toText)) {
-							JOptionPane.showMessageDialog(component, LanguageManager.getString("addline.createvariable.error.notalpha"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
-							return;
-						}
 						if(node != null) {
-							notifyListeners(node, cmboxVariables.getSelectedItem().toString(), fromText, toText);
+							notifyListeners(node, cmboxVariables.getSelectedItem().toString(), from.getText(), to.getText());
 						}
 						else {
-							notifyListeners(instruction, cmboxVariables.getSelectedItem().toString(), fromText, toText);
+							notifyListeners(instruction, cmboxVariables.getSelectedItem().toString(), from.getText(), to.getText());
 						}
 						if(after != null) {
 							after.run();
