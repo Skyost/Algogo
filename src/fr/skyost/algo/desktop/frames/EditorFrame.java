@@ -2,9 +2,12 @@ package fr.skyost.algo.desktop.frames;
 
 import java.awt.Container;
 import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
@@ -29,11 +32,13 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.GroupLayout;
 import javax.swing.JTree;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -96,6 +101,25 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(false);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public final void mousePressed(final MouseEvent event) {
+				if(SwingUtilities.isRightMouseButton(event)) {
+					final TreePath path = tree.getPathForLocation(event.getX(), event.getY());
+					final Rectangle pathBounds = tree.getUI().getPathBounds(tree, path);
+					if(pathBounds != null && pathBounds.contains(event.getX(), event.getY())) {
+						tree.setSelectionPath(path);
+						final AlgoTreeNode node = (AlgoTreeNode)path.getLastPathComponent();
+						if(node.equals(variables) || node.equals(beginning) || node.equals(end)) {
+							return;
+						}
+						createEditorPopupMenu().show(tree, pathBounds.x, pathBounds.y + pathBounds.height);
+					}
+				}
+			}
+			
+		});
 		final JScrollPane scrollPane = new JScrollPane(tree);
 		final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)tree.getCellRenderer();
 		renderer.setLeafIcon(null);
@@ -179,7 +203,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				final AlgoLine line = node.getAlgoLine();
 				if(line.getInstruction() == Instruction.IF && Boolean.valueOf(line.getArgs()[1])) {
 					final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
-					((AlgoTreeNode)parent.getChildAt(parent.getIndex(node) + 1)).removeFromParent();;
+					((AlgoTreeNode)parent.getChildAt(parent.getIndex(node) + 1)).removeFromParent();
+					;
 				}
 				node.removeFromParent();
 				Utils.reloadTree(tree, node.getParent());
@@ -264,7 +289,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 
 		});
-		this.setJMenuBar(createJMenuBar());
+		this.setJMenuBar(createEditorMenuBar());
 		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain) {
 			new GithubUpdater("Skyost", "Algogo", AlgogoDesktop.APP_VERSION, this).start();
 		}
@@ -375,12 +400,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	public final void updaterNoUpdate(final String localVersion, final String remoteVersion) {}
 
 	/**
-	 * Creates the menu of the editor.
+	 * Creates the menu bar of the editor.
 	 * 
 	 * @return The menu.
 	 */
-	
-	private final JMenuBar createJMenuBar() {
+
+	private final JMenuBar createEditorMenuBar() {
 		final int ctrl = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		final JMenuBar menuBar = new JMenuBar();
 		final JMenu file = new JMenu(LanguageManager.getString("editor.menu.file"));
@@ -569,17 +594,29 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		menuBar.add(help);
 		return menuBar;
 	}
+	
+	/**
+	 * Creates the popup menu of the editor.
+	 * 
+	 * @return The menu.
+	 */
+
+	private final JPopupMenu createEditorPopupMenu() {
+		final JPopupMenu popupMenu = new JPopupMenu();
+		/*popupMenu.add(new JMenuItem("TODO : Add copy, paste, cut and delete"));*/
+		return popupMenu;
+	}
 
 	/**
 	 * Builds the current title for the current algorithm.
 	 * 
 	 * @return The current title.
 	 */
-	
+
 	private static final String buildTitle() {
 		return buildTitle(algorithm.getTitle(), algorithm.getAuthor());
 	}
-	
+
 	/**
 	 * Builds a title for the specified title and author.
 	 * 
@@ -592,7 +629,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private static final String buildTitle(final String title, final String author) {
 		return String.format(LanguageManager.getString("editor.title"), algoChanged ? "* " : "", title, author, AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION);
 	}
-	
+
 	/**
 	 * Loads an algorithm from a file.
 	 * 
@@ -624,7 +661,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			ErrorDialog.errorMessage(EditorFrame.this, ex);
 		}
 	}
-	
+
 	/**
 	 * Saves an algorithm to a file.
 	 * 
@@ -651,7 +688,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			ErrorDialog.errorMessage(this, ex);
 		}
 	}
-	
+
 	/**
 	 * Saves an algorithm with a dialog.
 	 */
@@ -664,7 +701,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			save(chooser.getSelectedFile());
 		}
 	}
-	
+
 	/**
 	 * Moves a node (into the tree).
 	 * 
@@ -694,7 +731,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Must be called when the algorithm is changed.
 	 * 
