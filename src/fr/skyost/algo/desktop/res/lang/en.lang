@@ -1,5 +1,5 @@
 language.name=English
-language.version=1
+language.version=2
 
 
 console.title=Console
@@ -36,7 +36,7 @@ editor.line.instruction.for.from=FROM
 editor.line.instruction.for.to=TO
 
 editor.button.addline=Add line...
-editor.button.removeline=Remove line
+editor.button.removelines=Remove line(s)
 editor.button.editline=Edit line...
 editor.button.up=Up
 editor.button.down=Down
@@ -52,6 +52,9 @@ editor.menu.file.print=Print...
 editor.menu.file.close=Close
 
 editor.menu.edit=Edit
+editor.menu.edit.cut=Cut
+editor.menu.edit.copy=Copy
+editor.menu.edit.paste=Paste
 editor.menu.edit.options=Options...
 
 editor.menu.help=Help

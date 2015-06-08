@@ -2,12 +2,9 @@ package fr.skyost.algo.desktop.frames;
 
 import java.awt.Container;
 import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
@@ -16,6 +13,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -27,18 +26,17 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.GroupLayout;
 import javax.swing.JTree;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -46,7 +44,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -84,6 +81,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	public static final AlgoTreeNode variables = new AlgoTreeNode(algorithm.getVariables());
 	public static final AlgoTreeNode beginning = new AlgoTreeNode(algorithm.getInstructions());
 	public static final AlgoTreeNode end = new AlgoTreeNode(Keyword.END);
+	
+	public static final List<AlgoTreeNode> clipboard = new ArrayList<AlgoTreeNode>();
 
 	public EditorFrame() {
 		AddLineDialog.listeners.add(this);
@@ -100,26 +99,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		tree = new JTree(root);
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(false);
-		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public final void mousePressed(final MouseEvent event) {
-				if(SwingUtilities.isRightMouseButton(event)) {
-					final TreePath path = tree.getPathForLocation(event.getX(), event.getY());
-					final Rectangle pathBounds = tree.getUI().getPathBounds(tree, path);
-					if(pathBounds != null && pathBounds.contains(event.getX(), event.getY())) {
-						tree.setSelectionPath(path);
-						final AlgoTreeNode node = (AlgoTreeNode)path.getLastPathComponent();
-						if(node.equals(variables) || node.equals(beginning) || node.equals(end)) {
-							return;
-						}
-						createEditorPopupMenu().show(tree, pathBounds.x, pathBounds.y + pathBounds.height);
-					}
-				}
-			}
-			
-		});
 		final JScrollPane scrollPane = new JScrollPane(tree);
 		final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)tree.getCellRenderer();
 		renderer.setLeafIcon(null);
@@ -128,7 +107,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		Utils.reloadTree(tree);
 		final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
 		btnAddLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_add.png")));
-		final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removeline"));
+		final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
 		btnRemoveLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_remove.png")));
 		btnRemoveLine.setEnabled(false);
 		final JButton btnEditLine = new JButton(LanguageManager.getString("editor.button.editline"));
@@ -199,16 +178,9 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				final AlgoTreeNode node = (AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
-				final AlgoLine line = node.getAlgoLine();
-				if(line.getInstruction() == Instruction.IF && Boolean.valueOf(line.getArgs()[1])) {
-					final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
-					((AlgoTreeNode)parent.getChildAt(parent.getIndex(node) + 1)).removeFromParent();
-					;
+				for(final TreePath path : tree.getSelectionPaths()) {
+					removeNode((AlgoTreeNode)path.getLastPathComponent());
 				}
-				node.removeFromParent();
-				Utils.reloadTree(tree, node.getParent());
-				algorithmChanged(true);
 			}
 
 		});
@@ -289,7 +261,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 
 		});
-		this.setJMenuBar(createEditorMenuBar());
+		this.setJMenuBar(createEditorMenuBar(tree));
 		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain) {
 			new GithubUpdater("Skyost", "Algogo", AlgogoDesktop.APP_VERSION, this).start();
 		}
@@ -297,33 +269,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 	@Override
 	public final void lineAdded(final Instruction instruction, final String... args) {
-		if(instruction == Instruction.CREATE_VARIABLE) {
-			variables.add(new AlgoTreeNode(instruction, args));
-			Utils.reloadTree(tree, variables);
-			tree.expandPath(new TreePath(variables.getPath()));
-			algorithmChanged(true);
-			return;
-		}
-		final AlgoTreeNode selected = (AlgoTreeNode)tree.getLastSelectedPathComponent();
-		if(selected == null || selected.equals(variables) || selected.equals(beginning) || selected.equals(end)) {
-			beginning.add(new AlgoTreeNode(instruction, args));
-			Utils.reloadTree(tree, beginning);
-			tree.expandPath(new TreePath(beginning.getPath()));
-			algorithmChanged(true);
-			return;
-		}
-		if(selected.getAllowsChildren()) {
-			selected.add(new AlgoTreeNode(instruction, args));
-			Utils.reloadTree(tree, selected);
-			tree.expandPath(new TreePath(selected.getPath()));
-		}
-		else {
-			final AlgoTreeNode parent = (AlgoTreeNode)selected.getParent();
-			parent.insert(new AlgoTreeNode(instruction, args), selected.getParent().getIndex(selected) + 1);
-			Utils.reloadTree(tree, parent);
-			tree.expandPath(new TreePath(parent.getPath()));
-		}
-		algorithmChanged(true);
+		addNode(new AlgoTreeNode(instruction, args));
 	}
 
 	@Override
@@ -405,12 +351,10 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @return The menu.
 	 */
 
-	private final JMenuBar createEditorMenuBar() {
+	private final JMenuBar createEditorMenuBar(final JComponent component) {
 		final int ctrl = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-		final JMenuBar menuBar = new JMenuBar();
-		final JMenu file = new JMenu(LanguageManager.getString("editor.menu.file"));
-		final JMenuItem mnew = new JMenuItem(LanguageManager.getString("editor.menu.file.new"));
-		mnew.addActionListener(new ActionListener() {
+		final JMenuItem neww = new JMenuItem(LanguageManager.getString("editor.menu.file.new"));
+		neww.addActionListener(new ActionListener() {
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
@@ -424,8 +368,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 
 		});
-		mnew.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_new.png")));
-		mnew.setAccelerator(KeyStroke.getKeyStroke('N', ctrl));
+		neww.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_new.png")));
+		neww.setAccelerator(KeyStroke.getKeyStroke('N', ctrl));
 		final JMenuItem open = new JMenuItem(LanguageManager.getString("editor.menu.file.open"));
 		open.addActionListener(new ActionListener() {
 
@@ -517,16 +461,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		});
 		close.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_close.png")));
 		close.setAccelerator(KeyStroke.getKeyStroke('Q', ctrl));
-		file.add(mnew);
-		file.add(open);
-		file.add(save);
-		file.add(saveAs);
-		file.addSeparator();
-		file.add(print);
-		file.addSeparator();
-		file.add(close);
-		menuBar.add(file);
-		final JMenu edit = new JMenu(LanguageManager.getString("editor.menu.edit"));
 		final JMenuItem options = new JMenuItem(LanguageManager.getString("editor.menu.edit.options"));
 		options.addActionListener(new ActionListener() {
 
@@ -537,9 +471,78 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 		});
 		options.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_options.png")));
-		edit.add(options);
-		menuBar.add(edit);
-		final JMenu help = new JMenu(LanguageManager.getString("editor.menu.help"));
+		final JMenuItem paste = new JMenuItem(LanguageManager.getString("editor.menu.edit.paste"));
+		final ActionListener pasteActionListener = new ActionListener() {
+
+			@Override
+			public final void actionPerformed(final ActionEvent event) {
+				final TreePath[] paths = tree.getSelectionPaths();
+				if(paths == null) {
+					return;
+				}
+				for(final AlgoTreeNode node : clipboard) {
+					addNode(node);
+				}
+			}
+			
+		};
+		paste.addActionListener(pasteActionListener);
+		paste.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_paste.png")));
+		paste.setAccelerator(KeyStroke.getKeyStroke('V', ctrl));
+		component.getInputMap().put(KeyStroke.getKeyStroke('V', ctrl), "pasteActionListener");
+		paste.setEnabled(false);
+		final JMenuItem cut = new JMenuItem(LanguageManager.getString("editor.menu.edit.cut"));
+		final ActionListener cutActionListener = new ActionListener() {
+
+			@Override
+			public final void actionPerformed(final ActionEvent event) {
+				final TreePath[] paths = tree.getSelectionPaths();
+				if(paths == null || paths.length < 0) {
+					return;
+				}
+				final AlgoTreeNode selected = (AlgoTreeNode)paths[0].getLastPathComponent();
+				if(selected.equals(variables) || selected.equals(beginning) || selected.equals(end)) {
+					return;
+				}
+				clipboard.clear();
+				for(final TreePath path : paths) {
+					final AlgoTreeNode node = (AlgoTreeNode)path.getLastPathComponent();
+					clipboard.add(node.clone());
+					removeNode(node);
+				}
+				paste.setEnabled(true);
+			}
+			
+		};
+		cut.addActionListener(cutActionListener);
+		cut.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_cut.png")));
+		cut.setAccelerator(KeyStroke.getKeyStroke('X', ctrl));
+		component.getInputMap().put(KeyStroke.getKeyStroke('X', ctrl), "cutActionListener");
+		final JMenuItem copy = new JMenuItem(LanguageManager.getString("editor.menu.edit.copy"));
+		final ActionListener copyActionListener = new ActionListener() {
+
+			@Override
+			public final void actionPerformed(final ActionEvent event) {
+				final TreePath[] paths = tree.getSelectionPaths();
+				if(paths == null || paths.length < 0) {
+					return;
+				}
+				final AlgoTreeNode selected = (AlgoTreeNode)paths[0].getLastPathComponent();
+				if(selected.equals(variables) || selected.equals(beginning) || selected.equals(end)) {
+					return;
+				}
+				clipboard.clear();
+				for(final TreePath path : paths) {
+					clipboard.add(((AlgoTreeNode)path.getLastPathComponent()).clone());
+				}
+				paste.setEnabled(true);
+			}
+			
+		};
+		copy.addActionListener(copyActionListener);
+		copy.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_copy.png")));
+		copy.setAccelerator(KeyStroke.getKeyStroke('C', ctrl));
+		component.getInputMap().put(KeyStroke.getKeyStroke('C', ctrl), "copyActionListener");
 		final JMenuItem checkForUpdates = new JMenuItem(LanguageManager.getString("editor.menu.help.checkforupdates"));
 		checkForUpdates.addActionListener(new ActionListener() {
 
@@ -579,7 +582,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 		});
 		checkForUpdates.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_checkforupdates.png")));
-		help.add(checkForUpdates);
 		final JMenuItem about = new JMenuItem(LanguageManager.getString("editor.menu.help.about"));
 		about.addActionListener(new ActionListener() {
 
@@ -590,21 +592,75 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 		});
 		about.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_about.png")));
+		final JMenuBar menuBar = new JMenuBar();
+		final JMenu file = new JMenu(LanguageManager.getString("editor.menu.file"));
+		file.add(neww);
+		file.add(open);
+		file.add(save);
+		file.add(saveAs);
+		file.addSeparator();
+		file.add(print);
+		file.addSeparator();
+		file.add(close);
+		menuBar.add(file);
+		final JMenu edit = new JMenu(LanguageManager.getString("editor.menu.edit"));
+		edit.add(options);
+		edit.addSeparator();
+		edit.add(cut);
+		edit.add(copy);
+		edit.add(paste);
+		menuBar.add(edit);
+		final JMenu help = new JMenu(LanguageManager.getString("editor.menu.help"));
+		help.add(checkForUpdates);
 		help.add(about);
 		menuBar.add(help);
 		return menuBar;
 	}
 	
-	/**
-	 * Creates the popup menu of the editor.
-	 * 
-	 * @return The menu.
-	 */
-
-	private final JPopupMenu createEditorPopupMenu() {
-		final JPopupMenu popupMenu = new JPopupMenu();
-		/*popupMenu.add(new JMenuItem("TODO : Add copy, paste, cut and delete"));*/
-		return popupMenu;
+	private final void addNode(final AlgoTreeNode node) {
+		final AlgoLine line = node.getAlgoLine();
+		final Instruction instruction = line.getInstruction();
+		if(instruction == Instruction.CREATE_VARIABLE) {
+			variables.add(node);
+			Utils.reloadTree(tree, variables);
+			tree.expandPath(new TreePath(variables.getPath()));
+			algorithmChanged(true);
+			tree.setSelectionPath(new TreePath(node.getPath()));
+			return;
+		}
+		final AlgoTreeNode selected = (AlgoTreeNode)tree.getLastSelectedPathComponent();
+		if(selected == null || selected.equals(variables) || selected.equals(beginning) || selected.equals(end)) {
+			beginning.add(node);
+			Utils.reloadTree(tree, beginning);
+			tree.expandPath(new TreePath(beginning.getPath()));
+			algorithmChanged(true);
+			tree.setSelectionPath(new TreePath(node.getPath()));
+			return;
+		}
+		if(selected.getAllowsChildren()) {
+			selected.add(node);
+			Utils.reloadTree(tree, selected);
+			tree.expandPath(new TreePath(selected.getPath()));
+		}
+		else {
+			final AlgoTreeNode parent = (AlgoTreeNode)selected.getParent();
+			parent.insert(node, selected.getParent().getIndex(selected) + 1);
+			Utils.reloadTree(tree, parent);
+			tree.expandPath(new TreePath(parent.getPath()));
+		}
+		algorithmChanged(true);
+		tree.setSelectionPath(new TreePath(node.getPath()));
+	}
+	
+	private final void removeNode(final AlgoTreeNode node) {
+		final AlgoLine line = node.getAlgoLine();
+		if(line.getInstruction() == Instruction.IF && Boolean.valueOf(line.getArgs()[1])) {
+			final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
+			((AlgoTreeNode)parent.getChildAt(parent.getIndex(node) + 1)).removeFromParent();
+		}
+		node.removeFromParent();
+		Utils.reloadTree(tree, node.getParent());
+		algorithmChanged(true);
 	}
 
 	/**

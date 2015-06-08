@@ -1,5 +1,5 @@
 language.name=Français
-language.version=1
+language.version=2
 
 
 console.title=Console
@@ -36,7 +36,7 @@ editor.line.instruction.for.from=ALLANT DE
 editor.line.instruction.for.to=À
 
 editor.button.addline=Ajouter ligne...
-editor.button.removeline=Supprimer ligne
+editor.button.removelines=Supprimer ligne(s)
 editor.button.editline=Modifier ligne...
 editor.button.up=Haut
 editor.button.down=Bas
@@ -52,6 +52,9 @@ editor.menu.file.print=Imprimer...
 editor.menu.file.close=Fermer
 
 editor.menu.edit=Édition
+editor.menu.edit.cut=Couper
+editor.menu.edit.copy=Copier
+editor.menu.edit.paste=Coller
 editor.menu.edit.options=Options...
 
 editor.menu.help=Aide

@@ -16,7 +16,7 @@ import fr.skyost.algo.core.Keyword;
  * @author Skyost.
  */
 
-public class AlgoTreeNode extends DefaultMutableTreeNode {
+public class AlgoTreeNode extends DefaultMutableTreeNode implements Cloneable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -326,6 +326,22 @@ public class AlgoTreeNode extends DefaultMutableTreeNode {
 		default:
 			return "#3498DB";
 		}
+	}
+	
+	@Override
+	public final AlgoTreeNode clone() {
+		try {
+			if(line != null) {
+				return new AlgoTreeNode(line);
+			}
+			final AlgoTreeNode clone = (AlgoTreeNode)super.clone();
+			clone.setAlgoLine(line.clone());
+			return clone;
+		}
+		catch(final Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
 	}
 
 }
