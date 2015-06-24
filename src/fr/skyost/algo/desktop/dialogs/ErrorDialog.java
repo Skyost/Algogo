@@ -76,7 +76,9 @@ public class ErrorDialog extends JDialog {
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(Alignment.LEADING, groupLayout.createSequentialGroup().addContainerGap().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(scrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE).addComponent(lblMessage, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE).addComponent(btnClose, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE).addComponent(lblInfos, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE).addComponent(lblSubmitting)).addContainerGap()));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblMessage).addPreferredGap(ComponentPlacement.RELATED).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE).addPreferredGap(ComponentPlacement.RELATED).addComponent(lblSubmitting).addPreferredGap(ComponentPlacement.RELATED).addComponent(lblInfos, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addPreferredGap(ComponentPlacement.RELATED).addComponent(btnClose).addContainerGap()));
 		content.setLayout(groupLayout);
-		new DPasteUploader().start();
+		if(!AlgogoDesktop.DEBUG) {
+			new DPasteUploader().start();
+		}
 	}
 
 	/**

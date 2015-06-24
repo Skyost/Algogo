@@ -23,6 +23,8 @@ public class AlgogoDesktop {
 	public static final String[] APP_AUTHORS = new String[]{"Skyost"};
 	public static final String APP_WEBSITE = "http://www.algogo.xyz";
 	
+	public static final boolean DEBUG = true; // Does not report on paste.ee.
+	
 	public static Font CONSOLE_FONT;
 	public static AppSettings SETTINGS;
 	
