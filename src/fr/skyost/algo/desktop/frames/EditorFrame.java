@@ -481,7 +481,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					return;
 				}
 				for(final AlgoTreeNode node : clipboard) {
-					addNode(node);
+					addNode(node.clone()); // We clone it twice.
 				}
 			}
 			

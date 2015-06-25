@@ -331,9 +331,6 @@ public class AlgoTreeNode extends DefaultMutableTreeNode implements Cloneable {
 	@Override
 	public final AlgoTreeNode clone() {
 		try {
-			if(line != null) {
-				return new AlgoTreeNode(line);
-			}
 			final AlgoTreeNode clone = (AlgoTreeNode)super.clone();
 			clone.setAlgoLine(line.clone());
 			return clone;
