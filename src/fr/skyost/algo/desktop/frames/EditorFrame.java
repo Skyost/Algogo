@@ -53,6 +53,8 @@ import fr.skyost.algo.core.Algorithm;
 import fr.skyost.algo.core.Instruction;
 import fr.skyost.algo.core.Keyword;
 import fr.skyost.algo.core.AlgorithmListener.AlgorithmOptionsListener;
+import fr.skyost.algo.core.language.AlgorithmLanguage;
+import fr.skyost.algo.core.language.PHPLanguage;
 import fr.skyost.algo.desktop.AlgogoDesktop;
 import fr.skyost.algo.desktop.dialogs.AboutDialog;
 import fr.skyost.algo.desktop.dialogs.AddLineDialog;
@@ -72,51 +74,39 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 	private static final long serialVersionUID = 1L;
 
-	public static Algorithm algorithm = new Algorithm(LanguageManager.getString("editor.defaultalgorithm.untitled"), LanguageManager.getString("editor.defaultalgorithm.anonymous"));
+	public static Algorithm algorithm;
 
 	private static String algoPath;
 	private static boolean algoChanged;
 
 	public static JTree tree;
-	public static final AlgoTreeNode variables = new AlgoTreeNode(algorithm.getVariables());
-	public static final AlgoTreeNode beginning = new AlgoTreeNode(algorithm.getInstructions());
-	public static final AlgoTreeNode end = new AlgoTreeNode(Keyword.END);
+	public static AlgoTreeNode variables;
+	public static AlgoTreeNode beginning;
+	public static AlgoTreeNode end;
 	
 	public static final List<AlgoTreeNode> clipboard = new ArrayList<AlgoTreeNode>();
+	
+	private final JScrollPane scrollPane = new JScrollPane();
+	private final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
+	private final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
+	private final JButton btnEditLine = new JButton(LanguageManager.getString("editor.button.editline"));
+	private final JButton btnUp = new JButton(LanguageManager.getString("editor.button.up"));
+	private final JButton btnDown = new JButton(LanguageManager.getString("editor.button.down")); 
 
 	public EditorFrame() {
 		AddLineDialog.listeners.add(this);
-		algorithm.addOptionsListener(this);
-		this.setTitle(buildTitle());
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
 		this.setSize(800, 600);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setLocationRelativeTo(null);
-		final DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-		root.add(variables);
-		root.add(beginning);
-		root.add(end);
-		tree = new JTree(root);
-		tree.setShowsRootHandles(true);
-		tree.setRootVisible(false);
-		final JScrollPane scrollPane = new JScrollPane(tree);
-		final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)tree.getCellRenderer();
-		renderer.setLeafIcon(null);
-		renderer.setClosedIcon(null);
-		renderer.setOpenIcon(null);
-		Utils.reloadTree(tree);
-		final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
+		resetEditor();
 		btnAddLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_add.png")));
-		final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
 		btnRemoveLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_remove.png")));
 		btnRemoveLine.setEnabled(false);
-		final JButton btnEditLine = new JButton(LanguageManager.getString("editor.button.editline"));
 		btnEditLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_edit.png")));
 		btnEditLine.setEnabled(false);
-		final JButton btnUp = new JButton(LanguageManager.getString("editor.button.up"));
 		btnUp.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_up.png")));
 		btnUp.setEnabled(false);
-		final JButton btnDown = new JButton(LanguageManager.getString("editor.button.down"));
 		btnDown.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_down.png")));
 		btnDown.setEnabled(false);
 		final JButton btnTest = new JButton(LanguageManager.getString("editor.button.test"));
@@ -144,25 +134,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					}
 				}
 				EditorFrame.this.dispose();
-			}
-
-		});
-		tree.addTreeSelectionListener(new TreeSelectionListener() {
-
-			@Override
-			public final void valueChanged(final TreeSelectionEvent event) {
-				final TreePath path = event.getNewLeadSelectionPath();
-				if(path == null) {
-					for(final JButton button : new JButton[]{btnRemoveLine, btnEditLine, btnUp, btnDown}) {
-						button.setEnabled(false);
-					}
-					return;
-				}
-				final AlgoTreeNode selected = (AlgoTreeNode)path.getLastPathComponent();
-				final boolean enabled = !selected.equals(variables) && !selected.equals(beginning) && !selected.equals(end);
-				for(final JButton button : new JButton[]{btnRemoveLine, btnEditLine, btnUp, btnDown}) {
-					button.setEnabled(enabled);
-				}
 			}
 
 		});
@@ -262,7 +233,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 		});
 		this.setJMenuBar(createEditorMenuBar(tree));
-		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain) {
+		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain && !AlgogoDesktop.DEBUG) {
 			new GithubUpdater("Skyost", "Algogo", AlgogoDesktop.APP_VERSION, this).start();
 		}
 	}
@@ -358,13 +329,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				EditorFrame.variables.removeAllChildren();
-				EditorFrame.beginning.removeAllChildren();
-				algoPath = null;
-				algoChanged = false;
-				Utils.reloadTree(tree);
-				algorithm = new Algorithm("Untitled", "Anonymous");
-				EditorFrame.this.setTitle(buildTitle());
+				resetEditor();
 			}
 
 		});
@@ -410,6 +375,36 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 
 		});
+		final JMenu export = new JMenu(LanguageManager.getString("editor.menu.file.export"));
+		for(final AlgorithmLanguage language : new AlgorithmLanguage[]{new PHPLanguage()}) {
+			final String name = language.getName();
+			final JMenuItem subMenu = new JMenuItem(name);
+			subMenu.addActionListener(new ActionListener() {
+				
+				@Override
+				public final void actionPerformed(final ActionEvent event) {
+					try {
+						final String extension = language.getExtension();
+						final JFileChooser chooser = new JFileChooser();
+						chooser.setFileFilter(new FileNameExtensionFilter(String.format(LanguageManager.getString("editor.menu.file.export.filter"), name, extension), extension));
+						chooser.setMultiSelectionEnabled(false);
+						if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
+							String path = chooser.getSelectedFile().getPath();
+							if(!path.endsWith("." + extension)) {
+								path += "." + extension;
+							}
+							Files.write(Paths.get(path), algorithm.toLanguage(language).getBytes(StandardCharsets.UTF_8));
+						}
+					}
+					catch(final Exception ex) {
+						ex.printStackTrace();
+						ErrorDialog.errorMessage(EditorFrame.this, ex);
+					}
+				}
+				
+			});
+			export.add(subMenu);
+		}
 		final JMenuItem print = new JMenuItem(LanguageManager.getString("editor.menu.file.print"));
 		print.addActionListener(new ActionListener() {
 
@@ -417,8 +412,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			public final void actionPerformed(final ActionEvent event) {
 				try {
 					final StringBuilder builder = new StringBuilder();
-					builder.append(getNodeContent(variables, new StringBuilder()));
-					builder.append(getNodeContent(beginning, new StringBuilder()));
+					builder.append(Utils.getNodeContent(variables, new StringBuilder()));
+					builder.append(Utils.getNodeContent(beginning, new StringBuilder()));
 					builder.append(new AlgoTreeNode(Keyword.END));
 					final PrintRequestAttributeSet printRequest = new HashPrintRequestAttributeSet();
 					final DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
@@ -431,20 +426,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					ex.printStackTrace();
 					ErrorDialog.errorMessage(EditorFrame.this, ex);
 				}
-			}
-
-			private final String getNodeContent(final AlgoTreeNode node, final StringBuilder spaces) {
-				final StringBuilder builder = new StringBuilder();
-				builder.append(node.toString() + System.lineSeparator());
-				final int childCount = node.getChildCount();
-				if(childCount > 0) {
-					spaces.append("  ");
-					for(int i = 0; i != childCount; i++) {
-						builder.append(spaces.toString() + getNodeContent((AlgoTreeNode)node.getChildAt(i), spaces));
-					}
-					spaces.delete(0, 2);
-				}
-				return builder.toString();
 			}
 
 		});
@@ -599,6 +580,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		file.add(save);
 		file.add(saveAs);
 		file.addSeparator();
+		file.add(export);
 		file.add(print);
 		file.addSeparator();
 		file.add(close);
@@ -637,14 +619,17 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			tree.setSelectionPath(new TreePath(node.getPath()));
 			return;
 		}
-		if(selected.getAllowsChildren()) {
+		if(selected.getAllowsChildren() && instruction != Instruction.ELSE) {
 			selected.add(node);
 			Utils.reloadTree(tree, selected);
 			tree.expandPath(new TreePath(selected.getPath()));
 		}
 		else {
-			final AlgoTreeNode parent = (AlgoTreeNode)selected.getParent();
-			parent.insert(node, selected.getParent().getIndex(selected) + 1);
+			AlgoTreeNode parent = (AlgoTreeNode)selected.getParent();
+			if(parent.equals(variables)) {
+				parent = beginning;
+			}
+			parent.insert(node, parent.getIndex(selected) + 1);
 			Utils.reloadTree(tree, parent);
 			tree.expandPath(new TreePath(parent.getPath()));
 		}
@@ -661,6 +646,55 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		node.removeFromParent();
 		Utils.reloadTree(tree, node.getParent());
 		algorithmChanged(true);
+	}
+	
+	private final void resetEditor() {
+		if(variables != null) {
+			variables.removeAllChildren();
+		}
+		if(beginning != null) {
+			beginning.removeAllChildren();
+		}
+		if(tree != null) {
+			Utils.reloadTree(tree);
+		}
+		algoPath = null;
+		algoChanged = false;
+		algorithm = new Algorithm(LanguageManager.getString("editor.defaultalgorithm.untitled"), LanguageManager.getString("editor.defaultalgorithm.anonymous"));
+		algorithm.addOptionsListener(this);
+		this.setTitle(buildTitle());
+		final DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+		root.add(variables = new AlgoTreeNode(algorithm.getVariables()));
+		root.add(beginning = new AlgoTreeNode(algorithm.getInstructions()));
+		root.add(end = new AlgoTreeNode(Keyword.END));
+		tree = new JTree(root);
+		tree.setShowsRootHandles(true);
+		tree.setRootVisible(false);
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+
+			@Override
+			public final void valueChanged(final TreeSelectionEvent event) {
+				final TreePath path = event.getNewLeadSelectionPath();
+				if(path == null) {
+					for(final JButton button : new JButton[]{btnRemoveLine, btnEditLine, btnUp, btnDown}) {
+						button.setEnabled(false);
+					}
+					return;
+				}
+				final AlgoTreeNode selected = (AlgoTreeNode)path.getLastPathComponent();
+				final boolean enabled = !selected.equals(variables) && !selected.equals(beginning) && !selected.equals(end);
+				for(final JButton button : new JButton[]{btnRemoveLine, btnEditLine, btnUp, btnDown}) {
+					button.setEnabled(enabled);
+				}
+			}
+
+		});
+		final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)tree.getCellRenderer();
+		renderer.setLeafIcon(null);
+		renderer.setClosedIcon(null);
+		renderer.setOpenIcon(null);
+		scrollPane.setViewportView(tree);
+		Utils.reloadTree(tree);
 	}
 
 	/**
@@ -734,7 +768,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				file.delete();
 				file.createNewFile();
 			}
-			Files.write(Paths.get(path), algorithm.toJSON().toString().getBytes());
+			Files.write(Paths.get(path), algorithm.toJSON().toString().getBytes(StandardCharsets.UTF_8));
 			algoPath = path;
 			algoChanged = false;
 			EditorFrame.this.setTitle(buildTitle());

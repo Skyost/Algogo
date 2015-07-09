@@ -124,5 +124,28 @@ public class Utils {
 		}
 		return true;
 	}
+	
+	/**
+	 * Gets a node's content.
+	 * 
+	 * @param node The node.
+	 * @param spaces Current spaces.
+	 * 
+	 * @return The node's content.
+	 */
+	
+	public static final String getNodeContent(final AlgoTreeNode node, final StringBuilder spaces) {
+		final StringBuilder builder = new StringBuilder();
+		builder.append(node.toString() + System.lineSeparator());
+		final int childCount = node.getChildCount();
+		if(childCount > 0) {
+			spaces.append("  ");
+			for(int i = 0; i != childCount; i++) {
+				builder.append(spaces.toString() + getNodeContent((AlgoTreeNode)node.getChildAt(i), spaces));
+			}
+			spaces.delete(0, 2);
+		}
+		return builder.toString();
+	}
 
 }
