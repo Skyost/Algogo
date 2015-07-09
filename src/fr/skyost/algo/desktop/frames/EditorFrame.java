@@ -54,6 +54,8 @@ import fr.skyost.algo.core.Instruction;
 import fr.skyost.algo.core.Keyword;
 import fr.skyost.algo.core.AlgorithmListener.AlgorithmOptionsListener;
 import fr.skyost.algo.core.language.AlgorithmLanguage;
+import fr.skyost.algo.core.language.JavaLanguage;
+import fr.skyost.algo.core.language.JavaScriptLanguage;
 import fr.skyost.algo.core.language.PHPLanguage;
 import fr.skyost.algo.desktop.AlgogoDesktop;
 import fr.skyost.algo.desktop.dialogs.AboutDialog;
@@ -376,7 +378,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 		});
 		final JMenu export = new JMenu(LanguageManager.getString("editor.menu.file.export"));
-		for(final AlgorithmLanguage language : new AlgorithmLanguage[]{new PHPLanguage()}) {
+		for(final AlgorithmLanguage language : new AlgorithmLanguage[]{new PHPLanguage(), new JavaScriptLanguage(), new JavaLanguage()}) {
 			final String name = language.getName();
 			final JMenuItem subMenu = new JMenuItem(name);
 			subMenu.addActionListener(new ActionListener() {
@@ -599,6 +601,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		return menuBar;
 	}
 	
+	/**
+	 * Adds a node to the editor.
+	 * 
+	 * @param node The editor.
+	 */
+	
 	private final void addNode(final AlgoTreeNode node) {
 		final AlgoLine line = node.getAlgoLine();
 		final Instruction instruction = line.getInstruction();
@@ -637,6 +645,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		tree.setSelectionPath(new TreePath(node.getPath()));
 	}
 	
+	/**
+	 * Removes a node from the editor.
+	 * 
+	 * @param node The editor.
+	 */
+	
 	private final void removeNode(final AlgoTreeNode node) {
 		final AlgoLine line = node.getAlgoLine();
 		if(line.getInstruction() == Instruction.IF && Boolean.valueOf(line.getArgs()[1])) {
@@ -647,6 +661,10 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		Utils.reloadTree(tree, node.getParent());
 		algorithmChanged(true);
 	}
+	
+	/**
+	 * Resets the editor (algorithm, tree, ...).
+	 */
 	
 	private final void resetEditor() {
 		if(variables != null) {
