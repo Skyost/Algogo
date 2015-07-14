@@ -54,21 +54,20 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		output.setBackground(Color.BLACK);
 		output.setForeground(Color.WHITE);
 		output.setEditable(false);
-		final DefaultCaret caret = (DefaultCaret)output.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		/*final JCheckBox chckbxDebug = new JCheckBox("Debug");*/
+		((DefaultCaret)output.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		/*final JCheckBox chckbxDebug = new JCheckBox("Debug"); TODO: Enable it*/
 		final JScrollPane scrollPane = new JScrollPane(output);
 		btnRun.addActionListener(new ActionListener() {
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				if(currentThread == null) {
-					output.setText(null);
-					currentThread = EditorFrame.algorithm.createNewRunnable(ConsoleFrame.this);
-					currentThread.start();
+				if(currentThread != null) {
+					currentThread.interrupt();
 					return;
 				}
-				currentThread.interrupt();
+				output.setText(null);
+				currentThread = EditorFrame.algorithm.createNewRunnable(ConsoleFrame.this);
+				currentThread.start();
 			}
 
 		});
@@ -119,7 +118,10 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		if(thread != currentThread) {
 			return;
 		}
-		output.append(line + (lineBreak ? System.lineSeparator() : ""));
+		output.append(line);
+		if(lineBreak) {
+			output.append(System.lineSeparator());
+		}
 	}
 
 	@Override
@@ -137,6 +139,9 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		}
 		return null;
 	}
+	
+	@Override
+	public final void lineExecuted(final AlgoRunnable runnable, final AlgoLine line, final boolean before) {}
 
 	@Override
 	public final void threadInterrupted(final AlgoRunnable thread, final Exception ex) {

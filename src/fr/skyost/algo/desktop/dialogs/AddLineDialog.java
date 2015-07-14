@@ -36,9 +36,7 @@ public class AddLineDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final List<AlgoLineListener> listeners = new ArrayList<AlgoLineListener>();
-
-	public AddLineDialog() {
+	public AddLineDialog(final AlgoLineListener caller) {
 		this.setTitle(LanguageManager.getString("addline.title"));
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
 		this.setSize(500, 212);
@@ -57,22 +55,22 @@ public class AddLineDialog extends JDialog {
 
 		};
 		final JButton btnCreateVariable = new JButton(LanguageManager.getString("addline.createvariable"));
-		btnCreateVariable.addActionListener(listenerForInstruction(this, Instruction.CREATE_VARIABLE, dispose));
+		btnCreateVariable.addActionListener(listenerForInstruction(caller, this, Instruction.CREATE_VARIABLE, dispose));
 		final JButton btnAssignVariable = new JButton(LanguageManager.getString("addline.assignvaluetovariable"));
-		btnAssignVariable.addActionListener(listenerForInstruction(this, Instruction.ASSIGN_VALUE_TO_VARIABLE, dispose));
+		btnAssignVariable.addActionListener(listenerForInstruction(caller, this, Instruction.ASSIGN_VALUE_TO_VARIABLE, dispose));
 		btnAssignVariable.setEnabled(variables.size() > 0);
 		final JButton btnShowVariable = new JButton(LanguageManager.getString("addline.showvariable"));
-		btnShowVariable.addActionListener(listenerForInstruction(this, Instruction.SHOW_VARIABLE, dispose));
+		btnShowVariable.addActionListener(listenerForInstruction(caller, this, Instruction.SHOW_VARIABLE, dispose));
 		btnShowVariable.setEnabled(variables.size() > 0);
 		final JButton btnReadVariable = new JButton(LanguageManager.getString("addline.readvariable"));
-		btnReadVariable.addActionListener(listenerForInstruction(this, Instruction.READ_VARIABLE, dispose));
+		btnReadVariable.addActionListener(listenerForInstruction(caller, this, Instruction.READ_VARIABLE, dispose));
 		btnReadVariable.setEnabled(variables.size() > 0);
 		final JButton btnShowMessage = new JButton(LanguageManager.getString("addline.showmessage"));
-		btnShowMessage.addActionListener(listenerForInstruction(this, Instruction.SHOW_MESSAGE, dispose));
+		btnShowMessage.addActionListener(listenerForInstruction(caller, this, Instruction.SHOW_MESSAGE, dispose));
 		final JButton btnIfThenElse = new JButton(LanguageManager.getString("addline.ifelse"));
-		btnIfThenElse.addActionListener(listenerForInstruction(this, Instruction.IF, dispose));
+		btnIfThenElse.addActionListener(listenerForInstruction(caller, this, Instruction.IF, dispose));
 		final JButton btnWhile = new JButton(LanguageManager.getString("addline.while"));
-		btnWhile.addActionListener(listenerForInstruction(this, Instruction.WHILE, dispose));
+		btnWhile.addActionListener(listenerForInstruction(caller, this, Instruction.WHILE, dispose));
 		final List<String> variablesNumber = new ArrayList<String>();
 		for(final Entry<String, Integer> entry : variables.entrySet()) {
 			if(entry.getValue() == 1) {
@@ -80,7 +78,7 @@ public class AddLineDialog extends JDialog {
 			}
 		}
 		final JButton btnFor = new JButton(LanguageManager.getString("addline.for"));
-		btnFor.addActionListener(listenerForInstruction(this, Instruction.FOR, dispose, variablesNumber.toArray(new String[variablesNumber.size()])));
+		btnFor.addActionListener(listenerForInstruction(caller, this, Instruction.FOR, dispose, variablesNumber.toArray(new String[variablesNumber.size()])));
 		btnFor.setEnabled(variablesNumber.size() > 0);
 		final Container content = this.getContentPane();
 		final GroupLayout groupLayout = new GroupLayout(content);
@@ -89,18 +87,6 @@ public class AddLineDialog extends JDialog {
 		content.setLayout(groupLayout);
 	}
 
-	private static final void notifyListeners(final Instruction instruction, final String... args) {
-		for(final AlgoLineListener listener : listeners) {
-			listener.lineAdded(instruction, args);
-		}
-	}
-
-	private static final void notifyListeners(final AlgoTreeNode node, final String... args) {
-		for(final AlgoLineListener listener : listeners) {
-			listener.lineEdited(node, args);
-		}
-	}
-	
 	private static final LinkedHashMap<String, Integer> getVariables() {
 		final LinkedHashMap<String, Integer> variables = new LinkedHashMap<String, Integer>();
 		for(final AlgoLine variable : EditorFrame.algorithm.getVariables().getChildren()) {
@@ -113,6 +99,7 @@ public class AddLineDialog extends JDialog {
 	/**
 	 * Gets an action listener for the specified instruction.
 	 * 
+	 * @param caller Used to send the response.
 	 * @param component The parent component (will be used in dialogs).
 	 * @param instruction The instruction.
 	 * @param after Will be run after if the user clicks on "OK".
@@ -120,14 +107,15 @@ public class AddLineDialog extends JDialog {
 	 * @return The action listener.
 	 */
 
-	public static final ActionListener listenerForInstruction(final Component component, final Instruction instruction, final Runnable after) {
+	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final Instruction instruction, final Runnable after) {
 		final List<String> variables = new ArrayList<String>(getVariables().keySet());
-		return listenerForInstruction(component, instruction, after, variables.toArray(new String[variables.size()]));
+		return listenerForInstruction(caller, component, instruction, after, variables.toArray(new String[variables.size()]));
 	}
 	
 	/**
 	 * Gets an action listener for the specified instruction.
 	 * 
+	 * @param caller Used to send the response.
 	 * @param component The parent component (will be used in dialogs).
 	 * @param instruction The instruction.
 	 * @param after Will be run after if the user clicks on "OK".
@@ -136,13 +124,14 @@ public class AddLineDialog extends JDialog {
 	 * @return The action listener.
 	 */
 
-	public static final ActionListener listenerForInstruction(final Component component, final Instruction instruction, final Runnable after, final String... variables) {
-		return listenerForInstruction(component, instruction, null, after, variables);
+	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final Instruction instruction, final Runnable after, final String... variables) {
+		return listenerForInstruction(caller, component, instruction, null, after, variables);
 	}
 	
 	/**
 	 * Gets an action listener for the specified instruction.
 	 * 
+	 * @param caller Used to send the response.
 	 * @param component The parent component (will be used in dialogs).
 	 * @param node The algo line.
 	 * @param after Will be run after if the user clicks on "OK".
@@ -150,14 +139,15 @@ public class AddLineDialog extends JDialog {
 	 * @return The action listener.
 	 */
 
-	public static final ActionListener listenerForInstruction(final Component component, final AlgoTreeNode node, final Runnable after) {
+	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final AlgoTreeNode node, final Runnable after) {
 		final List<String> variables = new ArrayList<String>(getVariables().keySet());
-		return listenerForInstruction(component, node, after, variables.toArray(new String[variables.size()]));
+		return listenerForInstruction(caller, component, node, after, variables.toArray(new String[variables.size()]));
 	}
 	
 	/**
 	 * Gets an action listener for the specified instruction.
 	 * 
+	 * @param caller Used to send the response.
 	 * @param component The parent component (will be used in dialogs).
 	 * @param node The algo line.
 	 * @param after Will be run after if the user clicks on "OK".
@@ -166,11 +156,11 @@ public class AddLineDialog extends JDialog {
 	 * @return The action listener.
 	 */
 
-	public static final ActionListener listenerForInstruction(final Component component, final AlgoTreeNode node, final Runnable after, final String... variables) {
-		return listenerForInstruction(component, null, node, after, variables);
+	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final AlgoTreeNode node, final Runnable after, final String... variables) {
+		return listenerForInstruction(caller, component, null, node, after, variables);
 	}
 
-	private static final ActionListener listenerForInstruction(final Component component, final Instruction instruction, final AlgoTreeNode node, final Runnable after, final String... variables) {
+	private static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final Instruction instruction, final AlgoTreeNode node, final Runnable after, final String... variables) {
 		final boolean editMode = node != null;
 		switch(editMode ? node.getAlgoLine().getInstruction() : instruction) {
 		case CREATE_VARIABLE:
@@ -196,10 +186,10 @@ public class AddLineDialog extends JDialog {
 							return;
 						}
 						if(editMode) {
-							notifyListeners(node, var, String.valueOf(varTypes.getSelectedIndex()));
+							caller.lineEdited(node, var, String.valueOf(varTypes.getSelectedIndex()));
 						}
 						else {
-							notifyListeners(instruction, var, String.valueOf(varTypes.getSelectedIndex()));
+							caller.lineAdded(instruction, var, String.valueOf(varTypes.getSelectedIndex()));
 						}
 						if(after != null) {
 							after.run();
@@ -224,10 +214,10 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.assignvaluetovariable.dialog.title"), LanguageManager.getString("addline.assignvaluetovariable.dialog.message"), LanguageManager.getString("addline.assignvaluetovariable.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.assignvaluetovariable.dialog.object.value")), value)) {
 						if(node != null) {
-							notifyListeners(node, cmboxVariables.getSelectedItem().toString(), value.getText());
+							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString(), value.getText());
 						}
 						else {
-							notifyListeners(instruction, cmboxVariables.getSelectedItem().toString(), value.getText());
+							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), value.getText());
 						}
 						if(after != null) {
 							after.run();
@@ -252,10 +242,10 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.showvariable.dialog.title"), LanguageManager.getString("addline.showvariable.dialog.message"), LanguageManager.getString("addline.showvariable.dialog.tip"), cmboxVariables, lineBreak)) {
 						if(node != null) {
-							notifyListeners(node, cmboxVariables.getSelectedItem().toString(), String.valueOf(lineBreak.isSelected()));
+							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString(), String.valueOf(lineBreak.isSelected()));
 						}
 						else {
-							notifyListeners(instruction, cmboxVariables.getSelectedItem().toString(), String.valueOf(lineBreak.isSelected()));
+							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), String.valueOf(lineBreak.isSelected()));
 						}
 						if(after != null) {
 							after.run();
@@ -278,10 +268,10 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.readvariable.dialog.title"), LanguageManager.getString("addline.readvariable.dialog.message"), LanguageManager.getString("addline.readvariable.dialog.tip"), cmboxVariables)) {
 						if(node != null) {
-							notifyListeners(node, cmboxVariables.getSelectedItem().toString());
+							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString());
 						}
 						else {
-							notifyListeners(instruction, cmboxVariables.getSelectedItem().toString());
+							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString());
 						}
 						if(after != null) {
 							after.run();
@@ -304,10 +294,10 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.showmessage.dialog.title"), LanguageManager.getString("addline.showmessage.dialog.message"), LanguageManager.getString("addline.showmessage.dialog.tip"), value, lineBreak)) {
 						if(node != null) {
-							notifyListeners(node, value.getText(), String.valueOf(lineBreak.isSelected()));
+							caller.lineEdited(node, value.getText(), String.valueOf(lineBreak.isSelected()));
 						}
 						else {
-							notifyListeners(instruction, value.getText(), String.valueOf(lineBreak.isSelected()));
+							caller.lineAdded(instruction, value.getText(), String.valueOf(lineBreak.isSelected()));
 						}
 						if(after != null) {
 							after.run();
@@ -331,13 +321,13 @@ public class AddLineDialog extends JDialog {
 					if(Utils.createDialog(component, LanguageManager.getString("addline.ifelse.dialog.title"), LanguageManager.getString("addline.ifelse.dialog.message"), LanguageManager.getString("addline.ifelse.dialog.tip"), condition, addElse)) {
 						final boolean selected = addElse.isSelected();
 						if(node != null) {
-							notifyListeners(node, condition.getText(), String.valueOf(selected));
+							caller.lineEdited(node, condition.getText(), String.valueOf(selected));
 						}
 						else {
-							notifyListeners(instruction, condition.getText(), String.valueOf(selected));
+							caller.lineAdded(instruction, condition.getText(), String.valueOf(selected));
 						}
 						if(selected) {
-							notifyListeners(Instruction.ELSE, condition.getText());
+							caller.lineAdded(Instruction.ELSE, condition.getText());
 						}
 						if(after != null) {
 							after.run();
@@ -357,10 +347,10 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.while.dialog.title"), LanguageManager.getString("addline.while.dialog.message"), LanguageManager.getString("addline.while.dialog.tip"), condition)) {
 						if(node != null) {
-							notifyListeners(node, condition.getText());
+							caller.lineEdited(node, condition.getText());
 						}
 						else {
-							notifyListeners(instruction, condition.getText());
+							caller.lineAdded(instruction, condition.getText());
 						}
 						if(after != null) {
 							after.run();
@@ -387,10 +377,10 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.for.dialog.title"), LanguageManager.getString("addline.for.dialog.message"), LanguageManager.getString("addline.for.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.for.dialog.object.from")), from, new JLabel(LanguageManager.getString("addline.for.dialog.object.to")), to)) {
 						if(node != null) {
-							notifyListeners(node, cmboxVariables.getSelectedItem().toString(), from.getText(), to.getText());
+							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString(), from.getText(), to.getText());
 						}
 						else {
-							notifyListeners(instruction, cmboxVariables.getSelectedItem().toString(), from.getText(), to.getText());
+							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), from.getText(), to.getText());
 						}
 						if(after != null) {
 							after.run();

@@ -96,7 +96,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private final JButton btnDown = new JButton(LanguageManager.getString("editor.button.down")); 
 
 	public EditorFrame() {
-		AddLineDialog.listeners.add(this);
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
 		this.setSize(800, 600);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -143,7 +142,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				new AddLineDialog().setVisible(true);
+				new AddLineDialog(EditorFrame.this).setVisible(true);
 			}
 
 		});
@@ -161,7 +160,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				AddLineDialog.listenerForInstruction(EditorFrame.this, (AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent(), null).actionPerformed(event);
+				AddLineDialog.listenerForInstruction(EditorFrame.this, EditorFrame.this, (AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent(), null).actionPerformed(event);
 			}
 
 		});
@@ -407,6 +406,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			});
 			export.add(subMenu);
 		}
+		export.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_export.png")));
 		final JMenuItem print = new JMenuItem(LanguageManager.getString("editor.menu.file.print"));
 		print.addActionListener(new ActionListener() {
 

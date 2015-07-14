@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Font;
 import java.net.URL;
 
 import javax.swing.BorderFactory;
@@ -35,9 +36,9 @@ public class AboutDialog extends JDialog {
 			this.setModal(true);
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
-			final JLabel lblAppName = new JLabel(AlgogoDesktop.APP_NAME);
+			final JLabel lblAppName = new JLabel(" " + AlgogoDesktop.APP_NAME);
 			lblAppName.setHorizontalAlignment(SwingConstants.CENTER);
-			lblAppName.setFont(lblAppName.getFont().deriveFont(48.0f));
+			lblAppName.setFont(lblAppName.getFont().deriveFont(Font.BOLD).deriveFont(30.0f));
 			lblAppName.setForeground(Color.decode("#3b3b3b"));
 			lblAppName.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
 			final JLabelLink lblAppDesktopInfos = new JLabelLink(String.format(LanguageManager.getString("about.desktopinfos"), AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION, authors), new URL(AlgogoDesktop.APP_WEBSITE));
