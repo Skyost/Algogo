@@ -4,8 +4,10 @@ language.version=2
 
 console.title=Console
 
-console.button.run=Lancer
-console.button.stop=Arrêter
+console.buttons.run=Lancer
+console.buttons.stop=Arrêter
+console.buttons.debug=Debug
+
 console.actionrequired.dialog.title=Entrer la valeur d'une variable
 console.actionrequired.dialog.message=Entrer la valeur de "%s" :
 console.actionrequired.dialog.tip=Vous pouvez utiliser des variables ici.

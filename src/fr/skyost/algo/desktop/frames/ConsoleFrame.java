@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 
 import fr.skyost.algo.core.AlgoLine;
 import fr.skyost.algo.core.AlgoRunnable;
+import fr.skyost.algo.core.Instruction;
 import fr.skyost.algo.core.AlgorithmListener.AlgorithmThreadListener;
 import fr.skyost.algo.core.utils.VariableHolder.VariableValue;
 import fr.skyost.algo.desktop.AlgogoDesktop;
@@ -26,16 +27,17 @@ import java.awt.event.WindowListener;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ImageIcon;
 import javax.swing.text.DefaultCaret;
-// import javax.swing.JCheckBox;
 
 public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
 	private static final long serialVersionUID = 1L;
 	
+	private final JCheckBox chckbxDebug = new JCheckBox(LanguageManager.getString("console.buttons.debug"));
 	private final JTextArea output = new JTextArea();
 	private final JButton btnRun = changeButtonState(null, true);
 	
@@ -55,7 +57,6 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		output.setForeground(Color.WHITE);
 		output.setEditable(false);
 		((DefaultCaret)output.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		/*final JCheckBox chckbxDebug = new JCheckBox("Debug"); TODO: Enable it*/
 		final JScrollPane scrollPane = new JScrollPane(output);
 		btnRun.addActionListener(new ActionListener() {
 
@@ -100,8 +101,8 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 			
 		});
 		final GroupLayout groupLayout = new GroupLayout(content);
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout.createSequentialGroup().addComponent(scrollPane).addPreferredGap(ComponentPlacement.RELATED).addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)/*.addComponent(chckbxDebug, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)*/.addComponent(btnRun, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addContainerGap()));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addGap(11).addComponent(btnRun).addPreferredGap(ComponentPlacement.RELATED)/*.addComponent(chckbxDebug).addContainerGap(276, Short.MAX_VALUE)*/).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE));
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout.createSequentialGroup().addComponent(scrollPane).addPreferredGap(ComponentPlacement.RELATED).addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false).addComponent(chckbxDebug, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnRun, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addContainerGap()));
+		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addGap(11).addComponent(btnRun).addPreferredGap(ComponentPlacement.RELATED).addComponent(chckbxDebug).addContainerGap(276, Short.MAX_VALUE)).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE));
 		content.setLayout(groupLayout);
 	}
 
@@ -141,7 +142,11 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	}
 	
 	@Override
-	public final void lineExecuted(final AlgoRunnable runnable, final AlgoLine line, final boolean before) {}
+	public final void lineExecuted(final AlgoRunnable runnable, final AlgoLine line, final boolean before) {
+		if(chckbxDebug.isSelected() && before) {
+			output.append("Executing line \"" + getLine(line.getInstruction(), line.getArgs()) + "\"..." + System.lineSeparator());
+		}
+	}
 
 	@Override
 	public final void threadInterrupted(final AlgoRunnable thread, final Exception ex) {
@@ -161,14 +166,42 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 			button = new JButton();
 		}
 		if(state) {
-			button.setText(LanguageManager.getString("console.button.run"));
+			button.setText(LanguageManager.getString("console.buttons.run"));
 			button.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_run.png")));
 		}
 		else {
-			button.setText(LanguageManager.getString("console.button.stop"));
+			button.setText(LanguageManager.getString("console.buttons.stop"));
 			button.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_stop.png")));
 		}
 		return button;
+	}
+	
+	private final String getLine(final Instruction instruction, final String... args) {
+		final StringBuilder builder = new StringBuilder(Utils.escapeHTML(instruction.toString()) + " ");
+		switch(instruction) {
+		case CREATE_VARIABLE:
+			builder.append("TYPE" + (args[0].equals("0") ? " String" : " Number"));
+			break;
+		case ASSIGN_VALUE_TO_VARIABLE:
+			builder.append(Utils.escapeHTML(args[0]) + " → " + Utils.escapeHTML(args[1]));
+			break;
+		case SHOW_VARIABLE:
+		case READ_VARIABLE:
+		case SHOW_MESSAGE:
+		case IF:
+		case WHILE:
+			builder.append(Utils.escapeHTML(args[0]));
+			break;
+		case FOR:
+			builder.append(Utils.escapeHTML(args[0]) + " " + "FROM" + " " + args[1] + " " + "TO" + " " + args[2]);
+			break;
+		case ELSE:
+			break;
+		default:
+			builder.delete(0, builder.length() - 1);
+			break;
+		}
+		return builder.toString();
 	}
 
 }

@@ -4,8 +4,9 @@ language.version=2
 
 console.title=Console
 
-console.button.run=Run
-console.button.stop=Stop
+console.buttons.run=Run
+console.buttons.stop=Stop
+console.buttons.debug=Debug
 console.actionrequired.dialog.title=Enter a value for a variable
 console.actionrequired.dialog.message=Enter the value of "%s" :
 console.actionrequired.dialog.tip=You can use variables here.
