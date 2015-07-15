@@ -7,6 +7,9 @@ console.title=Console
 console.buttons.run=Run
 console.buttons.stop=Stop
 console.buttons.debug=Debug
+console.buttons.saveoutput=Save output...
+console.buttons.saveoutput.filter=HTML File (*.html)
+
 console.actionrequired.dialog.title=Enter a value for a variable
 console.actionrequired.dialog.message=Enter the value of "%s" :
 console.actionrequired.dialog.tip=You can use variables here.

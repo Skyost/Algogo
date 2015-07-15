@@ -134,7 +134,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 						save(new File(algoPath));
 					}
 				}
-				EditorFrame.this.dispose();
+				System.exit(0);
 			}
 
 		});
@@ -393,6 +393,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 							String path = chooser.getSelectedFile().getPath();
 							if(!path.endsWith("." + extension)) {
 								path += "." + extension;
+							}
+							final File file = new File(path);
+							if(file.exists()) {
+								file.delete();
+								file.createNewFile();
 							}
 							Files.write(Paths.get(path), algorithm.toLanguage(language).getBytes(StandardCharsets.UTF_8));
 						}
@@ -776,11 +781,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @param file The file.
 	 */
 
-	public final void save(final File file) {
+	public final void save(File file) {
 		try {
 			String path = file.getPath();
 			if(!path.endsWith(".agg")) {
 				path += ".agg";
+				file = new File(path);
 			}
 			if(file.exists()) {
 				file.delete();

@@ -7,6 +7,8 @@ console.title=Console
 console.buttons.run=Lancer
 console.buttons.stop=Arrêter
 console.buttons.debug=Debug
+console.buttons.saveoutput=Enregistrer...
+console.buttons.saveoutput.filter=Fichier HTML (*.html)
 
 console.actionrequired.dialog.title=Entrer la valeur d'une variable
 console.actionrequired.dialog.message=Entrer la valeur de "%s" :

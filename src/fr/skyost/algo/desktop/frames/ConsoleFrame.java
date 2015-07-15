@@ -23,24 +23,30 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ImageIcon;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultCaret;
 
 public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private final JCheckBox chckbxDebug = new JCheckBox(LanguageManager.getString("console.buttons.debug"));
 	private final JTextArea output = new JTextArea();
 	private final JButton btnRun = changeButtonState(null, true);
-	
+
 	private AlgoRunnable currentThread;
 
 	public ConsoleFrame() {
@@ -49,6 +55,34 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		this.setSize(500, 376);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.addWindowListener(new WindowListener() {
+
+			@Override
+			public final void windowClosing(final WindowEvent event) {
+				if(currentThread != null) {
+					currentThread.interrupt();
+				}
+			}
+
+			@Override
+			public final void windowActivated(final WindowEvent event) {}
+
+			@Override
+			public final void windowDeactivated(final WindowEvent event) {}
+
+			@Override
+			public final void windowClosed(final WindowEvent event) {}
+
+			@Override
+			public final void windowIconified(final WindowEvent event) {}
+
+			@Override
+			public final void windowDeiconified(final WindowEvent event) {}
+
+			@Override
+			public final void windowOpened(final WindowEvent event) {}
+
+		});
 		final Container content = this.getContentPane();
 		output.setFont(AlgogoDesktop.CONSOLE_FONT);
 		output.setLineWrap(true);
@@ -72,37 +106,50 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 			}
 
 		});
-		this.addWindowListener(new WindowListener() {
-			
+		final JButton btnSaveReport = new JButton(LanguageManager.getString("console.buttons.saveoutput"));
+		btnSaveReport.addActionListener(new ActionListener() {
+
 			@Override
-			public final void windowClosing(final WindowEvent event) {
-				if(currentThread != null) {
-					currentThread.interrupt();
+			public void actionPerformed(final ActionEvent event) {
+				final String separator = System.lineSeparator();
+				final StringBuilder builder = new StringBuilder();
+				builder.append("<html>" + separator);
+				builder.append("<head>" + separator);
+				builder.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>" + separator);
+				builder.append("<title>" + EditorFrame.algorithm.getTitle() + " by " + EditorFrame.algorithm.getAuthor() + "</title>" + separator);
+				builder.append("<meta name=\"generator\" content=\"" + AlgogoDesktop.APP_NAME + "\">" + separator);
+				builder.append("</head>" + separator);
+				builder.append("<body style=\"background-color: black; color: white; font-family: 'DejaVuSansMono', 'Consolas', 'Courier', 'Courier New'; font-size: 1.1em;\">" + separator);
+				builder.append(output.getText().replace(separator, "<br>") + separator);
+				builder.append("</body>" + separator);
+				builder.append("</html>");
+				final JFileChooser chooser = new JFileChooser();
+				chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("console.buttons.saveoutput.filter"), "html"));
+				chooser.setMultiSelectionEnabled(false);
+				if(chooser.showSaveDialog(ConsoleFrame.this) == JFileChooser.APPROVE_OPTION) {
+					try {
+						String path = chooser.getSelectedFile().getPath();
+						if(!path.endsWith(".html")) {
+							path += ".html";
+						}
+						final File file = new File(path);
+						if(file.exists()) {
+							file.delete();
+							file.createNewFile();
+						}
+						Files.write(Paths.get(path), builder.toString().getBytes(StandardCharsets.UTF_8));
+					}
+					catch(final Exception ex) {
+						ex.printStackTrace();
+						ErrorDialog.errorMessage(ConsoleFrame.this, ex);
+					}
 				}
 			}
-
-			@Override
-			public final void windowActivated(final WindowEvent event) {}
-			
-			@Override
-			public final void windowDeactivated(final WindowEvent event) {}
-
-			@Override
-			public final void windowClosed(final WindowEvent event) {}
-
-			@Override
-			public final void windowIconified(final WindowEvent event) {}
-
-			@Override
-			public final void windowDeiconified(final WindowEvent event) {}
-
-			@Override
-			public final void windowOpened(final WindowEvent event) {}
 			
 		});
 		final GroupLayout groupLayout = new GroupLayout(content);
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout.createSequentialGroup().addComponent(scrollPane).addPreferredGap(ComponentPlacement.RELATED).addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false).addComponent(chckbxDebug, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnRun, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addContainerGap()));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addGap(11).addComponent(btnRun).addPreferredGap(ComponentPlacement.RELATED).addComponent(chckbxDebug).addContainerGap(276, Short.MAX_VALUE)).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE));
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE).addPreferredGap(ComponentPlacement.RELATED).addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING, groupLayout.createParallelGroup(Alignment.LEADING, false).addComponent(chckbxDebug, Alignment.TRAILING, 0, 0, Short.MAX_VALUE).addComponent(btnRun, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addComponent(btnSaveReport, Alignment.TRAILING)).addContainerGap()));
+		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE).addGroup(groupLayout.createSequentialGroup().addComponent(btnRun).addPreferredGap(ComponentPlacement.RELATED).addComponent(chckbxDebug).addPreferredGap(ComponentPlacement.RELATED, 244, Short.MAX_VALUE).addComponent(btnSaveReport))).addContainerGap()));
 		content.setLayout(groupLayout);
 	}
 
@@ -140,7 +187,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public final void lineExecuted(final AlgoRunnable runnable, final AlgoLine line, final boolean before) {
 		if(chckbxDebug.isSelected() && before) {
@@ -156,11 +203,12 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		changeButtonState(btnRun, true);
 		currentThread = null;
 		if(ex != null) {
+			output.append("Exception occurred :\"" + ex.getClass().getName() + "\", please check the error log." + System.lineSeparator());
 			ex.printStackTrace();
 			ErrorDialog.errorMessage(this, ex);
 		}
 	}
-	
+
 	private final JButton changeButtonState(JButton button, final boolean state) {
 		if(button == null) {
 			button = new JButton();
@@ -175,7 +223,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		}
 		return button;
 	}
-	
+
 	private final String getLine(final Instruction instruction, final String... args) {
 		final StringBuilder builder = new StringBuilder(Utils.escapeHTML(instruction.toString()) + " ");
 		switch(instruction) {
@@ -203,5 +251,4 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		}
 		return builder.toString();
 	}
-
 }
