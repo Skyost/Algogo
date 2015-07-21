@@ -2,8 +2,6 @@ package fr.skyost.algo.desktop;
 
 import java.awt.Font;
 import java.io.File;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import javax.swing.Icon;
@@ -15,6 +13,7 @@ import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
 
 import fr.skyost.algo.desktop.dialogs.ErrorDialog;
 import fr.skyost.algo.desktop.frames.EditorFrame;
+import fr.skyost.algo.desktop.utils.Utils;
 
 public class AlgogoDesktop {
 	
@@ -30,7 +29,7 @@ public class AlgogoDesktop {
 	
 	public static final void main(final String[] args) {
 		try {
-			SETTINGS = new AppSettings(new File(new File(URLDecoder.decode(ClassLoader.getSystemClassLoader().getResource(".").getPath(), StandardCharsets.UTF_8.toString())), "settings.json"));
+			SETTINGS = new AppSettings(new File(Utils.getParentFolder(), "settings.json"));
 			SETTINGS.load();
 			//SETTINGS.save(); // Used to save new fields, will be used in next versions.
 			final Properties properties = new Properties();
@@ -50,7 +49,12 @@ public class AlgogoDesktop {
 					if(args != null && args.length > 0) {
 						final File file = new File(args[0]);
 						if(file.exists()) {
-							frame.open(file);
+							try {
+								frame.open(file);
+							}
+							catch(final Exception ex) {
+								ex.printStackTrace();
+							}
 						}
 					}
 				}

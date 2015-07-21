@@ -9,6 +9,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -341,11 +342,20 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				final JFileChooser chooser = new JFileChooser();
-				chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter"), "agg"));
-				chooser.setMultiSelectionEnabled(false);
-				if(chooser.showOpenDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
-					open(chooser.getSelectedFile());
+				try {
+					final JFileChooser chooser = new JFileChooser();
+					final File currentDir = Utils.getParentFolder();
+					chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter"), "agg"));
+					chooser.setMultiSelectionEnabled(false);
+					chooser.setCurrentDirectory(currentDir);
+					chooser.setSelectedFile(new File(currentDir, EditorFrame.algorithm.getTitle()));
+					if(chooser.showOpenDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
+						open(chooser.getSelectedFile());
+					}
+				}
+				catch(final Exception ex) {
+					ErrorDialog.errorMessage(EditorFrame.this, ex);
+					ex.printStackTrace();
 				}
 			}
 
@@ -387,8 +397,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					try {
 						final String extension = language.getExtension();
 						final JFileChooser chooser = new JFileChooser();
+						final File currentDir = Utils.getParentFolder();
 						chooser.setFileFilter(new FileNameExtensionFilter(String.format(LanguageManager.getString("editor.menu.file.export.filter"), name, extension), extension));
 						chooser.setMultiSelectionEnabled(false);
+						chooser.setCurrentDirectory(currentDir);
+						chooser.setSelectedFile(new File(currentDir, EditorFrame.algorithm.getTitle()));
 						if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
 							String path = chooser.getSelectedFile().getPath();
 							if(!path.endsWith("." + extension)) {
@@ -747,32 +760,28 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * Loads an algorithm from a file.
 	 * 
 	 * @param file The file.
+	 * 
+	 * @throws IOException If an exception occurs while reading the file.
 	 */
 
-	public final void open(final File file) {
-		try {
-			final String path = file.getPath();
-			algorithm = Algorithm.fromJSON(Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8).get(0));
-			algorithm.addOptionsListener(EditorFrame.this);
-			variables.removeAllChildren();
-			variables.setAlgoLine(algorithm.getVariables());
-			beginning.removeAllChildren();
-			beginning.setAlgoLine(algorithm.getInstructions());
-			for(final AlgoLine variable : algorithm.getVariables().getChildren()) {
-				variables.add(new AlgoTreeNode(variable), false);
-			}
-			for(final AlgoLine instruction : algorithm.getInstructions().getChildren()) {
-				beginning.add(new AlgoTreeNode(instruction), false);
-			}
-			algoPath = path;
-			algoChanged = false;
-			Utils.reloadTree(tree);
-			EditorFrame.this.setTitle(buildTitle());
+	public final void open(final File file) throws IOException {
+		final String path = file.getPath();
+		algorithm = Algorithm.fromJSON(Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8).get(0));
+		algorithm.addOptionsListener(EditorFrame.this);
+		variables.removeAllChildren();
+		variables.setAlgoLine(algorithm.getVariables());
+		beginning.removeAllChildren();
+		beginning.setAlgoLine(algorithm.getInstructions());
+		for(final AlgoLine variable : algorithm.getVariables().getChildren()) {
+			variables.add(new AlgoTreeNode(variable), false);
 		}
-		catch(final Exception ex) {
-			ex.printStackTrace();
-			ErrorDialog.errorMessage(EditorFrame.this, ex);
+		for(final AlgoLine instruction : algorithm.getInstructions().getChildren()) {
+			beginning.add(new AlgoTreeNode(instruction), false);
 		}
+		algoPath = path;
+		algoChanged = false;
+		Utils.reloadTree(tree);
+		EditorFrame.this.setTitle(buildTitle());
 	}
 
 	/**
@@ -808,11 +817,20 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 */
 
 	public final void saveAs() {
-		final JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter"), "agg"));
-		chooser.setMultiSelectionEnabled(false);
-		if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
-			save(chooser.getSelectedFile());
+		try {
+			final JFileChooser chooser = new JFileChooser();
+			final File currentDir = Utils.getParentFolder();
+			chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter"), "agg"));
+			chooser.setMultiSelectionEnabled(false);
+			chooser.setCurrentDirectory(currentDir);
+			chooser.setSelectedFile(new File(currentDir, EditorFrame.algorithm.getTitle()));
+			if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
+				save(chooser.getSelectedFile());
+			}
+		}
+		catch(final Exception ex) {
+			ex.printStackTrace();
+			ErrorDialog.errorMessage(EditorFrame.this, ex);
 		}
 	}
 

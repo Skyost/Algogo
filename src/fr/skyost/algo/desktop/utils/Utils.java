@@ -1,6 +1,10 @@
 package fr.skyost.algo.desktop.utils;
 
 import java.awt.Component;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -146,6 +150,18 @@ public class Utils {
 			spaces.delete(0, 2);
 		}
 		return builder.toString();
+	}
+	
+	/**
+	 * Gets the JAR parent folder.
+	 * 
+	 * @return The JAR parent folder.
+	 * 
+	 * @throws UnsupportedEncodingException If the URLDecoder fails to decode the string.
+	 */
+	
+	public static final File getParentFolder() throws UnsupportedEncodingException {
+		return new File(URLDecoder.decode(ClassLoader.getSystemClassLoader().getResource(".").getPath(), StandardCharsets.UTF_8.toString()));
 	}
 
 }

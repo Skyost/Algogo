@@ -111,23 +111,26 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
 			@Override
 			public void actionPerformed(final ActionEvent event) {
-				final String separator = System.lineSeparator();
-				final StringBuilder builder = new StringBuilder();
-				builder.append("<html>" + separator);
-				builder.append("<head>" + separator);
-				builder.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>" + separator);
-				builder.append("<title>" + EditorFrame.algorithm.getTitle() + " by " + EditorFrame.algorithm.getAuthor() + "</title>" + separator);
-				builder.append("<meta name=\"generator\" content=\"" + AlgogoDesktop.APP_NAME + "\">" + separator);
-				builder.append("</head>" + separator);
-				builder.append("<body style=\"background-color: black; color: white; font-family: 'DejaVuSansMono', 'Consolas', 'Courier', 'Courier New'; font-size: 1.1em;\">" + separator);
-				builder.append(output.getText().replace(separator, "<br>") + separator);
-				builder.append("</body>" + separator);
-				builder.append("</html>");
-				final JFileChooser chooser = new JFileChooser();
-				chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("console.buttons.saveoutput.filter"), "html"));
-				chooser.setMultiSelectionEnabled(false);
-				if(chooser.showSaveDialog(ConsoleFrame.this) == JFileChooser.APPROVE_OPTION) {
-					try {
+				try {
+					final String separator = System.lineSeparator();
+					final StringBuilder builder = new StringBuilder();
+					builder.append("<html>" + separator);
+					builder.append("<head>" + separator);
+					builder.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>" + separator);
+					builder.append("<title>" + EditorFrame.algorithm.getTitle() + " by " + EditorFrame.algorithm.getAuthor() + "</title>" + separator);
+					builder.append("<meta name=\"generator\" content=\"" + AlgogoDesktop.APP_NAME + "\">" + separator);
+					builder.append("</head>" + separator);
+					builder.append("<body style=\"background-color: black; color: white; font-family: 'DejaVuSansMono', 'Consolas', 'Courier', 'Courier New'; font-size: 1.1em;\">" + separator);
+					builder.append(output.getText().replace(separator, "<br>") + separator);
+					builder.append("</body>" + separator);
+					builder.append("</html>");
+					final JFileChooser chooser = new JFileChooser();
+					final File currentDir = Utils.getParentFolder();
+					chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("console.buttons.saveoutput.filter"), "html"));
+					chooser.setMultiSelectionEnabled(false);
+					chooser.setCurrentDirectory(currentDir);
+					chooser.setSelectedFile(new File(currentDir, EditorFrame.algorithm.getTitle()));
+					if(chooser.showSaveDialog(ConsoleFrame.this) == JFileChooser.APPROVE_OPTION) {
 						String path = chooser.getSelectedFile().getPath();
 						if(!path.endsWith(".html")) {
 							path += ".html";
@@ -139,10 +142,10 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 						}
 						Files.write(Paths.get(path), builder.toString().getBytes(StandardCharsets.UTF_8));
 					}
-					catch(final Exception ex) {
-						ex.printStackTrace();
-						ErrorDialog.errorMessage(ConsoleFrame.this, ex);
-					}
+				}
+				catch(final Exception ex) {
+					ex.printStackTrace();
+					ErrorDialog.errorMessage(ConsoleFrame.this, ex);
 				}
 			}
 			
@@ -251,4 +254,5 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		}
 		return builder.toString();
 	}
+	
 }

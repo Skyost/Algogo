@@ -19,6 +19,10 @@ import fr.skyost.algo.desktop.dialogs.ErrorDialog;
 
 public class LanguageManager {
 	
+	/**
+	 * If a key is not found.
+	 */
+	public static final String NOT_FOUND_STRING = "Translation not found";
 	private static final HashMap<String, String> strings = new HashMap<String, String>();
 	static {
 		try {
@@ -44,7 +48,11 @@ public class LanguageManager {
 	 */
 	
 	public static final String getString(final String key) {
-		return strings.get(key);
+		final String value = strings.get(key);
+		if(value != null) {
+			return value;
+		}
+		return NOT_FOUND_STRING;
 	}
 	
 	/**
