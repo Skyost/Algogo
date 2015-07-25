@@ -42,6 +42,7 @@ import javax.swing.text.DefaultCaret;
 public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final String LINE_SEPARATOR = System.lineSeparator();
 
 	private final JCheckBox chckbxDebug = new JCheckBox(LanguageManager.getString("console.buttons.debug"));
 	private final JTextArea output = new JTextArea();
@@ -112,17 +113,16 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 			@Override
 			public void actionPerformed(final ActionEvent event) {
 				try {
-					final String separator = System.lineSeparator();
 					final StringBuilder builder = new StringBuilder();
-					builder.append("<html>" + separator);
-					builder.append("<head>" + separator);
-					builder.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>" + separator);
-					builder.append("<title>" + EditorFrame.algorithm.getTitle() + " by " + EditorFrame.algorithm.getAuthor() + "</title>" + separator);
-					builder.append("<meta name=\"generator\" content=\"" + AlgogoDesktop.APP_NAME + "\">" + separator);
-					builder.append("</head>" + separator);
-					builder.append("<body style=\"background-color: black; color: white; font-family: 'DejaVuSansMono', 'Consolas', 'Courier', 'Courier New'; font-size: 1.1em;\">" + separator);
-					builder.append(output.getText().replace(separator, "<br>") + separator);
-					builder.append("</body>" + separator);
+					builder.append("<html>" + LINE_SEPARATOR);
+					builder.append("<head>" + LINE_SEPARATOR);
+					builder.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>" + LINE_SEPARATOR);
+					builder.append("<title>" + EditorFrame.algorithm.getTitle() + " by " + EditorFrame.algorithm.getAuthor() + "</title>" + LINE_SEPARATOR);
+					builder.append("<meta name=\"generator\" content=\"" + AlgogoDesktop.APP_NAME + "\">" + LINE_SEPARATOR);
+					builder.append("</head>" + LINE_SEPARATOR);
+					builder.append("<body style=\"background-color: black; color: white; font-family: 'DejaVuSansMono', 'Consolas', 'Courier', 'Courier New'; font-size: 1.1em;\">" + LINE_SEPARATOR);
+					builder.append(output.getText().replace(LINE_SEPARATOR, "<br>") + LINE_SEPARATOR);
+					builder.append("</body>" + LINE_SEPARATOR);
 					builder.append("</html>");
 					final JFileChooser chooser = new JFileChooser();
 					final File currentDir = Utils.getParentFolder();
@@ -171,7 +171,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		}
 		output.append(line);
 		if(lineBreak) {
-			output.append(System.lineSeparator());
+			output.append(LINE_SEPARATOR);
 		}
 	}
 
@@ -194,7 +194,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	@Override
 	public final void lineExecuted(final AlgoRunnable runnable, final AlgoLine line, final boolean before) {
 		if(chckbxDebug.isSelected() && before) {
-			output.append("Executing line \"" + getLine(line.getInstruction(), line.getArgs()) + "\"..." + System.lineSeparator());
+			output.append("Executing line \"" + getLine(line.getInstruction(), line.getArgs()) + "\"..." + LINE_SEPARATOR);
 		}
 	}
 
@@ -206,7 +206,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		changeButtonState(btnRun, true);
 		currentThread = null;
 		if(ex != null) {
-			output.append("Exception occurred :\"" + ex.getClass().getName() + "\", please check the error log." + System.lineSeparator());
+			output.append("Exception occurred :\"" + ex.getClass().getName() + "\", please check the error log." + LINE_SEPARATOR);
 			ex.printStackTrace();
 			ErrorDialog.errorMessage(this, ex);
 		}
