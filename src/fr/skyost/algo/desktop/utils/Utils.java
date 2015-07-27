@@ -1,13 +1,21 @@
 package fr.skyost.algo.desktop.utils;
 
 import java.awt.Component;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -16,7 +24,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
 public class Utils {
-	
+
 	/**
 	 * Escapes HTML characters of the specified String.
 	 * 
@@ -40,7 +48,7 @@ public class Utils {
 		}
 		return builder.toString();
 	}
-	
+
 	/**
 	 * Joins a String array.
 	 * 
@@ -58,7 +66,7 @@ public class Utils {
 		builder.setLength(builder.length() - 1);
 		return builder.toString();
 	}
-	
+
 	/**
 	 * Creates a dialog.
 	 * 
@@ -81,7 +89,7 @@ public class Utils {
 		}
 		return JOptionPane.showConfirmDialog(component, components.toArray(new Object[components.size()]), title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION;
 	}
-	
+
 	/**
 	 * Reloads a JTree.
 	 * 
@@ -91,7 +99,7 @@ public class Utils {
 	public static final void reloadTree(final JTree tree) {
 		reloadTree(tree, null);
 	}
-	
+
 	/**
 	 * Reloads a node in a JTree.
 	 * 
@@ -110,7 +118,7 @@ public class Utils {
 			tree.expandRow(i);
 		}
 	}
-	
+
 	/**
 	 * Checks if a String is alpha.
 	 * 
@@ -128,7 +136,7 @@ public class Utils {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Gets a node's content.
 	 * 
@@ -137,7 +145,7 @@ public class Utils {
 	 * 
 	 * @return The node's content.
 	 */
-	
+
 	public static final String getNodeContent(final AlgoTreeNode node, final StringBuilder spaces) {
 		final StringBuilder builder = new StringBuilder();
 		builder.append(node.toString() + System.lineSeparator());
@@ -151,7 +159,7 @@ public class Utils {
 		}
 		return builder.toString();
 	}
-	
+
 	/**
 	 * Gets the JAR parent folder.
 	 * 
@@ -159,9 +167,50 @@ public class Utils {
 	 * 
 	 * @throws UnsupportedEncodingException If the URLDecoder fails to decode the string.
 	 */
-	
+
 	public static final File getParentFolder() throws UnsupportedEncodingException {
 		return new File(URLDecoder.decode(ClassLoader.getSystemClassLoader().getResource(".").getPath(), StandardCharsets.UTF_8.toString()));
+	}
+	
+	/**
+	 * GZIP a String.
+	 * 
+	 * @param string The String.
+	 * 
+	 * @return The compressed String.
+	 * 
+	 * @throws IOException If an Exception occurs.
+	 */
+
+	public static final byte[] gzip(final String string) throws IOException {
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		final GZIPOutputStream gzip = new GZIPOutputStream(output);
+		final OutputStreamWriter writer = new OutputStreamWriter(gzip, StandardCharsets.UTF_8);
+		writer.write(string);
+		writer.close();
+		gzip.close();
+		writer.close();
+		return output.toByteArray();
+	}
+	
+	/**
+	 * UnGZIP a String.
+	 * 
+	 * @param bytes The String (bytes).
+	 * 
+	 * @return The unGZIPed String.
+	 * 
+	 * @throws IOException If an Exception occurs.
+	 */
+	
+	public static final String ungzip(final byte[] bytes) throws IOException {
+		final InputStreamReader input = new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(bytes)), StandardCharsets.UTF_8);
+		final StringWriter writer = new StringWriter();
+		final char[] chars = new char[1024];
+		for(int length; (length = input.read(chars)) > 0;) {
+			writer.write(chars, 0, length);
+		}
+		return writer.toString();
 	}
 
 }

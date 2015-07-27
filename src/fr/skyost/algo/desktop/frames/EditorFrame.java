@@ -132,7 +132,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 							saveAs();
 							return;
 						}
-						save(new File(algoPath));
+						save(new File(algoPath), algoPath.substring(algoPath.lastIndexOf(".")));
 					}
 				}
 				System.exit(0);
@@ -345,7 +345,10 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				try {
 					final JFileChooser chooser = new JFileChooser();
 					final File currentDir = Utils.getParentFolder();
-					chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter"), "agg"));
+					chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter.algorithms"), "agg", "aggc"));
+					chooser.addChoosableFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter.agg"), "agg"));
+					chooser.addChoosableFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter.aggc"), "aggc"));
+					chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 					chooser.setMultiSelectionEnabled(false);
 					chooser.setCurrentDirectory(currentDir);
 					chooser.setSelectedFile(new File(currentDir, EditorFrame.algorithm.getTitle()));
@@ -371,7 +374,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					saveAs();
 					return;
 				}
-				save(new File(algoPath));
+				save(new File(algoPath), algoPath.substring(algoPath.lastIndexOf(".")));
 			}
 
 		});
@@ -399,6 +402,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 						final JFileChooser chooser = new JFileChooser();
 						final File currentDir = Utils.getParentFolder();
 						chooser.setFileFilter(new FileNameExtensionFilter(String.format(LanguageManager.getString("editor.menu.file.export.filter"), name, extension), extension));
+						chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 						chooser.setMultiSelectionEnabled(false);
 						chooser.setCurrentDirectory(currentDir);
 						chooser.setSelectedFile(new File(currentDir, EditorFrame.algorithm.getTitle()));
@@ -766,7 +770,16 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 	public final void open(final File file) throws IOException {
 		final String path = file.getPath();
-		algorithm = Algorithm.fromJSON(Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8).get(0));
+		final String extension = path.substring(path.lastIndexOf("."));
+		if(extension.equalsIgnoreCase(".agg")) {
+			algorithm = Algorithm.fromJSON(Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8).get(0));
+		}
+		else if(extension.equalsIgnoreCase(".aggc")) {
+			algorithm = Algorithm.fromJSON(Utils.ungzip(Files.readAllBytes(Paths.get(path))));
+		}
+		else {
+			return;
+		}
 		algorithm.addOptionsListener(EditorFrame.this);
 		variables.removeAllChildren();
 		variables.setAlgoLine(algorithm.getVariables());
@@ -788,20 +801,31 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * Saves an algorithm to a file.
 	 * 
 	 * @param file The file.
+	 * @param extension The file extension with dot.
 	 */
 
-	public final void save(File file) {
+	public final void save(File file, final String extension) {
 		try {
 			String path = file.getPath();
-			if(!path.endsWith(".agg")) {
-				path += ".agg";
+			if(!path.endsWith(extension)) {
+				path += extension;
 				file = new File(path);
+			}
+			byte[] content = null;
+			if(extension.equalsIgnoreCase(".agg")) {
+				content = algorithm.toJSON().toString().getBytes(StandardCharsets.UTF_8);
+			}
+			else if(extension.equalsIgnoreCase(".aggc")) {
+				content = Utils.gzip(algorithm.toJSON().toString());
+			}
+			else {
+				return;
 			}
 			if(file.exists()) {
 				file.delete();
 				file.createNewFile();
 			}
-			Files.write(Paths.get(path), algorithm.toJSON().toString().getBytes(StandardCharsets.UTF_8));
+			Files.write(Paths.get(path), content);
 			algoPath = path;
 			algoChanged = false;
 			EditorFrame.this.setTitle(buildTitle());
@@ -820,12 +844,14 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		try {
 			final JFileChooser chooser = new JFileChooser();
 			final File currentDir = Utils.getParentFolder();
-			chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter"), "agg"));
+			chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter.agg"), "agg"));
+			chooser.addChoosableFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter.aggc"), "aggc"));
+			chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 			chooser.setMultiSelectionEnabled(false);
 			chooser.setCurrentDirectory(currentDir);
 			chooser.setSelectedFile(new File(currentDir, EditorFrame.algorithm.getTitle()));
 			if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
-				save(chooser.getSelectedFile());
+				save(chooser.getSelectedFile(), "." + ((FileNameExtensionFilter)chooser.getFileFilter()).getExtensions()[0]);
 			}
 		}
 		catch(final Exception ex) {

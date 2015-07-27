@@ -127,6 +127,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 					final JFileChooser chooser = new JFileChooser();
 					final File currentDir = Utils.getParentFolder();
 					chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("console.buttons.saveoutput.filter"), "html"));
+					chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 					chooser.setMultiSelectionEnabled(false);
 					chooser.setCurrentDirectory(currentDir);
 					chooser.setSelectedFile(new File(currentDir, EditorFrame.algorithm.getTitle()));

@@ -47,7 +47,9 @@ editor.button.down=Down
 editor.button.test=Test...
 
 editor.menu.file=File
-editor.menu.file.filter=Algogo Algorithm File (*.agg)
+editor.menu.file.filter.algorithms=Algogo Algorithms (*.agg, *.aggc)
+editor.menu.file.filter.agg=Algogo Algorithm File (*.agg)
+editor.menu.file.filter.aggc=Algogo Compressed Algorithm File (*.aggc)
 editor.menu.file.new=New
 editor.menu.file.open=Open...
 editor.menu.file.saveas=Save as...
