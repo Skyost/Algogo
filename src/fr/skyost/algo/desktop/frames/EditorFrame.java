@@ -79,8 +79,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 	public static Algorithm algorithm;
 
-	private static String algoPath;
-	private static boolean algoChanged;
+	protected static String algoPath;
+	protected static boolean algoChanged;
 
 	public static JTree tree;
 	public static AlgoTreeNode variables;
@@ -351,7 +351,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 					chooser.setMultiSelectionEnabled(false);
 					chooser.setCurrentDirectory(currentDir);
-					chooser.setSelectedFile(new File(currentDir, EditorFrame.algorithm.getTitle()));
+					chooser.setSelectedFile(algoPath == null ? new File(currentDir, EditorFrame.algorithm.getTitle()) : new File(algoPath));
 					if(chooser.showOpenDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
 						open(chooser.getSelectedFile());
 					}
@@ -405,7 +405,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 						chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 						chooser.setMultiSelectionEnabled(false);
 						chooser.setCurrentDirectory(currentDir);
-						chooser.setSelectedFile(new File(currentDir, EditorFrame.algorithm.getTitle()));
+						chooser.setSelectedFile(algoPath == null ? new File(currentDir, EditorFrame.algorithm.getTitle()) : new File(algoPath));
 						if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
 							String path = chooser.getSelectedFile().getPath();
 							if(!path.endsWith("." + extension)) {
@@ -849,7 +849,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 			chooser.setMultiSelectionEnabled(false);
 			chooser.setCurrentDirectory(currentDir);
-			chooser.setSelectedFile(new File(currentDir, EditorFrame.algorithm.getTitle()));
+			chooser.setSelectedFile(algoPath == null ? new File(currentDir, EditorFrame.algorithm.getTitle()) : new File(algoPath));
 			if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
 				save(chooser.getSelectedFile(), "." + ((FileNameExtensionFilter)chooser.getFileFilter()).getExtensions()[0]);
 			}
