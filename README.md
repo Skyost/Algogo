@@ -38,3 +38,5 @@ This software has been written in Java using AlgogoCore (see it in the branches)
 
 ## Anything else ?
 Yes a lot ! [Here](http://www.algogo.xyz/) is the website.
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Skyost/algogo/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
