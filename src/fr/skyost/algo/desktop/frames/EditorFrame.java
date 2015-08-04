@@ -5,6 +5,8 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
@@ -15,7 +17,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -27,7 +32,6 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -152,7 +156,10 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
 				for(final TreePath path : tree.getSelectionPaths()) {
-					removeNode((AlgoTreeNode)path.getLastPathComponent());
+					final AlgoTreeNode node = (AlgoTreeNode)path.getLastPathComponent();
+					if(!node.getAlgoLine().isKeyword()) {
+						removeNode(node);
+					}
 				}
 			}
 
@@ -234,7 +241,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 
 		});
-		this.setJMenuBar(createEditorMenuBar(tree));
 		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain && !AlgogoDesktop.DEBUG) {
 			new GithubUpdater("Skyost", "Algogo", AlgogoDesktop.APP_VERSION, this).start();
 		}
@@ -324,7 +330,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @return The menu.
 	 */
 
-	private final JMenuBar createEditorMenuBar(final JComponent component) {
+	private final JMenuBar createEditorMenuBar() {
+		final HashMap<KeyStroke, ActionListener> listeners = new HashMap<KeyStroke, ActionListener>();
 		final int ctrl = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		final JMenuItem neww = new JMenuItem(LanguageManager.getString("editor.menu.file.new"));
 		neww.addActionListener(new ActionListener() {
@@ -494,7 +501,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		paste.addActionListener(pasteActionListener);
 		paste.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_paste.png")));
 		paste.setAccelerator(KeyStroke.getKeyStroke('V', ctrl));
-		component.getInputMap().put(KeyStroke.getKeyStroke('V', ctrl), "pasteActionListener");
+		listeners.put(KeyStroke.getKeyStroke('V', ctrl), pasteActionListener);
 		paste.setEnabled(false);
 		final JMenuItem cut = new JMenuItem(LanguageManager.getString("editor.menu.edit.cut"));
 		final ActionListener cutActionListener = new ActionListener() {
@@ -522,7 +529,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		cut.addActionListener(cutActionListener);
 		cut.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_cut.png")));
 		cut.setAccelerator(KeyStroke.getKeyStroke('X', ctrl));
-		component.getInputMap().put(KeyStroke.getKeyStroke('X', ctrl), "cutActionListener");
+		listeners.put(KeyStroke.getKeyStroke('X', ctrl), cutActionListener);
 		final JMenuItem copy = new JMenuItem(LanguageManager.getString("editor.menu.edit.copy"));
 		final ActionListener copyActionListener = new ActionListener() {
 
@@ -547,7 +554,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		copy.addActionListener(copyActionListener);
 		copy.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_copy.png")));
 		copy.setAccelerator(KeyStroke.getKeyStroke('C', ctrl));
-		component.getInputMap().put(KeyStroke.getKeyStroke('C', ctrl), "copyActionListener");
+		listeners.put(KeyStroke.getKeyStroke('C', ctrl), copyActionListener);
 		final JMenuItem checkForUpdates = new JMenuItem(LanguageManager.getString("editor.menu.help.checkforupdates"));
 		checkForUpdates.addActionListener(new ActionListener() {
 
@@ -620,7 +627,14 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		help.add(checkForUpdates);
 		help.add(about);
 		menuBar.add(help);
+		registerKeyListeners(listeners);
 		return menuBar;
+	}
+	
+	public final void registerKeyListeners(final Map<KeyStroke, ActionListener> listeners) {
+		for(final Entry<KeyStroke, ActionListener> entry : listeners.entrySet()) {
+			tree.getInputMap().put(entry.getKey(), entry.getValue());
+		}
 	}
 	
 	/**
@@ -729,11 +743,28 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 
 		});
+		tree.addKeyListener(new KeyListener() {
+
+			@Override
+			public final void keyPressed(final KeyEvent event) {}
+
+			@Override
+			public final void keyReleased(final KeyEvent event) {}
+
+			@Override
+			public final void keyTyped(final KeyEvent event) {
+				if(event.getKeyChar() == '\177') {
+					btnRemoveLine.getActionListeners()[0].actionPerformed(null);
+				}
+			}
+			
+		});
 		final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)tree.getCellRenderer();
 		renderer.setLeafIcon(null);
 		renderer.setClosedIcon(null);
 		renderer.setOpenIcon(null);
 		scrollPane.setViewportView(tree);
+		EditorFrame.this.setJMenuBar(createEditorMenuBar());
 		Utils.reloadTree(tree);
 	}
 
