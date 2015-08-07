@@ -146,7 +146,6 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 					}
 				}
 				catch(final Exception ex) {
-					ex.printStackTrace();
 					ErrorDialog.errorMessage(ConsoleFrame.this, ex);
 				}
 			}
@@ -209,7 +208,6 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		currentThread = null;
 		if(ex != null) {
 			output.append("Exception occurred :\"" + ex.getClass().getName() + "\", please check the error log." + LINE_SEPARATOR);
-			ex.printStackTrace();
 			ErrorDialog.errorMessage(this, ex);
 		}
 	}

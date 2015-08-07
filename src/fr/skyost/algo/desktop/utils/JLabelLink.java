@@ -84,7 +84,6 @@ public class JLabelLink extends JLabel {
 					}
 				}
 				catch(final Exception ex) {
-					ex.printStackTrace();
 					ErrorDialog.errorMessage(null, ex);
 				}
 			}

@@ -85,13 +85,30 @@ public class ErrorDialog extends JDialog {
 	 * Shows an error message (no translation because it can be risky).
 	 * 
 	 * @param component The parent component.
-	 * @param throwable The error.
+	 * @param throwable The error. Will be printed.
 	 * 
 	 * @return The dialog.
 	 */
 
 	public static ErrorDialog errorMessage(final Component component, final Throwable throwable) {
+		return errorMessage(component, throwable, true);
+	}
+	
+	/**
+	 * Shows an error message (no translation because it can be risky).
+	 * 
+	 * @param component The parent component.
+	 * @param throwable The error.
+	 * @param printStackTrace If the error should be printed.
+	 * 
+	 * @return The dialog.
+	 */
+	
+	public static ErrorDialog errorMessage(final Component component, final Throwable throwable, final boolean printStackTrace) {
 		try {
+			if(printStackTrace) {
+				throwable.printStackTrace();
+			}
 			final ErrorDialog dialog = new ErrorDialog(component, throwable);
 			dialog.setVisible(true);
 			return dialog;

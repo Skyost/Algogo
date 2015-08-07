@@ -77,6 +77,7 @@ about.title=%s v%s - Par %s
 about.desktopinfos=<html><b>%s</b> <i>v%s - Par %s</i></html>
 about.coreinfos=<html><b>%s</b> <i>v%s - Par %s</i></html>
 about.builtusing=Fait avec %s, %s et %s.
+about.donate=Payez moi un café !
 
 
 addline.title=Ajouter une ligne...

@@ -10,7 +10,10 @@ import javax.swing.JLabel;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 
 import javax.swing.BorderFactory;
@@ -21,6 +24,7 @@ import javax.swing.SwingConstants;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JButton;
 
 public class AboutDialog extends JDialog {
 
@@ -30,7 +34,7 @@ public class AboutDialog extends JDialog {
 		try {
 			final String authors = Utils.join(' ', AlgogoDesktop.APP_AUTHORS);
 			this.setTitle(String.format(LanguageManager.getString("about.title"), AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION, authors));
-			this.setSize(430, 406);
+			this.setSize(430, 460);
 			this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			this.setModalityType(ModalityType.APPLICATION_MODAL);
 			this.setModal(true);
@@ -53,14 +57,31 @@ public class AboutDialog extends JDialog {
 			final JLabel lblBuiltUsing = new JLabel(String.format(LanguageManager.getString("about.builtusing"), "minimal-json v0.9.2", "Heartbeat v0.1", "JTattoo v1.6.11"));
 			lblBuiltUsing.setHorizontalAlignment(SwingConstants.CENTER);
 			final Container content = this.getContentPane();
+			final JButton btnDonate = new JButton(LanguageManager.getString("about.donate"));
+			btnDonate.setFont(btnDonate.getFont().deriveFont(Font.BOLD));
+			btnDonate.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_donate.png")));
+			btnDonate.addActionListener(new ActionListener() {
+
+				@Override
+				public final void actionPerformed(final ActionEvent event) {
+					if(Desktop.isDesktopSupported()) {
+						try {
+							Desktop.getDesktop().browse(new URL("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4KYYXZTK4HQME").toURI());
+						}
+						catch(final Exception ex) {
+							ErrorDialog.errorMessage(AboutDialog.this, ex);
+						}
+					}
+				}
+				
+			});
 			final GroupLayout groupLayout = new GroupLayout(content);
-			groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblAppDesktopInfos, GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE).addContainerGap()).addGroup(groupLayout.createSequentialGroup().addComponent(lblAppName, GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE).addGap(0)).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblAppCoreInfos, GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE).addContainerGap()).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(panel, GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE).addContainerGap()).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblBuiltUsing, GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE).addContainerGap()));
-			groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblAppName).addPreferredGap(ComponentPlacement.UNRELATED).addComponent(lblAppDesktopInfos).addPreferredGap(ComponentPlacement.RELATED).addComponent(lblAppCoreInfos).addPreferredGap(ComponentPlacement.UNRELATED).addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addPreferredGap(ComponentPlacement.RELATED).addComponent(lblBuiltUsing).addContainerGap(34, Short.MAX_VALUE)));
+			groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblAppDesktopInfos, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE).addContainerGap()).addGroup(groupLayout.createSequentialGroup().addComponent(lblAppName, GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE).addGap(0)).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblAppCoreInfos, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE).addContainerGap()).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(panel, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE).addContainerGap()).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblBuiltUsing, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE).addContainerGap()).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(btnDonate, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE).addContainerGap()));
+			groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblAppName).addPreferredGap(ComponentPlacement.UNRELATED).addComponent(lblAppDesktopInfos, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addPreferredGap(ComponentPlacement.RELATED).addComponent(lblAppCoreInfos, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addPreferredGap(ComponentPlacement.UNRELATED).addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addPreferredGap(ComponentPlacement.RELATED).addComponent(lblBuiltUsing).addGap(18).addComponent(btnDonate, GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE).addContainerGap()));
 			content.setLayout(groupLayout);
 		}
 		catch(final Exception ex) {
 			ErrorDialog.errorMessage(this, ex);
-			ex.printStackTrace();
 		}
 	}
 	

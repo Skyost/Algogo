@@ -296,7 +296,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 	@Override
 	public final void updaterException(final Exception ex) {
-		ex.printStackTrace();
 		ErrorDialog.errorMessage(this, ex);
 	}
 
@@ -316,7 +315,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 		}
 		catch(final Exception ex) {
-			ex.printStackTrace();
 			ErrorDialog.errorMessage(this, ex);
 		}
 	}
@@ -365,7 +363,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				}
 				catch(final Exception ex) {
 					ErrorDialog.errorMessage(EditorFrame.this, ex);
-					ex.printStackTrace();
 				}
 			}
 
@@ -427,7 +424,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 						}
 					}
 					catch(final Exception ex) {
-						ex.printStackTrace();
 						ErrorDialog.errorMessage(EditorFrame.this, ex);
 					}
 				}
@@ -454,7 +450,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					}
 				}
 				catch(final Exception ex) {
-					ex.printStackTrace();
 					ErrorDialog.errorMessage(EditorFrame.this, ex);
 				}
 			}
@@ -567,7 +562,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 					@Override
 					public final void updaterException(final Exception ex) {
-						ex.printStackTrace();
 						ErrorDialog.errorMessage(EditorFrame.this, ex);
 					}
 
@@ -862,7 +856,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			EditorFrame.this.setTitle(buildTitle());
 		}
 		catch(final Exception ex) {
-			ex.printStackTrace();
 			ErrorDialog.errorMessage(this, ex);
 		}
 	}
@@ -886,7 +879,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 		}
 		catch(final Exception ex) {
-			ex.printStackTrace();
 			ErrorDialog.errorMessage(EditorFrame.this, ex);
 		}
 	}
