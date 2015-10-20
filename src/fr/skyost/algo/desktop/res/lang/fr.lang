@@ -1,5 +1,5 @@
 language.name=Français
-language.version=2
+language.version=3
 
 
 console.title=Console
@@ -7,6 +7,7 @@ console.title=Console
 console.buttons.run=Lancer
 console.buttons.stop=Arrêter
 console.buttons.debug=Debug
+console.buttons.debug.message=Exécution de la ligne "%s"...
 console.buttons.saveoutput=Enregistrer...
 console.buttons.saveoutput.filter=Fichier HTML (*.html)
 
@@ -69,6 +70,7 @@ editor.menu.help=Aide
 editor.menu.help.checkforupdates=Rechercher des mises à jour...
 editor.menu.help.about=À propos...
 
+editor.higherversion=Cet algorithm provient d'une version supérieure. Vous devez mettre à jour votre installation d'%s.
 editor.closedialog=Voulez-vous enregistrer les modifications apportées à %s ?
 
 

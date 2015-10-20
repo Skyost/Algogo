@@ -11,7 +11,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -790,36 +789,48 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * 
 	 * @param file The file.
 	 * 
-	 * @throws IOException If an exception occurs while reading the file.
+	 * @throws Exception If an exception occurs while reading the file.
 	 */
 
-	public final void open(final File file) throws IOException {
-		final String path = file.getPath();
-		final String extension = path.substring(path.lastIndexOf("."));
-		if(extension.equalsIgnoreCase(".agg")) {
-			algorithm = Algorithm.fromJSON(Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8).get(0));
+	public final void open(final File file) throws Exception {
+		try {
+			final String path = file.getPath();
+			final String extension = path.substring(path.lastIndexOf("."));
+			if(extension.equalsIgnoreCase(".agg")) {
+				algorithm = Algorithm.fromJSON(Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8).get(0));
+			}
+			else if(extension.equalsIgnoreCase(".aggc")) {
+				algorithm = Algorithm.fromJSON(Utils.ungzip(Files.readAllBytes(Paths.get(path))));
+			}
+			else {
+				return;
+			}
+			algorithm.addOptionsListener(EditorFrame.this);
+			variables.removeAllChildren();
+			variables.setAlgoLine(algorithm.getVariables());
+			beginning.removeAllChildren();
+			beginning.setAlgoLine(algorithm.getInstructions());
+			for(final AlgoLine variable : algorithm.getVariables().getChildren()) {
+				variables.add(new AlgoTreeNode(variable), false);
+			}
+			for(final AlgoLine instruction : algorithm.getInstructions().getChildren()) {
+				beginning.add(new AlgoTreeNode(instruction), false);
+			}
+			algoPath = path;
+			algoChanged = false;
+			Utils.reloadTree(tree);
+			EditorFrame.this.setTitle(buildTitle());
 		}
-		else if(extension.equalsIgnoreCase(".aggc")) {
-			algorithm = Algorithm.fromJSON(Utils.ungzip(Files.readAllBytes(Paths.get(path))));
+		catch(final IllegalStateException ex) {
+			if(ex.getMessage().contains("higher version")) {
+				JOptionPane.showMessageDialog(this, String.format(LanguageManager.getString("editor.higherversion"), AlgogoDesktop.APP_NAME), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			throw ex;
 		}
-		else {
-			return;
+		catch(final Exception ex) {
+			throw ex;
 		}
-		algorithm.addOptionsListener(EditorFrame.this);
-		variables.removeAllChildren();
-		variables.setAlgoLine(algorithm.getVariables());
-		beginning.removeAllChildren();
-		beginning.setAlgoLine(algorithm.getInstructions());
-		for(final AlgoLine variable : algorithm.getVariables().getChildren()) {
-			variables.add(new AlgoTreeNode(variable), false);
-		}
-		for(final AlgoLine instruction : algorithm.getInstructions().getChildren()) {
-			beginning.add(new AlgoTreeNode(instruction), false);
-		}
-		algoPath = path;
-		algoChanged = false;
-		Utils.reloadTree(tree);
-		EditorFrame.this.setTitle(buildTitle());
 	}
 
 	/**

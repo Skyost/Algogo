@@ -195,7 +195,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	@Override
 	public final void lineExecuted(final AlgoRunnable runnable, final AlgoLine line, final boolean before) {
 		if(chckbxDebug.isSelected() && before) {
-			output.append("Executing line \"" + getLine(line.getInstruction(), line.getArgs()) + "\"..." + LINE_SEPARATOR);
+			output.append(String.format(LanguageManager.getString("console.buttons.debug.message"), getLine(line.getInstruction(), line.getArgs())) + LINE_SEPARATOR);
 		}
 	}
 

@@ -177,12 +177,12 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.createvariable.dialog.title"), LanguageManager.getString("addline.createvariable.dialog.message"), LanguageManager.getString("addline.createvariable.dialog.tip"), varName, varTypes)) {
 						final String var = varName.getText();
-						if(Arrays.asList(variables).contains(var)) {
-							JOptionPane.showMessageDialog(component, LanguageManager.getString("addline.createvariable.error.alreadyexists"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
-							return;
-						}
 						if(!Utils.isAlpha(var)) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString("addline.createvariable.error.notalpha"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						if(Arrays.asList(variables).contains(var)) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString("addline.createvariable.error.alreadyexists"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						if(editMode) {
@@ -213,11 +213,15 @@ public class AddLineDialog extends JDialog {
 						value.setText(args[1]);
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.assignvaluetovariable.dialog.title"), LanguageManager.getString("addline.assignvaluetovariable.dialog.message"), LanguageManager.getString("addline.assignvaluetovariable.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.assignvaluetovariable.dialog.object.value")), value)) {
+						final String newValue = value.getText();
+						if(newValue == null || newValue.length() == 0) {
+							return;
+						}
 						if(node != null) {
-							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString(), value.getText());
+							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString(), newValue);
 						}
 						else {
-							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), value.getText());
+							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), newValue);
 						}
 						if(after != null) {
 							after.run();

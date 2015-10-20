@@ -1,5 +1,5 @@
 language.name=English
-language.version=2
+language.version=3
 
 
 console.title=Console
@@ -7,6 +7,7 @@ console.title=Console
 console.buttons.run=Run
 console.buttons.stop=Stop
 console.buttons.debug=Debug
+console.buttons.debug.message=Executing line "%s"...
 console.buttons.saveoutput=Save output...
 console.buttons.saveoutput.filter=HTML File (*.html)
 
@@ -69,6 +70,7 @@ editor.menu.help=Help
 editor.menu.help.checkforupdates=Check for updates...
 editor.menu.help.about=About...
 
+editor.higherversion=This algorithm comes from an higher version. You need to update your %s version.
 editor.closedialog=Do you want to save the changes of %s ?
 
 

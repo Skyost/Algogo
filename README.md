@@ -13,7 +13,7 @@ Algogo Desktop is the desktop implementation of Algogo.
 * Automatically checks for updates.
 * Print your algorithm or save it in your computer.
 * Give a title and an author to your algorithm.
-* Can be used as learning purposes.
+* Can be used for learning purposes.
 * Export your algorithm to other languages (PHP, JS, ...).
 
 ## Screenshots
@@ -38,5 +38,3 @@ This software has been written in Java using AlgogoCore (see it in the branches)
 
 ## Anything else ?
 Yes a lot ! [Here](http://www.algogo.xyz/) is the website.
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Skyost/algogo/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
