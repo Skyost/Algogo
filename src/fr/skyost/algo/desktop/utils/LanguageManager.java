@@ -42,14 +42,15 @@ public class LanguageManager {
 	 * Gets the String for the specified key.
 	 * 
 	 * @param key The String's key.
+	 * @param args To automatically format the String.
 	 * 
 	 * @return The String.
 	 */
 	
-	public static final String getString(final String key) {
+	public static final String getString(final String key, final Object... args) {
 		final String value = strings.get(key);
 		if(value != null) {
-			return value;
+			return args == null ? value : String.format(value, args);
 		}
 		return NOT_FOUND_STRING;
 	}

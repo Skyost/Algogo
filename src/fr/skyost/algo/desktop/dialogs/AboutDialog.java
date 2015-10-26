@@ -33,7 +33,7 @@ public class AboutDialog extends JDialog {
 	public AboutDialog() {
 		try {
 			final String authors = Utils.join(' ', AlgogoDesktop.APP_AUTHORS);
-			this.setTitle(String.format(LanguageManager.getString("about.title"), AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION, authors));
+			this.setTitle(LanguageManager.getString("about.title", AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION, authors));
 			this.setSize(430, 460);
 			this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			this.setModalityType(ModalityType.APPLICATION_MODAL);
@@ -45,16 +45,16 @@ public class AboutDialog extends JDialog {
 			lblAppName.setFont(lblAppName.getFont().deriveFont(Font.BOLD).deriveFont(30.0f));
 			lblAppName.setForeground(Color.decode("#3b3b3b"));
 			lblAppName.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
-			final JLabelLink lblAppDesktopInfos = new JLabelLink(String.format(LanguageManager.getString("about.desktopinfos"), AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION, authors), new URL(AlgogoDesktop.APP_WEBSITE));
+			final JLabelLink lblAppDesktopInfos = new JLabelLink(LanguageManager.getString("about.desktopinfos", AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION, authors), new URL(AlgogoDesktop.APP_WEBSITE));
 			lblAppDesktopInfos.setHorizontalAlignment(SwingConstants.CENTER);
-			final JLabelLink lblAppCoreInfos = new JLabelLink(String.format(LanguageManager.getString("about.coreinfos"), AlgogoCore.APP_NAME, AlgogoCore.APP_VERSION, Utils.join(' ', AlgogoCore.APP_AUTHORS)), new URL(AlgogoCore.APP_WEBSITE));
+			final JLabelLink lblAppCoreInfos = new JLabelLink(LanguageManager.getString("about.coreinfos", AlgogoCore.APP_NAME, AlgogoCore.APP_VERSION, Utils.join(' ', AlgogoCore.APP_AUTHORS)), new URL(AlgogoCore.APP_WEBSITE));
 			lblAppCoreInfos.setHorizontalAlignment(SwingConstants.CENTER);
 			final JPanel panel = new JPanel();
 			final JLabelLink lblAnimation = new JLabelLink(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/images/about_animation.gif")), new URL(AlgogoDesktop.APP_WEBSITE));
 			lblAnimation.setHorizontalAlignment(SwingConstants.CENTER);
 			lblAnimation.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			panel.add(lblAnimation);
-			final JLabel lblBuiltUsing = new JLabel(String.format(LanguageManager.getString("about.builtusing"), "minimal-json v0.9.2", "Heartbeat v0.1", "JTattoo v1.6.11"));
+			final JLabel lblBuiltUsing = new JLabel(LanguageManager.getString("about.builtusing", "minimal-json v0.9.2", "Heartbeat v0.1", "JTattoo v1.6.11"));
 			lblBuiltUsing.setHorizontalAlignment(SwingConstants.CENTER);
 			final Container content = this.getContentPane();
 			final JButton btnDonate = new JButton(LanguageManager.getString("about.donate"));

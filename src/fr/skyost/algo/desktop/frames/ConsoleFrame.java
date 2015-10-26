@@ -187,7 +187,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		if(currentValue != null) {
 			value.setText(currentValue);
 		}
-		if(Utils.createDialog(this, LanguageManager.getString("console.actionrequired.dialog.title"), String.format(LanguageManager.getString("console.actionrequired.dialog.message"), line.getArgs()[0], LanguageManager.getString(variable.getType() == VariableType.STRING ? "editor.line.instruction.createvariable.type.string" : "editor.line.instruction.createvariable.type.number")), LanguageManager.getString("console.actionrequired.dialog.tip"), value)) {
+		if(Utils.createDialog(this, LanguageManager.getString("console.actionrequired.dialog.title"), LanguageManager.getString("console.actionrequired.dialog.message", line.getArgs()[0], LanguageManager.getString(variable.getType() == VariableType.STRING ? "editor.line.instruction.createvariable.type.string" : "editor.line.instruction.createvariable.type.number")), LanguageManager.getString("console.actionrequired.dialog.tip"), value)) {
 			return value.getText();
 		}
 		return null;
@@ -196,7 +196,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	@Override
 	public final void lineExecuted(final AlgoRunnable runnable, final AlgoLine line, final boolean before) {
 		if(chckbxDebug.isSelected() && before) {
-			output.append(String.format(LanguageManager.getString("console.buttons.debug.message"), getLine(line.getInstruction(), line.getArgs())) + LINE_SEPARATOR);
+			output.append(LanguageManager.getString("console.buttons.debug.message", getLine(line.getInstruction(), line.getArgs())) + LINE_SEPARATOR);
 		}
 	}
 

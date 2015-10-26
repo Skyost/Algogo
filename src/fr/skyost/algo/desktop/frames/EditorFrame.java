@@ -126,7 +126,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			@Override
 			public final void windowClosing(final WindowEvent event) {
 				if(algoChanged) {
-					final int result = JOptionPane.showConfirmDialog(EditorFrame.this, String.format(LanguageManager.getString("editor.closedialog"), algorithm.getTitle()), AlgogoCore.APP_NAME, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+					final int result = JOptionPane.showConfirmDialog(EditorFrame.this, LanguageManager.getString("editor.closedialog", algorithm.getTitle()), AlgogoCore.APP_NAME, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 					if(result == JOptionPane.CANCEL_OPTION) {
 						return;
 					}
@@ -275,7 +275,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			algorithmChanged(false);
 			return true;
 		}
-		JOptionPane.showMessageDialog(this, String.format(LanguageManager.getString("joptionpane.invalidtitle"), newTitle), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(this, LanguageManager.getString("joptionpane.invalidtitle", newTitle), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 		return false;
 	}
 
@@ -286,7 +286,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			algorithmChanged(false);
 			return true;
 		}
-		JOptionPane.showMessageDialog(this, String.format(LanguageManager.getString("joptionpane.invalidauthor"), newAuthor), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(this, LanguageManager.getString("joptionpane.invalidauthor", newAuthor), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 		return false;
 	}
 
@@ -306,7 +306,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		try {
 			final JCheckBox doNotShowItAgain = new JCheckBox(LanguageManager.getString("joptionpane.updateavailable.objects.donotautocheckagain"));
 			doNotShowItAgain.setSelected(AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain);
-			JOptionPane.showMessageDialog(this, new Object[]{new JLabelLink(String.format(LanguageManager.getString("joptionpane.updateavailable.message"), remoteVersion, AlgogoDesktop.APP_WEBSITE), new URL(AlgogoDesktop.APP_WEBSITE)), doNotShowItAgain}, LanguageManager.getString("joptionpane.updateavailable.title"), JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, new Object[]{new JLabelLink(LanguageManager.getString("joptionpane.updateavailable.message", remoteVersion, AlgogoDesktop.APP_WEBSITE), new URL(AlgogoDesktop.APP_WEBSITE)), doNotShowItAgain}, LanguageManager.getString("joptionpane.updateavailable.title"), JOptionPane.INFORMATION_MESSAGE);
 			final boolean value = doNotShowItAgain.isSelected();
 			if(AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain != value) {
 				AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain = value;
@@ -404,7 +404,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 						final String extension = language.getExtension();
 						final JFileChooser chooser = new JFileChooser();
 						final File currentDir = Utils.getParentFolder();
-						chooser.setFileFilter(new FileNameExtensionFilter(String.format(LanguageManager.getString("editor.menu.file.export.filter"), name, extension), extension));
+						chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.export.filter", name, extension), extension));
 						chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 						chooser.setMultiSelectionEnabled(false);
 						chooser.setCurrentDirectory(currentDir);
@@ -570,7 +570,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					@Override
 					public final void updaterUpdateAvailable(final String localVersion, final String remoteVersion) {
 						try {
-							JOptionPane.showMessageDialog(EditorFrame.this, new Object[]{new JLabelLink(String.format(LanguageManager.getString("joptionpane.updateavailable.message"), remoteVersion, AlgogoDesktop.APP_WEBSITE), new URL(AlgogoDesktop.APP_WEBSITE))}, LanguageManager.getString("joptionpane.updateavailable.title"), JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(EditorFrame.this, new Object[]{new JLabelLink(LanguageManager.getString("joptionpane.updateavailable.message", remoteVersion, AlgogoDesktop.APP_WEBSITE), new URL(AlgogoDesktop.APP_WEBSITE))}, LanguageManager.getString("joptionpane.updateavailable.title"), JOptionPane.INFORMATION_MESSAGE);
 						}
 						catch(final Exception ex) {
 							ex.printStackTrace();
@@ -781,7 +781,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 */
 
 	private static final String buildTitle(final String title, final String author) {
-		return String.format(LanguageManager.getString("editor.title"), algoChanged ? "* " : "", title, author, AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION);
+		return LanguageManager.getString("editor.title", algoChanged ? "* " : "", title, author, AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION);
 	}
 
 	/**
@@ -823,7 +823,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		}
 		catch(final IllegalStateException ex) {
 			if(ex.getMessage().contains("higher version")) {
-				JOptionPane.showMessageDialog(this, String.format(LanguageManager.getString("editor.higherversion"), AlgogoDesktop.APP_NAME), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, LanguageManager.getString("editor.higherversion", AlgogoDesktop.APP_NAME), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			throw ex;
