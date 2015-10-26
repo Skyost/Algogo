@@ -12,6 +12,7 @@ import fr.skyost.algo.core.AlgoLine;
 import fr.skyost.algo.core.AlgoRunnable;
 import fr.skyost.algo.core.Instruction;
 import fr.skyost.algo.core.AlgorithmListener.AlgorithmThreadListener;
+import fr.skyost.algo.core.utils.VariableHolder.VariableType;
 import fr.skyost.algo.core.utils.VariableHolder.VariableValue;
 import fr.skyost.algo.desktop.AlgogoDesktop;
 import fr.skyost.algo.desktop.dialogs.ErrorDialog;
@@ -186,7 +187,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		if(currentValue != null) {
 			value.setText(currentValue);
 		}
-		if(Utils.createDialog(this, LanguageManager.getString("console.actionrequired.dialog.title"), String.format(LanguageManager.getString("console.actionrequired.dialog.message"), line.getArgs()[0]), LanguageManager.getString("console.actionrequired.dialog.tip"), value)) {
+		if(Utils.createDialog(this, LanguageManager.getString("console.actionrequired.dialog.title"), String.format(LanguageManager.getString("console.actionrequired.dialog.message"), line.getArgs()[0], LanguageManager.getString(variable.getType() == VariableType.STRING ? "editor.line.instruction.createvariable.type.string" : "editor.line.instruction.createvariable.type.number")), LanguageManager.getString("console.actionrequired.dialog.tip"), value)) {
 			return value.getText();
 		}
 		return null;

@@ -1,5 +1,5 @@
 language.name=English
-language.version=3
+language.version=4
 
 
 console.title=Console
@@ -12,7 +12,7 @@ console.buttons.saveoutput=Save output...
 console.buttons.saveoutput.filter=HTML File (*.html)
 
 console.actionrequired.dialog.title=Enter a value for a variable
-console.actionrequired.dialog.message=Enter the value of "%s" :
+console.actionrequired.dialog.message=Enter the value of "%s" (%s) :
 console.actionrequired.dialog.tip=You can use variables here.
 
 
