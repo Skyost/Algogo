@@ -22,6 +22,7 @@ public class LanguageManager {
 	/**
 	 * If a key is not found.
 	 */
+	
 	public static final String NOT_FOUND_STRING = "Translation not found";
 	private static final HashMap<String, String> strings = new HashMap<String, String>();
 	static {

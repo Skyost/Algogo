@@ -150,10 +150,10 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 					ErrorDialog.errorMessage(ConsoleFrame.this, ex);
 				}
 			}
-			
+
 		});
 		final GroupLayout groupLayout = new GroupLayout(content);
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE).addPreferredGap(ComponentPlacement.RELATED).addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING, groupLayout.createParallelGroup(Alignment.LEADING, false).addComponent(chckbxDebug, Alignment.TRAILING, 0, 0, Short.MAX_VALUE).addComponent(btnRun, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addComponent(btnSaveReport, Alignment.TRAILING)).addContainerGap()));
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup().addContainerGap().addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE).addPreferredGap(ComponentPlacement.RELATED).addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false).addComponent(btnSaveReport, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnRun, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(chckbxDebug, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addContainerGap()));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE).addGroup(groupLayout.createSequentialGroup().addComponent(btnRun).addPreferredGap(ComponentPlacement.RELATED).addComponent(chckbxDebug).addPreferredGap(ComponentPlacement.RELATED, 244, Short.MAX_VALUE).addComponent(btnSaveReport))).addContainerGap()));
 		content.setLayout(groupLayout);
 	}
@@ -255,5 +255,5 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		}
 		return builder.toString();
 	}
-	
+
 }
