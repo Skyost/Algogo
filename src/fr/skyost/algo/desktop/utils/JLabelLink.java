@@ -78,14 +78,7 @@ public class JLabelLink extends JLabel {
 
 			@Override
 			public final void mouseClicked(final MouseEvent event) {
-				try {
-					if(Desktop.isDesktopSupported()) {
-						Desktop.getDesktop().browse(link.toURI());
-					}
-				}
-				catch(final Exception ex) {
-					ErrorDialog.errorMessage(null, ex);
-				}
+				openBrowser(link);
 			}
 
 			@Override
@@ -103,6 +96,23 @@ public class JLabelLink extends JLabel {
 		});
 		this.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		this.setToolTipText(LanguageManager.getString("jlabellink.tooltip", link.toString()));
+	}
+	
+	/**
+	 * Opens a link if browser is supported.
+	 * 
+	 * @param link The link.
+	 */
+	
+	public static final void openBrowser(final URL link) {
+		try {
+			if(Desktop.isDesktopSupported()) {
+				Desktop.getDesktop().browse(link.toURI());
+			}
+		}
+		catch(final Exception ex) {
+			ErrorDialog.errorMessage(null, ex);
+		}
 	}
 	
 }

@@ -587,6 +587,21 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 		});
 		checkForUpdates.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_checkforupdates.png")));
+		final JMenuItem onlineHelp = new JMenuItem(LanguageManager.getString("editor.menu.help.onlinehelp"));
+		onlineHelp.addActionListener(new ActionListener() {
+			
+			@Override
+			public final void actionPerformed(final ActionEvent event) {
+				try {
+					JLabelLink.openBrowser(new URL("https://github.com/Skyost/Algogo/wiki"));
+				}
+				catch(final Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+			
+		});
+		onlineHelp.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_onlinehelp.png")));
 		final JMenuItem about = new JMenuItem(LanguageManager.getString("editor.menu.help.about"));
 		about.addActionListener(new ActionListener() {
 
@@ -618,6 +633,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		menuBar.add(edit);
 		final JMenu help = new JMenu(LanguageManager.getString("editor.menu.help"));
 		help.add(checkForUpdates);
+		help.addSeparator();
+		help.add(onlineHelp);
 		help.add(about);
 		menuBar.add(help);
 		registerKeyListeners(listeners);
