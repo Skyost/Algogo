@@ -13,9 +13,14 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -171,7 +176,7 @@ public class Utils {
 	public static final File getParentFolder() throws UnsupportedEncodingException {
 		return new File(URLDecoder.decode(ClassLoader.getSystemClassLoader().getResource(".").getPath(), StandardCharsets.UTF_8.toString()));
 	}
-	
+
 	/**
 	 * GZIP a String.
 	 * 
@@ -192,7 +197,7 @@ public class Utils {
 		writer.close();
 		return output.toByteArray();
 	}
-	
+
 	/**
 	 * UnGZIP a String.
 	 * 
@@ -202,7 +207,7 @@ public class Utils {
 	 * 
 	 * @throws IOException If an Exception occurs.
 	 */
-	
+
 	public static final String ungzip(final byte[] bytes) throws IOException {
 		final InputStreamReader input = new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(bytes)), StandardCharsets.UTF_8);
 		final StringWriter writer = new StringWriter();
@@ -211,6 +216,87 @@ public class Utils {
 			writer.write(chars, 0, length);
 		}
 		return writer.toString();
+	}
+
+	/**
+	 * for all elements of java.class.path get a Collection of resources Pattern
+	 * pattern = Pattern.compile(".*"); gets all resources
+	 * 
+	 * @param pattern
+	 *            the pattern to match
+	 * @return the resources in the order they are found
+	 */
+	public static Collection<String> getResourcesInPackage(final String packagee) {
+		final ArrayList<String> retval = new ArrayList<String>();
+		final String classPath = System.getProperty("java.class.path", ".");
+		final String[] classPathElements = classPath.split(File.pathSeparator);
+		for(final String element : classPathElements) {
+			retval.addAll(getResourcesInPackage(element, packagee));
+		}
+		return retval;
+	}
+
+	private static Collection<String> getResourcesInPackage(final String element, final String packagee) {
+		final ArrayList<String> retval = new ArrayList<String>();
+		final File file = new File(element);
+		if(file.isDirectory()) {
+			retval.addAll(getResourcesFromDirectory(file, packagee));
+		}
+		else {
+			retval.addAll(getResourcesFromJarFile(file, packagee));
+		}
+		return retval;
+	}
+
+	private static Collection<String> getResourcesFromJarFile(final File file, final String packagee) {
+		final ArrayList<String> retval = new ArrayList<String>();
+		ZipFile zf;
+		try {
+			zf = new ZipFile(file);
+		}
+		catch(final ZipException e) {
+			throw new Error(e);
+		}
+		catch(final IOException e) {
+			throw new Error(e);
+		}
+		final Enumeration<? extends ZipEntry> e = zf.entries();
+		while(e.hasMoreElements()) {
+			final ZipEntry ze = e.nextElement();
+			final String fileName = ze.getName();
+			if(fileName.contains(packagee)) {
+				retval.add(fileName);
+			}
+		}
+		try {
+			zf.close();
+		}
+		catch(final IOException e1) {
+			throw new Error(e1);
+		}
+		return retval;
+	}
+
+	private static Collection<String> getResourcesFromDirectory(final File directory, final String packagee) {
+		final ArrayList<String> retval = new ArrayList<String>();
+		final File[] fileList = directory.listFiles();
+		for(final File file : fileList) {
+			if(file.isDirectory()) {
+				retval.addAll(getResourcesFromDirectory(file, packagee));
+			}
+			else {
+				try {
+					final String fileName = file.getCanonicalPath();
+					if(fileName.contains(packagee)) {
+						retval.add(fileName);
+					}
+				}
+				catch(final IOException e) {
+					throw new Error(e);
+				}
+			}
+		}
+		return retval;
 	}
 
 }

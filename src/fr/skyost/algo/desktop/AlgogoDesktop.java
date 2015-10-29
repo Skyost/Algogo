@@ -3,7 +3,6 @@ package fr.skyost.algo.desktop;
 import java.awt.Font;
 import java.io.File;
 import java.util.Properties;
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
@@ -23,7 +22,6 @@ public class AlgogoDesktop {
 	public static final String APP_WEBSITE = "http://www.algogo.xyz";
 	
 	public static final boolean DEBUG = false;
-	public static final boolean FORCE_ENGLISH = false;
 	
 	public static Font CONSOLE_FONT;
 	public static AppSettings SETTINGS;

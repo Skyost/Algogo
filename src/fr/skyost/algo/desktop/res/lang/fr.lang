@@ -61,10 +61,11 @@ editor.menu.file.print=Imprimer...
 editor.menu.file.close=Fermer
 
 editor.menu.edit=Édition
+editor.menu.edit.options=Options...
 editor.menu.edit.cut=Couper
 editor.menu.edit.copy=Copier
 editor.menu.edit.paste=Coller
-editor.menu.edit.options=Options...
+editor.menu.edit.preferences=Préférences...
 
 editor.menu.help=Aide
 editor.menu.help.checkforupdates=Rechercher des mises à jour...
@@ -137,6 +138,13 @@ options.algorithm.author=Auteur :
 options.save=Enregistrer
 
 
+preferences.title=Préférences
+
+preferences.checkforupdates=Chercher automatiquement des mises à jours au démarrage
+preferences.language=Langage :
+preferences.save=Enregistrer
+
+
 utils.tip=Conseil
 
 
@@ -151,3 +159,4 @@ joptionpane.updateavailable.objects.donotautocheckagain=Ne plus rechercher des m
 joptionpane.updateavailable.message=<html><b>Une mise à jour est disponible : v%s.</b><br>Allez sur <i>%s</i> pour télécharger la dernière version.</html>
 joptionpane.updatenotavailable.title=Pas de mise à jour
 joptionpane.updatenotavailable.message=Il n'y a pour l'instant pas de mise à jour disponible.
+joptionpane.settingssaved=Paramètres enregistrés. Veuillez redémarrer l'application.

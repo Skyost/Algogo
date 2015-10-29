@@ -11,6 +11,7 @@ import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Locale;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -19,6 +20,8 @@ public class AppSettings {
 	
 	@SerializationOptions(name = "upater-donotautocheckagain")
 	public boolean updaterDoNotAutoCheckAgain = false;
+	@SerializationOptions(name = "custom-language")
+	public String customLanguage = Locale.getDefault().getLanguage().toLowerCase();
 	
 	private transient File file;
 	
@@ -39,6 +42,7 @@ public class AppSettings {
 			this.save();
 			return;
 		}
+		boolean needToSave = false;
 		final JsonObject object = JsonValue.readFrom(Files.readAllLines(Paths.get(file.getPath()), StandardCharsets.UTF_8).get(0)).asObject();
 		for(final Field field : this.getClass().getFields()) {
 			final SerializationOptions options = this.getAnnotation(field);
@@ -46,18 +50,26 @@ public class AppSettings {
 				continue;
 			}
 			final Class<?> type = field.getType();
-			if(type.equals(boolean.class)) {
-				field.set(this, object.get(options.name()).asBoolean());
+			final JsonValue value = object.get(options.name());
+			if(value == null) {
+				needToSave = true;
 				continue;
 			}
-			if(type.equals(int.class)) {
-				field.set(this, object.get(options.name()).asInt());
+			if(type.equals(boolean.class)) {
+				field.set(this, value.asBoolean());
 				continue;
 			}
 			if(type.equals(String.class)) {
-				field.set(this, object.get(options.name()).asString());
+				field.set(this, value.asString());
 				continue;
 			}
+			if(type.equals(int.class)) {
+				field.set(this, value.asInt());
+				continue;
+			}
+		}
+		if(needToSave) {
+			save();
 		}
 	}
 	

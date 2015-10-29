@@ -66,6 +66,7 @@ import fr.skyost.algo.desktop.dialogs.AboutDialog;
 import fr.skyost.algo.desktop.dialogs.AddLineDialog;
 import fr.skyost.algo.desktop.dialogs.ErrorDialog;
 import fr.skyost.algo.desktop.dialogs.OptionsDialog;
+import fr.skyost.algo.desktop.dialogs.PreferencesDialog;
 import fr.skyost.algo.desktop.dialogs.AddLineDialog.AlgoLineListener;
 import fr.skyost.algo.desktop.utils.AlgoTreeNode;
 import fr.skyost.algo.desktop.utils.GithubUpdater;
@@ -549,6 +550,16 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		copy.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_copy.png")));
 		copy.setAccelerator(KeyStroke.getKeyStroke('C', ctrl));
 		listeners.put(KeyStroke.getKeyStroke('C', ctrl), copyActionListener);
+		final JMenuItem preferences = new JMenuItem(LanguageManager.getString("editor.menu.edit.preferences"));
+		preferences.addActionListener(new ActionListener() {
+			
+			@Override
+			public final void actionPerformed(final ActionEvent event) {
+				new PreferencesDialog().setVisible(true);
+			}
+			
+		});
+		preferences.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_preferences.png")));
 		final JMenuItem checkForUpdates = new JMenuItem(LanguageManager.getString("editor.menu.help.checkforupdates"));
 		checkForUpdates.addActionListener(new ActionListener() {
 
@@ -588,7 +599,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		});
 		checkForUpdates.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_checkforupdates.png")));
 		final JMenuItem onlineHelp = new JMenuItem(LanguageManager.getString("editor.menu.help.onlinehelp"));
-		onlineHelp.addActionListener(new ActionListener() {
+		final ActionListener onlineHelpListener = new ActionListener() {
 			
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
@@ -600,8 +611,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				}
 			}
 			
-		});
+		};
+		onlineHelp.addActionListener(onlineHelpListener);
 		onlineHelp.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_onlinehelp.png")));
+		onlineHelp.setAccelerator(KeyStroke.getKeyStroke('H', ctrl));
+		listeners.put(KeyStroke.getKeyStroke('H', ctrl), onlineHelpListener);
 		final JMenuItem about = new JMenuItem(LanguageManager.getString("editor.menu.help.about"));
 		about.addActionListener(new ActionListener() {
 
@@ -630,6 +644,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		edit.add(cut);
 		edit.add(copy);
 		edit.add(paste);
+		edit.addSeparator();
+		edit.add(preferences);
 		menuBar.add(edit);
 		final JMenu help = new JMenu(LanguageManager.getString("editor.menu.help"));
 		help.add(checkForUpdates);

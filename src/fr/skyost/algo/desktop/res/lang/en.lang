@@ -61,10 +61,11 @@ editor.menu.file.print=Print...
 editor.menu.file.close=Close
 
 editor.menu.edit=Edit
+editor.menu.edit.options=Options...
 editor.menu.edit.cut=Cut
 editor.menu.edit.copy=Copy
 editor.menu.edit.paste=Paste
-editor.menu.edit.options=Options...
+editor.menu.edit.preferences=Preferences...
 
 editor.menu.help=Help
 editor.menu.help.checkforupdates=Check for updates...
@@ -137,6 +138,13 @@ options.algorithm.author=Author :
 options.save=Save
 
 
+preferences.title=Preferences
+
+preferences.checkforupdates=Automatically check for updates on startup
+preferences.language=Language :
+preferences.save=Save
+
+
 utils.tip=Tip
 
 
@@ -151,3 +159,4 @@ joptionpane.updateavailable.objects.donotautocheckagain=Do not automatically che
 joptionpane.updateavailable.message=<html><b>An update is available : v%s.</b><br>Please go on <i>%s</i> to get the latest release.</html>
 joptionpane.updatenotavailable.title=No update
 joptionpane.updatenotavailable.message=There is currently no update available.
+joptionpane.settingssaved=Settings saved. Please restart the application.
