@@ -1,5 +1,5 @@
 # <img src="http://www.algogo.xyz/assets/img/icon.png" height="48px" width="48px" title="Icon" alt="Icon"/> Algogo Desktop
-*Algogo is an algorithm interpreter. Lightweight (less than 1 mb) and easy to use, it is open-source and can be translated in any language !*
+*Algogo is an editor and an algorithm interpreter. Lightweight and easy to use, it is free and open-source.*
 
 ## What is it ?
 Algogo Desktop is the desktop implementation of Algogo.
