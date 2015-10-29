@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import javax.swing.JLabel;
@@ -27,6 +26,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
+
+import fr.skyost.algo.desktop.dialogs.ErrorDialog;
 
 public class Utils {
 
@@ -217,16 +218,18 @@ public class Utils {
 		}
 		return writer.toString();
 	}
-
+	
 	/**
-	 * for all elements of java.class.path get a Collection of resources Pattern
-	 * pattern = Pattern.compile(".*"); gets all resources
+	 * Gets a list of resources in the selected package.
 	 * 
-	 * @param pattern
-	 *            the pattern to match
-	 * @return the resources in the order they are found
+	 * @param packagee The package.
+	 * 
+	 * @return A list of resources.
+	 * 
+	 * @author <a href="http://stackoverflow.com/a/3923182/3608831">Jigar Joshi</a>.
 	 */
-	public static Collection<String> getResourcesInPackage(final String packagee) {
+	
+	public static final Collection<String> getResourcesInPackage(final String packagee) {
 		final ArrayList<String> retval = new ArrayList<String>();
 		final String classPath = System.getProperty("java.class.path", ".");
 		final String[] classPathElements = classPath.split(File.pathSeparator);
@@ -236,67 +239,50 @@ public class Utils {
 		return retval;
 	}
 
-	private static Collection<String> getResourcesInPackage(final String element, final String packagee) {
-		final ArrayList<String> retval = new ArrayList<String>();
+	private static final Collection<String> getResourcesInPackage(final String element, final String packagee) {
 		final File file = new File(element);
-		if(file.isDirectory()) {
-			retval.addAll(getResourcesFromDirectory(file, packagee));
-		}
-		else {
-			retval.addAll(getResourcesFromJarFile(file, packagee));
-		}
-		return retval;
+		return file.isDirectory() ? getResourcesFromDirectory(file, packagee) : getResourcesFromJarFile(file, packagee);
 	}
 
-	private static Collection<String> getResourcesFromJarFile(final File file, final String packagee) {
-		final ArrayList<String> retval = new ArrayList<String>();
-		ZipFile zf;
+	private static final Collection<String> getResourcesFromJarFile(final File file, final String packagee) {
+		final ArrayList<String> resources = new ArrayList<String>();
 		try {
-			zf = new ZipFile(file);
-		}
-		catch(final ZipException e) {
-			throw new Error(e);
-		}
-		catch(final IOException e) {
-			throw new Error(e);
-		}
-		final Enumeration<? extends ZipEntry> e = zf.entries();
-		while(e.hasMoreElements()) {
-			final ZipEntry ze = e.nextElement();
-			final String fileName = ze.getName();
-			if(fileName.contains(packagee)) {
-				retval.add(fileName);
+			final ZipFile zip = new ZipFile(file);
+			final Enumeration<? extends ZipEntry> enumeration = zip.entries();
+			while(enumeration.hasMoreElements()) {
+				final ZipEntry entry = enumeration.nextElement();
+				final String fileName = entry.getName();
+				if(fileName.contains(packagee)) {
+					resources.add(fileName);
+				}
 			}
+			zip.close();
 		}
-		try {
-			zf.close();
+		catch(final Exception ex) {
+			ErrorDialog.errorMessage(null, ex, true);
 		}
-		catch(final IOException e1) {
-			throw new Error(e1);
-		}
-		return retval;
+		return resources;
 	}
 
-	private static Collection<String> getResourcesFromDirectory(final File directory, final String packagee) {
-		final ArrayList<String> retval = new ArrayList<String>();
-		final File[] fileList = directory.listFiles();
-		for(final File file : fileList) {
+	private static final Collection<String> getResourcesFromDirectory(final File directory, final String packagee) {
+		final ArrayList<String> values = new ArrayList<String>();
+		for(final File file : directory.listFiles()) {
 			if(file.isDirectory()) {
-				retval.addAll(getResourcesFromDirectory(file, packagee));
+				values.addAll(getResourcesFromDirectory(file, packagee));
 			}
 			else {
 				try {
 					final String fileName = file.getCanonicalPath();
 					if(fileName.contains(packagee)) {
-						retval.add(fileName);
+						values.add(fileName);
 					}
 				}
-				catch(final IOException e) {
-					throw new Error(e);
+				catch(final Exception ex) {
+					ErrorDialog.errorMessage(null, ex, true);
 				}
 			}
 		}
-		return retval;
+		return values;
 	}
 
 }
