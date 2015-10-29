@@ -29,7 +29,7 @@ public class LanguageManager {
 		try {
 			final Properties properties = new Properties();
 			final InputStream input = AlgogoDesktop.class.getResourceAsStream("/fr/skyost/algo/desktop/res/lang/" + Locale.getDefault().getLanguage() + ".lang");
-			properties.load(new InputStreamReader(input == null ? AlgogoDesktop.class.getResourceAsStream("/fr/skyost/algo/desktop/res/lang/en.lang") : input, StandardCharsets.UTF_8));
+			properties.load(new InputStreamReader(input == null || AlgogoDesktop.FORCE_ENGLISH ? AlgogoDesktop.class.getResourceAsStream("/fr/skyost/algo/desktop/res/lang/en.lang") : input, StandardCharsets.UTF_8));
 			for(final Entry<Object, Object> entry : properties.entrySet()) {
 				strings.put(entry.getKey().toString(), entry.getValue().toString());
 			}

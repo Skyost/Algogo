@@ -23,6 +23,7 @@ public class AlgogoDesktop {
 	public static final String APP_WEBSITE = "http://www.algogo.xyz";
 	
 	public static final boolean DEBUG = false;
+	public static final boolean FORCE_ENGLISH = false;
 	
 	public static Font CONSOLE_FONT;
 	public static AppSettings SETTINGS;
