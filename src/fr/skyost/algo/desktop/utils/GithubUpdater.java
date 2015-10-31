@@ -46,7 +46,7 @@ public class GithubUpdater extends Thread {
 		caller.updaterStarted();
 		try {
 			final HttpURLConnection connection = (HttpURLConnection)new URL("https://api.github.com/repos/" + githubAuthor + "/" + githubRepo + "/releases").openConnection();
-			connection.addRequestProperty("User-Agent", UPDATER_NAME + " by " + Utils.join(' ', UPDATER_AUTHORS) + " v" + UPDATER_VERSION);
+			connection.addRequestProperty("User-Agent", UPDATER_NAME + " by " + Utils.join(" ", UPDATER_AUTHORS) + " v" + UPDATER_VERSION);
 			final String response = connection.getResponseCode() + " " + connection.getResponseMessage();
 			caller.updaterResponse(response);
 			if(!response.startsWith("2")) {

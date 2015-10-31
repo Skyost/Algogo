@@ -32,7 +32,7 @@ public class AboutDialog extends JDialog {
 
 	public AboutDialog() {
 		try {
-			final String authors = Utils.join(' ', AlgogoDesktop.APP_AUTHORS);
+			final String authors = Utils.join(" ", AlgogoDesktop.APP_AUTHORS);
 			this.setTitle(LanguageManager.getString("about.title", AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION, authors));
 			this.setSize(430, 460);
 			this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -47,7 +47,7 @@ public class AboutDialog extends JDialog {
 			lblAppName.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
 			final JLabelLink lblAppDesktopInfos = new JLabelLink(LanguageManager.getString("about.desktopinfos", AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION, authors), new URL(AlgogoDesktop.APP_WEBSITE));
 			lblAppDesktopInfos.setHorizontalAlignment(SwingConstants.CENTER);
-			final JLabelLink lblAppCoreInfos = new JLabelLink(LanguageManager.getString("about.coreinfos", AlgogoCore.APP_NAME, AlgogoCore.APP_VERSION, Utils.join(' ', AlgogoCore.APP_AUTHORS)), new URL(AlgogoCore.APP_WEBSITE));
+			final JLabelLink lblAppCoreInfos = new JLabelLink(LanguageManager.getString("about.coreinfos", AlgogoCore.APP_NAME, AlgogoCore.APP_VERSION, Utils.join(" ", AlgogoCore.APP_AUTHORS)), new URL(AlgogoCore.APP_WEBSITE));
 			lblAppCoreInfos.setHorizontalAlignment(SwingConstants.CENTER);
 			final JPanel panel = new JPanel();
 			final JLabelLink lblAnimation = new JLabelLink(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/images/about_animation.gif")), new URL(AlgogoDesktop.APP_WEBSITE));
@@ -73,7 +73,7 @@ public class AboutDialog extends JDialog {
 						}
 					}
 				}
-				
+
 			});
 			final GroupLayout groupLayout = new GroupLayout(content);
 			groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblAppDesktopInfos, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE).addContainerGap()).addGroup(groupLayout.createSequentialGroup().addComponent(lblAppName, GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE).addGap(0)).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblAppCoreInfos, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE).addContainerGap()).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(panel, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE).addContainerGap()).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblBuiltUsing, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE).addContainerGap()).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(btnDonate, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE).addContainerGap()));
@@ -84,5 +84,5 @@ public class AboutDialog extends JDialog {
 			ErrorDialog.errorMessage(this, ex);
 		}
 	}
-	
+
 }

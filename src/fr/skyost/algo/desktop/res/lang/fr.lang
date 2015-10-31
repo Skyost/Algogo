@@ -117,7 +117,7 @@ addline.ifelse=Si... Sinon...
 addline.ifelse.dialog.title=Ajouter une condition...
 addline.ifelse.dialog.message=Si :
 addline.ifelse.dialog.object.addelse=Ajouter Sinon
-addline.ifelse.dialog.tip=Pour le moment vous ne pouvez comparer que les nombres.
+addline.ifelse.dialog.tip=Pour le moment vous ne pouvez comparer que les nombres.<br>Vous ne pouvez mettre aussi qu'un booléen.
 addline.while=Tant que...
 addline.while.dialog.title=Ajouter une boucle...
 addline.while.dialog.message=Tant que :
@@ -127,7 +127,7 @@ addline.for.dialog.title=Ajouter une boucle pour...
 addline.for.dialog.message=Pour :
 addline.for.dialog.object.from=Allant de :
 addline.for.dialog.object.to=À :
-addline.for.dialog.tip=Vous ne devez utiliser que des nombres ici.
+addline.for.dialog.tip=Vous pouvez aussi utiliser des variables ici.
 
 
 options.title=Options
@@ -136,6 +136,9 @@ options.algorithm.options=Options de l'Algorithme
 options.algorithm.title=Titre :
 options.algorithm.author=Auteur :
 options.save=Enregistrer
+
+
+picker.title=Sélecteur de fonction
 
 
 preferences.title=Préférences
@@ -160,3 +163,4 @@ joptionpane.updateavailable.message=<html><b>Une mise à jour est disponible : v
 joptionpane.updatenotavailable.title=Pas de mise à jour
 joptionpane.updatenotavailable.message=Il n'y a pour l'instant pas de mise à jour disponible.
 joptionpane.settingssaved=Paramètres enregistrés. Veuillez redémarrer l'application.
+joptionpane.fillfields=Vous devez remplir tous les champs !

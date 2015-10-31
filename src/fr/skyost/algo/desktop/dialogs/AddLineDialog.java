@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -31,6 +32,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import com.wordpress.tips4java.ComponentBorder;
 
 public class AddLineDialog extends JDialog {
 
@@ -177,7 +180,7 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.createvariable.dialog.title"), LanguageManager.getString("addline.createvariable.dialog.message"), LanguageManager.getString("addline.createvariable.dialog.tip"), varName, varTypes)) {
 						final String var = varName.getText();
-						if(!Utils.isAlpha(var)) {
+						if(!Utils.isAlpha(var) || var.length() == 0) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString("addline.createvariable.error.notalpha"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
@@ -205,6 +208,7 @@ public class AddLineDialog extends JDialog {
 				public final void actionPerformed(final ActionEvent event) {
 					final JComboBox<String> cmboxVariables = new JComboBox<String>(variables);
 					final JTextField value = new JTextField();
+					attachPickerButton(value);
 					if(editMode) {
 						final String[] args = node.getAlgoLine().getArgs();
 						if(Arrays.asList(variables).contains(args[0])) {
@@ -215,6 +219,7 @@ public class AddLineDialog extends JDialog {
 					if(Utils.createDialog(component, LanguageManager.getString("addline.assignvaluetovariable.dialog.title"), LanguageManager.getString("addline.assignvaluetovariable.dialog.message"), LanguageManager.getString("addline.assignvaluetovariable.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.assignvaluetovariable.dialog.object.value")), value)) {
 						final String newValue = value.getText();
 						if(newValue == null || newValue.length() == 0) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						if(node != null) {
@@ -297,11 +302,16 @@ public class AddLineDialog extends JDialog {
 						lineBreak.setSelected(Boolean.valueOf(args[1]));
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.showmessage.dialog.title"), LanguageManager.getString("addline.showmessage.dialog.message"), LanguageManager.getString("addline.showmessage.dialog.tip"), value, lineBreak)) {
+						final String message = value.getText();
+						if(message.length() == 0) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 						if(node != null) {
-							caller.lineEdited(node, value.getText(), String.valueOf(lineBreak.isSelected()));
+							caller.lineEdited(node, message, String.valueOf(lineBreak.isSelected()));
 						}
 						else {
-							caller.lineAdded(instruction, value.getText(), String.valueOf(lineBreak.isSelected()));
+							caller.lineAdded(instruction, message, String.valueOf(lineBreak.isSelected()));
 						}
 						if(after != null) {
 							after.run();
@@ -316,6 +326,7 @@ public class AddLineDialog extends JDialog {
 				@Override
 				public final void actionPerformed(final ActionEvent event) {
 					final JTextField condition = new JTextField();
+					attachPickerButton(condition);
 					final JCheckBox addElse = new JCheckBox(LanguageManager.getString("addline.ifelse.dialog.object.addelse"));
 					if(editMode) {
 						final String[] args = node.getAlgoLine().getArgs();
@@ -323,12 +334,17 @@ public class AddLineDialog extends JDialog {
 						addElse.setSelected(Boolean.valueOf(args[1]));
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.ifelse.dialog.title"), LanguageManager.getString("addline.ifelse.dialog.message"), LanguageManager.getString("addline.ifelse.dialog.tip"), condition, addElse)) {
+						final String newCondition = condition.getText();
+						if(newCondition.length() == 0) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 						final boolean selected = addElse.isSelected();
 						if(node != null) {
-							caller.lineEdited(node, condition.getText(), String.valueOf(selected));
+							caller.lineEdited(node, newCondition, String.valueOf(selected));
 						}
 						else {
-							caller.lineAdded(instruction, condition.getText(), String.valueOf(selected));
+							caller.lineAdded(instruction, newCondition, String.valueOf(selected));
 						}
 						if(selected) {
 							caller.lineAdded(Instruction.ELSE, condition.getText());
@@ -346,15 +362,21 @@ public class AddLineDialog extends JDialog {
 				@Override
 				public final void actionPerformed(final ActionEvent event) {
 					final JTextField condition = new JTextField();
+					attachPickerButton(condition);
 					if(editMode) {
 						condition.setText(node.getAlgoLine().getArgs()[0]);
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.while.dialog.title"), LanguageManager.getString("addline.while.dialog.message"), LanguageManager.getString("addline.while.dialog.tip"), condition)) {
+						final String newCondition = condition.getText();
+						if(newCondition.length() == 0) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 						if(node != null) {
-							caller.lineEdited(node, condition.getText());
+							caller.lineEdited(node, newCondition);
 						}
 						else {
-							caller.lineAdded(instruction, condition.getText());
+							caller.lineAdded(instruction, newCondition);
 						}
 						if(after != null) {
 							after.run();
@@ -370,7 +392,9 @@ public class AddLineDialog extends JDialog {
 				public final void actionPerformed(final ActionEvent event) {
 					final JComboBox<String> cmboxVariables = new JComboBox<String>(variables);
 					final JTextField from = new JTextField();
+					attachPickerButton(from);
 					final JTextField to = new JTextField();
+					attachPickerButton(to);
 					if(editMode) {
 						final String[] args = node.getAlgoLine().getArgs();
 						if(Arrays.asList(variables).contains(args[0])) {
@@ -380,11 +404,17 @@ public class AddLineDialog extends JDialog {
 						to.setText(args[2]);
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.for.dialog.title"), LanguageManager.getString("addline.for.dialog.message"), LanguageManager.getString("addline.for.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.for.dialog.object.from")), from, new JLabel(LanguageManager.getString("addline.for.dialog.object.to")), to)) {
+						final String newFrom = from.getText();
+						final String newTo = to.getText();
+						if(newFrom.length() == 0 || newTo.length() == 0) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 						if(node != null) {
-							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString(), from.getText(), to.getText());
+							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString(), newFrom, newTo);
 						}
 						else {
-							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), from.getText(), to.getText());
+							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), newFrom, newTo);
 						}
 						if(after != null) {
 							after.run();
@@ -396,6 +426,26 @@ public class AddLineDialog extends JDialog {
 		default:
 			return null;
 		}
+	}
+	
+	/**
+	 * Attaches a picker button to a text field.
+	 * 
+	 * @param textField The text field.
+	 */
+	
+	public static final void attachPickerButton(final JTextField textField) {
+		final JButton picker = new JButton(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_picker.png")));
+		picker.addActionListener(new ActionListener() {
+
+			@Override
+			public final void actionPerformed(final ActionEvent event) {
+				new PickerDialog(textField).setVisible(true);
+			}
+			
+		});
+		final ComponentBorder border = new ComponentBorder(picker);
+		border.install(textField);
 	}
 	
 	/**

@@ -15,6 +15,7 @@ import fr.skyost.algo.core.AlgorithmListener.AlgorithmThreadListener;
 import fr.skyost.algo.core.utils.VariableHolder.VariableType;
 import fr.skyost.algo.core.utils.VariableHolder.VariableValue;
 import fr.skyost.algo.desktop.AlgogoDesktop;
+import fr.skyost.algo.desktop.dialogs.AddLineDialog;
 import fr.skyost.algo.desktop.dialogs.ErrorDialog;
 import fr.skyost.algo.desktop.utils.LanguageManager;
 import fr.skyost.algo.desktop.utils.Utils;
@@ -183,6 +184,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 			return null;
 		}
 		final JTextField value = new JTextField();
+		AddLineDialog.attachPickerButton(value);
 		final String currentValue = variable.getValue();
 		if(currentValue != null) {
 			value.setText(currentValue);

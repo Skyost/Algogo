@@ -58,18 +58,18 @@ public class Utils {
 	/**
 	 * Joins a String array.
 	 * 
-	 * @param joiner The character used to join arrays.
+	 * @param joiner The String used to join arrays.
 	 * @param strings The array.
 	 * 
 	 * @return The joined array.
 	 */
 
-	public static final String join(final char joiner, final String... strings) {
+	public static final String join(final String joiner, final String... strings) {
 		final StringBuilder builder = new StringBuilder();
 		for(final String string : strings) {
 			builder.append(string + joiner);
 		}
-		builder.setLength(builder.length() - 1);
+		builder.setLength(builder.length() - joiner.length());
 		return builder.toString();
 	}
 

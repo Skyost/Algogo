@@ -30,7 +30,6 @@ public class AlgogoDesktop {
 		try {
 			SETTINGS = new AppSettings(new File(Utils.getParentFolder(), "settings.json"));
 			SETTINGS.load();
-			//SETTINGS.save(); // Used to save new fields, will be used in next versions.
 			final Properties properties = new Properties();
 			properties.put("logoString", APP_NAME);
 			AcrylLookAndFeel.setTheme(properties);

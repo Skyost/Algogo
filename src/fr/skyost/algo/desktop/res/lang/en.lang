@@ -117,7 +117,7 @@ addline.ifelse=If... Else...
 addline.ifelse.dialog.title=Add a condition...
 addline.ifelse.dialog.message=If :
 addline.ifelse.dialog.object.addelse=Add Else
-addline.ifelse.dialog.tip=At the moment, you can only compare numbers.
+addline.ifelse.dialog.tip=At the moment, you can only compare numbers.<br>You can put a simple boolean here too.
 addline.while=While...
 addline.while.dialog.title=Add a loop...
 addline.while.dialog.message=While :
@@ -127,7 +127,7 @@ addline.for.dialog.title=Add a for loop...
 addline.for.dialog.message=For :
 addline.for.dialog.object.from=From :
 addline.for.dialog.object.to=To :
-addline.for.dialog.tip=You must only use numbers here.
+addline.for.dialog.tip=You can use variables here.
 
 
 options.title=Options
@@ -136,6 +136,9 @@ options.algorithm.options=Algorithm's Options
 options.algorithm.title=Title :
 options.algorithm.author=Author :
 options.save=Save
+
+
+picker.title=Function picker
 
 
 preferences.title=Preferences
@@ -160,3 +163,4 @@ joptionpane.updateavailable.message=<html><b>An update is available : v%s.</b><b
 joptionpane.updatenotavailable.title=No update
 joptionpane.updatenotavailable.message=There is currently no update available.
 joptionpane.settingssaved=Settings saved. Please restart the application.
+joptionpane.fillfields=You must fill all fields !

@@ -52,7 +52,6 @@ import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import fr.skyost.algo.core.AlgoLine;
-import fr.skyost.algo.core.AlgogoCore;
 import fr.skyost.algo.core.Algorithm;
 import fr.skyost.algo.core.Instruction;
 import fr.skyost.algo.core.Keyword;
@@ -127,7 +126,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			@Override
 			public final void windowClosing(final WindowEvent event) {
 				if(algoChanged) {
-					final int result = JOptionPane.showConfirmDialog(EditorFrame.this, LanguageManager.getString("editor.closedialog", algorithm.getTitle()), AlgogoCore.APP_NAME, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+					final int result = JOptionPane.showConfirmDialog(EditorFrame.this, LanguageManager.getString("editor.closedialog", algorithm.getTitle()), AlgogoDesktop.APP_NAME, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 					if(result == JOptionPane.CANCEL_OPTION) {
 						return;
 					}
