@@ -1,5 +1,6 @@
 package fr.skyost.algo.desktop.dialogs;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -22,7 +23,7 @@ public class OptionsDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	public OptionsDialog() {
+	public OptionsDialog(final Component component) {
 		final String algoTitle = EditorFrame.algorithm.getTitle();
 		final String algoAuthor = EditorFrame.algorithm.getAuthor();
 		this.setTitle(LanguageManager.getString("options.title"));
@@ -31,7 +32,6 @@ public class OptionsDialog extends JDialog {
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setModal(true);
-		this.setLocationRelativeTo(null);
 		final JLabel lblAlgorithmOptions = new JLabel(LanguageManager.getString("options.algorithm.options"));
 		lblAlgorithmOptions.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAlgorithmOptions.setFont(lblAlgorithmOptions.getFont().deriveFont(32.0f));
@@ -63,6 +63,7 @@ public class OptionsDialog extends JDialog {
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(lblAlgorithmOptions, GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE).addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(lblTitle).addComponent(lblAuthor)).addPreferredGap(ComponentPlacement.RELATED).addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(txtfldTitle, GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE).addComponent(txtfldAuthor, GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE))).addComponent(btnSave, GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)).addContainerGap()));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(lblAlgorithmOptions).addPreferredGap(ComponentPlacement.UNRELATED).addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(txtfldTitle, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lblTitle)).addPreferredGap(ComponentPlacement.RELATED).addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(txtfldAuthor, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(lblAuthor)).addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE).addComponent(btnSave).addContainerGap()));
 		content.setLayout(groupLayout);
+		this.setLocationRelativeTo(component);
 	}
 
 }

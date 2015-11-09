@@ -80,7 +80,7 @@ about.title=%s v%s - By %s
 
 about.desktopinfos=<html><b>%s</b> <i>v%s - By %s</i></html>
 about.coreinfos=<html><b>%s</b> <i>v%s - By %s</i></html>
-about.builtusing=Built using %s, %s and %s.
+about.builtusing=Fait avec %s, %s, %s and %s.
 about.donate=Buy me a coffee !
 
 

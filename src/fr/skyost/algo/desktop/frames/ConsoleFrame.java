@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 
 import javax.swing.JTextField;
@@ -52,11 +53,10 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
 	private AlgoRunnable currentThread;
 
-	public ConsoleFrame() {
+	public ConsoleFrame(final Component component) {
 		this.setTitle(LanguageManager.getString("console.title"));
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
 		this.setSize(500, 376);
-		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.addWindowListener(new WindowListener() {
 
@@ -157,6 +157,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup().addContainerGap().addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE).addPreferredGap(ComponentPlacement.RELATED).addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false).addComponent(btnSaveReport, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnRun, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(chckbxDebug, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addContainerGap()));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE).addGroup(groupLayout.createSequentialGroup().addComponent(btnRun).addPreferredGap(ComponentPlacement.RELATED).addComponent(chckbxDebug).addPreferredGap(ComponentPlacement.RELATED, 244, Short.MAX_VALUE).addComponent(btnSaveReport))).addContainerGap()));
 		content.setLayout(groupLayout);
+		this.setLocationRelativeTo(component);
 	}
 
 	@Override
@@ -184,7 +185,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 			return null;
 		}
 		final JTextField value = new JTextField();
-		AddLineDialog.attachPickerButton(value);
+		AddLineDialog.attachPickerButton(this, value);
 		final String currentValue = variable.getValue();
 		if(currentValue != null) {
 			value.setText(currentValue);

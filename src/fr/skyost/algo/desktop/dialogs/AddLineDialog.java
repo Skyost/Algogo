@@ -10,6 +10,7 @@ import javax.swing.JDialog;
 
 import fr.skyost.algo.core.AlgoLine;
 import fr.skyost.algo.core.Instruction;
+import fr.skyost.algo.core.utils.VariableHolder.VariableType;
 import fr.skyost.algo.desktop.AlgogoDesktop;
 import fr.skyost.algo.desktop.frames.EditorFrame;
 import fr.skyost.algo.desktop.utils.AlgoTreeNode;
@@ -38,8 +39,8 @@ import com.wordpress.tips4java.ComponentBorder;
 public class AddLineDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-
-	public AddLineDialog(final AlgoLineListener caller) {
+	
+	public AddLineDialog(final Component component, final AlgoLineListener caller) {
 		this.setTitle(LanguageManager.getString("addline.title"));
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
 		this.setSize(500, 212);
@@ -47,8 +48,7 @@ public class AddLineDialog extends JDialog {
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setModal(true);
 		this.setResizable(false);
-		this.setLocationRelativeTo(null);
-		final LinkedHashMap<String, Integer> variables = getVariables();
+		final LinkedHashMap<String, VariableType> variables = getVariables();
 		final Runnable dispose = new Runnable() {
 
 			@Override
@@ -75,8 +75,8 @@ public class AddLineDialog extends JDialog {
 		final JButton btnWhile = new JButton(LanguageManager.getString("addline.while"));
 		btnWhile.addActionListener(listenerForInstruction(caller, this, Instruction.WHILE, dispose));
 		final List<String> variablesNumber = new ArrayList<String>();
-		for(final Entry<String, Integer> entry : variables.entrySet()) {
-			if(entry.getValue() == 1) {
+		for(final Entry<String, VariableType> entry : variables.entrySet()) {
+			if(entry.getValue() == VariableType.NUMBER) {
 				variablesNumber.add(entry.getKey());
 			}
 		}
@@ -88,13 +88,14 @@ public class AddLineDialog extends JDialog {
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false).addComponent(btnReadVariable, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnWhile, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnIfThenElse, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnAssignVariable, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 177, Short.MAX_VALUE).addComponent(btnCreateVariable, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 216, GroupLayout.PREFERRED_SIZE)).addPreferredGap(ComponentPlacement.RELATED, 49, Short.MAX_VALUE).addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false).addComponent(btnFor, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnShowMessage, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnShowVariable, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)).addContainerGap()));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(btnCreateVariable).addComponent(btnShowVariable)).addGap(5).addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(btnAssignVariable).addComponent(btnShowMessage)).addPreferredGap(ComponentPlacement.RELATED).addComponent(btnReadVariable).addPreferredGap(ComponentPlacement.RELATED, 28, Short.MAX_VALUE).addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(btnIfThenElse).addComponent(btnFor)).addPreferredGap(ComponentPlacement.RELATED).addComponent(btnWhile).addGap(12)));
 		content.setLayout(groupLayout);
+		this.setLocationRelativeTo(component);
 	}
 
-	private static final LinkedHashMap<String, Integer> getVariables() {
-		final LinkedHashMap<String, Integer> variables = new LinkedHashMap<String, Integer>();
+	private static final LinkedHashMap<String, VariableType> getVariables() {
+		final LinkedHashMap<String, VariableType> variables = new LinkedHashMap<String, VariableType>();
 		for(final AlgoLine variable : EditorFrame.algorithm.getVariables().getChildren()) {
 			final String[] args = variable.getArgs();
-			variables.put(args[0], Integer.valueOf(args[1]));
+			variables.put(args[0], args[1].equals("1") ? VariableType.NUMBER : VariableType.STRING);
 		}
 		return variables;
 	}
@@ -162,6 +163,20 @@ public class AddLineDialog extends JDialog {
 	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final AlgoTreeNode node, final Runnable after, final String... variables) {
 		return listenerForInstruction(caller, component, null, node, after, variables);
 	}
+	
+	/**
+	 * Gets an action listener for the specified instruction.
+	 * <br><b>TODO :</b> Add a verification for expression with brackets (http://stackoverflow.com/a/8910767/3608831).
+	 * 
+	 * @param caller Used to send the response.
+	 * @param component The parent component (will be used in dialogs).
+	 * @param instruction The instruction.
+	 * @param node The algo line.
+	 * @param after Will be run after if the user clicks on "OK".
+	 * @param variables The variables (for instructions like SHOW_VARIABLE, FOR, ...).
+	 * 
+	 * @return The action listener.
+	 */
 
 	private static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final Instruction instruction, final AlgoTreeNode node, final Runnable after, final String... variables) {
 		final boolean editMode = node != null;
@@ -208,7 +223,7 @@ public class AddLineDialog extends JDialog {
 				public final void actionPerformed(final ActionEvent event) {
 					final JComboBox<String> cmboxVariables = new JComboBox<String>(variables);
 					final JTextField value = new JTextField();
-					attachPickerButton(value);
+					attachPickerButton(component, value);
 					if(editMode) {
 						final String[] args = node.getAlgoLine().getArgs();
 						if(Arrays.asList(variables).contains(args[0])) {
@@ -326,7 +341,7 @@ public class AddLineDialog extends JDialog {
 				@Override
 				public final void actionPerformed(final ActionEvent event) {
 					final JTextField condition = new JTextField();
-					attachPickerButton(condition);
+					attachPickerButton(component, condition);
 					final JCheckBox addElse = new JCheckBox(LanguageManager.getString("addline.ifelse.dialog.object.addelse"));
 					if(editMode) {
 						final String[] args = node.getAlgoLine().getArgs();
@@ -362,7 +377,7 @@ public class AddLineDialog extends JDialog {
 				@Override
 				public final void actionPerformed(final ActionEvent event) {
 					final JTextField condition = new JTextField();
-					attachPickerButton(condition);
+					attachPickerButton(component, condition);
 					if(editMode) {
 						condition.setText(node.getAlgoLine().getArgs()[0]);
 					}
@@ -392,9 +407,9 @@ public class AddLineDialog extends JDialog {
 				public final void actionPerformed(final ActionEvent event) {
 					final JComboBox<String> cmboxVariables = new JComboBox<String>(variables);
 					final JTextField from = new JTextField();
-					attachPickerButton(from);
+					attachPickerButton(component, from);
 					final JTextField to = new JTextField();
-					attachPickerButton(to);
+					attachPickerButton(component, to);
 					if(editMode) {
 						final String[] args = node.getAlgoLine().getArgs();
 						if(Arrays.asList(variables).contains(args[0])) {
@@ -431,16 +446,17 @@ public class AddLineDialog extends JDialog {
 	/**
 	 * Attaches a picker button to a text field.
 	 * 
+	 * @param parent The dialog's parent.
 	 * @param textField The text field.
 	 */
 	
-	public static final void attachPickerButton(final JTextField textField) {
+	public static final void attachPickerButton(final Component parent, final JTextField textField) {
 		final JButton picker = new JButton(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_picker.png")));
 		picker.addActionListener(new ActionListener() {
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				new PickerDialog(textField).setVisible(true);
+				new PickerDialog(parent, textField).setVisible(true);
 			}
 			
 		});

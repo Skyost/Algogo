@@ -24,13 +24,12 @@ public class PickerDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	
-	public PickerDialog(final JTextField textField) {
+	public PickerDialog(final Component parent, final JTextField textField) {
 		this.setTitle(LanguageManager.getString("picker.title"));
 		this.setSize(260, 318);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(ModalityType.TOOLKIT_MODAL);
 		this.setModal(true);
-		this.setLocationRelativeTo(null);
 		final PickerModel model = new PickerModel(Expression.getDefaultFunctions());
 		final JList<Function> list = new JList<Function>();
 		list.setModel(model);
@@ -63,6 +62,7 @@ public class PickerDialog extends JDialog {
 			
 		});
 		this.getContentPane().add(new JScrollPane(list), BorderLayout.CENTER);
+		this.setLocationRelativeTo(parent);
 	}
 	
 	private class PickerModel extends DefaultListModel<Function> {

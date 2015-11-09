@@ -146,7 +146,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				new AddLineDialog(EditorFrame.this).setVisible(true);
+				new AddLineDialog(EditorFrame.this, EditorFrame.this).setVisible(true);
 			}
 
 		});
@@ -236,7 +236,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				new ConsoleFrame().setVisible(true);
+				new ConsoleFrame(EditorFrame.this).setVisible(true);
 			}
 
 		});
@@ -472,7 +472,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				new OptionsDialog().setVisible(true);
+				new OptionsDialog(EditorFrame.this).setVisible(true);
 			}
 
 		});
@@ -554,7 +554,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				new PreferencesDialog().setVisible(true);
+				new PreferencesDialog(EditorFrame.this).setVisible(true);
 			}
 			
 		});
@@ -620,7 +620,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				new AboutDialog().setVisible(true);
+				new AboutDialog(EditorFrame.this).setVisible(true);
 			}
 
 		});

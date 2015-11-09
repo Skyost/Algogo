@@ -2,6 +2,7 @@ package fr.skyost.algo.desktop.dialogs;
 
 import javax.swing.JDialog;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -26,14 +27,13 @@ public class PreferencesDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	public PreferencesDialog() {
+	public PreferencesDialog(final Component component) {
 		this.setTitle(LanguageManager.getString("preferences.title"));
 		this.setSize(420, 346);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setModal(true);
-		this.setLocationRelativeTo(null);
 		final Map<String, String> languages = LanguageManager.getAvailableLanguages();
 		final JCheckBox chckbxCheckForUpdates = new JCheckBox(LanguageManager.getString("preferences.checkforupdates"));
 		chckbxCheckForUpdates.setSelected(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain);
@@ -77,6 +77,7 @@ public class PreferencesDialog extends JDialog {
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(btnSave, GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE).addComponent(lblLanguage).addComponent(cboxLanguages, 0, 346, Short.MAX_VALUE).addComponent(chckbxCheckForUpdates)).addContainerGap()));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addComponent(chckbxCheckForUpdates).addPreferredGap(ComponentPlacement.UNRELATED).addComponent(lblLanguage).addPreferredGap(ComponentPlacement.RELATED).addComponent(cboxLanguages, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addPreferredGap(ComponentPlacement.RELATED, 196, Short.MAX_VALUE).addComponent(btnSave).addContainerGap()));
 		content.setLayout(groupLayout);
+		this.setLocationRelativeTo(component);
 	}
 	
 	private final String getLanguageFromName(final Map<String, String> languages, final String name) {
