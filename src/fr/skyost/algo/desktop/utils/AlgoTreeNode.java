@@ -254,7 +254,7 @@ public class AlgoTreeNode extends DefaultMutableTreeNode implements Cloneable {
 	 * @return The String representation.
 	 */
 	
-	private static final String getLine(final Keyword keyword) {
+	public static final String getLine(final Keyword keyword) {
 		return "<html><b style=\"color:" + getLineColor(keyword) + "\">" + LanguageManager.getString("editor.line.keyword." + keyword.toString().toLowerCase()) + "</b></html>";
 	}
 	
@@ -267,7 +267,7 @@ public class AlgoTreeNode extends DefaultMutableTreeNode implements Cloneable {
 	 * @return The String representation.
 	 */
 	
-	private static final String getLine(final Instruction instruction, final String... args) {
+	public static final String getLine(final Instruction instruction, final String... args) {
 		final StringBuilder builder = new StringBuilder("<html><span style=color:\"" + getLineColor(instruction) + "\"><b>" + LanguageManager.getString("editor.line.instruction." + instruction.toString().replace("_", "").toLowerCase()) + "</b> ");
 		switch(instruction) {
 		case CREATE_VARIABLE:

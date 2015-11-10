@@ -1,7 +1,9 @@
 package fr.skyost.algo.desktop.frames;
 
 import java.awt.Container;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
@@ -21,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
 import javax.print.DocFlavor;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
@@ -71,6 +75,7 @@ import fr.skyost.algo.desktop.utils.AlgoTreeNode;
 import fr.skyost.algo.desktop.utils.GithubUpdater;
 import fr.skyost.algo.desktop.utils.JLabelLink;
 import fr.skyost.algo.desktop.utils.LanguageManager;
+import fr.skyost.algo.desktop.utils.TextLanguage;
 import fr.skyost.algo.desktop.utils.Utils;
 import fr.skyost.algo.desktop.utils.GithubUpdater.GithubUpdaterResultListener;
 
@@ -89,15 +94,15 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	public static AlgoTreeNode variables;
 	public static AlgoTreeNode beginning;
 	public static AlgoTreeNode end;
-	
+
 	public static final List<AlgoTreeNode> clipboard = new ArrayList<AlgoTreeNode>();
-	
+
 	private final JScrollPane scrollPane = new JScrollPane();
 	private final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
 	private final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
 	private final JButton btnEditLine = new JButton(LanguageManager.getString("editor.button.editline"));
 	private final JButton btnUp = new JButton(LanguageManager.getString("editor.button.up"));
-	private final JButton btnDown = new JButton(LanguageManager.getString("editor.button.down")); 
+	private final JButton btnDown = new JButton(LanguageManager.getString("editor.button.down"));
 
 	public EditorFrame() {
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
@@ -393,11 +398,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 		});
 		final JMenu export = new JMenu(LanguageManager.getString("editor.menu.file.export"));
-		for(final AlgorithmLanguage language : new AlgorithmLanguage[]{new PHPLanguage(), new JavaScriptLanguage(), new JavaLanguage()}) {
+		for(final AlgorithmLanguage language : new AlgorithmLanguage[]{new PHPLanguage(), new JavaScriptLanguage(), new JavaLanguage(), new TextLanguage()}) {
 			final String name = language.getName();
 			final JMenuItem subMenu = new JMenuItem(name);
 			subMenu.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public final void actionPerformed(final ActionEvent event) {
 					try {
@@ -426,10 +431,48 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 						ErrorDialog.errorMessage(EditorFrame.this, ex);
 					}
 				}
-				
+
 			});
 			export.add(subMenu);
 		}
+		final JMenuItem exportToImage = new JMenuItem(LanguageManager.getString("editor.menu.file.export.png"));
+		exportToImage.addActionListener(new ActionListener() {
+
+			@Override
+			public final void actionPerformed(final ActionEvent event) {
+				try {
+					final JFileChooser chooser = new JFileChooser();
+					final File currentDir = Utils.getParentFolder();
+					chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.export.png"), "png"));
+					chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
+					chooser.setMultiSelectionEnabled(false);
+					chooser.setCurrentDirectory(currentDir);
+					chooser.setSelectedFile(algoPath == null ? new File(currentDir, EditorFrame.algorithm.getTitle()) : new File(algoPath));
+					if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
+						String path = chooser.getSelectedFile().getPath();
+						if(!path.endsWith(".png")) {
+							path += ".png";
+						}
+						final File file = new File(path);
+						if(file.exists()) {
+							file.delete();
+							file.createNewFile();
+						}
+						final BufferedImage image = new BufferedImage(tree.getWidth(), tree.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+						final Graphics graphics = image.getGraphics();
+						graphics.setColor(tree.getForeground());
+						graphics.setFont(tree.getFont());
+						tree.paintAll(graphics);
+						final Rectangle region = new Rectangle(0, 0, image.getWidth(), image.getHeight());
+						ImageIO.write(image.getSubimage(region.x, region.y, region.width, region.height), "PNG", file);
+					}
+				}
+				catch(final Exception ex) {
+					ErrorDialog.errorMessage(EditorFrame.this, ex);
+				}
+			}
+
+		});
 		export.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_export.png")));
 		final JMenuItem print = new JMenuItem(LanguageManager.getString("editor.menu.file.print"));
 		print.addActionListener(new ActionListener() {
@@ -490,7 +533,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					addNode(node.clone()); // We clone it twice.
 				}
 			}
-			
+
 		};
 		paste.addActionListener(pasteActionListener);
 		paste.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_paste.png")));
@@ -518,7 +561,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				}
 				paste.setEnabled(true);
 			}
-			
+
 		};
 		cut.addActionListener(cutActionListener);
 		cut.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_cut.png")));
@@ -543,7 +586,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				}
 				paste.setEnabled(true);
 			}
-			
+
 		};
 		copy.addActionListener(copyActionListener);
 		copy.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_copy.png")));
@@ -551,12 +594,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		listeners.put(KeyStroke.getKeyStroke('C', ctrl), copyActionListener);
 		final JMenuItem preferences = new JMenuItem(LanguageManager.getString("editor.menu.edit.preferences"));
 		preferences.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
 				new PreferencesDialog(EditorFrame.this).setVisible(true);
 			}
-			
+
 		});
 		preferences.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_preferences.png")));
 		final JMenuItem checkForUpdates = new JMenuItem(LanguageManager.getString("editor.menu.help.checkforupdates"));
@@ -599,7 +642,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		checkForUpdates.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_checkforupdates.png")));
 		final JMenuItem onlineHelp = new JMenuItem(LanguageManager.getString("editor.menu.help.onlinehelp"));
 		final ActionListener onlineHelpListener = new ActionListener() {
-			
+
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
 				try {
@@ -609,7 +652,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					ex.printStackTrace();
 				}
 			}
-			
+
 		};
 		onlineHelp.addActionListener(onlineHelpListener);
 		onlineHelp.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/menu_onlinehelp.png")));
@@ -632,6 +675,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		file.add(save);
 		file.add(saveAs);
 		file.addSeparator();
+		export.add(exportToImage);
 		file.add(export);
 		file.add(print);
 		file.addSeparator();
@@ -655,19 +699,19 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		registerKeyListeners(listeners);
 		return menuBar;
 	}
-	
+
 	public final void registerKeyListeners(final Map<KeyStroke, ActionListener> listeners) {
 		for(final Entry<KeyStroke, ActionListener> entry : listeners.entrySet()) {
 			tree.getInputMap().put(entry.getKey(), entry.getValue());
 		}
 	}
-	
+
 	/**
 	 * Adds a node to the editor.
 	 * 
 	 * @param node The editor.
 	 */
-	
+
 	private final void addNode(final AlgoTreeNode node) {
 		final AlgoLine line = node.getAlgoLine();
 		final Instruction instruction = line.getInstruction();
@@ -705,13 +749,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		algorithmChanged(true);
 		tree.setSelectionPath(new TreePath(node.getPath()));
 	}
-	
+
 	/**
 	 * Removes a node from the editor.
 	 * 
 	 * @param node The editor.
 	 */
-	
+
 	private final void removeNode(final AlgoTreeNode node) {
 		final AlgoLine line = node.getAlgoLine();
 		if(line.getInstruction() == Instruction.IF && Boolean.valueOf(line.getArgs()[1])) {
@@ -722,11 +766,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		Utils.reloadTree(tree, node.getParent());
 		algorithmChanged(true);
 	}
-	
+
 	/**
 	 * Resets the editor (algorithm, tree, ...).
 	 */
-	
+
 	private final void resetEditor() {
 		if(variables != null) {
 			variables.removeAllChildren();
@@ -782,7 +826,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					btnRemoveLine.getActionListeners()[0].actionPerformed(null);
 				}
 			}
-			
+
 		});
 		final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)tree.getCellRenderer();
 		renderer.setLeafIcon(null);
