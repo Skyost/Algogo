@@ -458,7 +458,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 							file.delete();
 							file.createNewFile();
 						}
-						final BufferedImage image = new BufferedImage(tree.getWidth(), tree.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+						final BufferedImage image = new BufferedImage(tree.getWidth(), tree.getHeight(), BufferedImage.TYPE_INT_RGB);
 						final Graphics graphics = image.getGraphics();
 						graphics.setColor(tree.getForeground());
 						graphics.setFont(tree.getFont());
