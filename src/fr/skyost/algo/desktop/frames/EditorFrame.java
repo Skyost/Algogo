@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import javax.imageio.ImageIO;
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -98,7 +97,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	public static final List<AlgoTreeNode> clipboard = new ArrayList<AlgoTreeNode>();
 
 	private final JScrollPane scrollPane = new JScrollPane();
-	private final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
 	private final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
 	private final JButton btnEditLine = new JButton(LanguageManager.getString("editor.button.editline"));
 	private final JButton btnUp = new JButton(LanguageManager.getString("editor.button.up"));
@@ -110,6 +108,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		resetEditor();
+		final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
 		btnAddLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_add.png")));
 		btnRemoveLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_remove.png")));
 		btnRemoveLine.setEnabled(false);
