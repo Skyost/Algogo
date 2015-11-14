@@ -2,6 +2,7 @@ package fr.skyost.algo.desktop;
 
 import java.awt.Font;
 import java.io.File;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Properties;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -28,6 +29,14 @@ public class AlgogoDesktop {
 	
 	public static final void main(final String[] args) {
 		try {
+			Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+
+				@Override
+				public void uncaughtException(final Thread thread, final Throwable throwable) {
+					ErrorDialog.errorMessage(null, throwable);
+				}
+				
+			});
 			SETTINGS = new AppSettings(new File(Utils.getParentFolder(), "settings.json"));
 			SETTINGS.load();
 			final Properties properties = new Properties();

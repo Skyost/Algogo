@@ -152,9 +152,6 @@ preferences.save=Save
 utils.tip=Tip
 
 
-jlabellink.tooltip=Visit %s.
-
-
 joptionpane.error=Error !
 joptionpane.invalidtitle=Invalid title "%s" !
 joptionpane.invalidauthor=Invalid author "%s" !

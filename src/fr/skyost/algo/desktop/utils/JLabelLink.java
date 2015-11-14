@@ -95,7 +95,7 @@ public class JLabelLink extends JLabel {
 			
 		});
 		this.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		this.setToolTipText(LanguageManager.getString("jlabellink.tooltip", link.toString()));
+		this.setToolTipText(link.toString());
 	}
 	
 	/**
