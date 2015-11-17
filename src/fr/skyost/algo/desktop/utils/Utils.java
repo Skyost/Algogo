@@ -13,21 +13,14 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
-
-import fr.skyost.algo.desktop.dialogs.ErrorDialog;
 
 public class Utils {
 
@@ -144,29 +137,6 @@ public class Utils {
 	}
 
 	/**
-	 * Gets a node's content.
-	 * 
-	 * @param node The node.
-	 * @param spaces Current spaces.
-	 * 
-	 * @return The node's content.
-	 */
-
-	public static final String getNodeContent(final AlgoTreeNode node, final StringBuilder spaces) {
-		final StringBuilder builder = new StringBuilder();
-		builder.append(node.toString() + System.lineSeparator());
-		final int childCount = node.getChildCount();
-		if(childCount > 0) {
-			spaces.append("  ");
-			for(int i = 0; i != childCount; i++) {
-				builder.append(spaces.toString() + getNodeContent((AlgoTreeNode)node.getChildAt(i), spaces));
-			}
-			spaces.delete(0, 2);
-		}
-		return builder.toString();
-	}
-
-	/**
 	 * Gets the JAR parent folder.
 	 * 
 	 * @return The JAR parent folder.
@@ -217,72 +187,6 @@ public class Utils {
 			writer.write(chars, 0, length);
 		}
 		return writer.toString();
-	}
-	
-	/**
-	 * Gets a list of resources in the selected package.
-	 * 
-	 * @param packagee The package.
-	 * 
-	 * @return A list of resources.
-	 * 
-	 * @author <a href="http://stackoverflow.com/a/3923182/3608831">Jigar Joshi</a>.
-	 */
-	
-	public static final Collection<String> getResourcesInPackage(final String packagee) {
-		final ArrayList<String> retval = new ArrayList<String>();
-		final String classPath = System.getProperty("java.class.path", ".");
-		final String[] classPathElements = classPath.split(File.pathSeparator);
-		for(final String element : classPathElements) {
-			retval.addAll(getResourcesInPackage(element, packagee));
-		}
-		return retval;
-	}
-
-	private static final Collection<String> getResourcesInPackage(final String element, final String packagee) {
-		final File file = new File(element);
-		return file.isDirectory() ? getResourcesFromDirectory(file, packagee) : getResourcesFromJarFile(file, packagee);
-	}
-
-	private static final Collection<String> getResourcesFromJarFile(final File file, final String packagee) {
-		final ArrayList<String> resources = new ArrayList<String>();
-		try {
-			final ZipFile zip = new ZipFile(file);
-			final Enumeration<? extends ZipEntry> enumeration = zip.entries();
-			while(enumeration.hasMoreElements()) {
-				final ZipEntry entry = enumeration.nextElement();
-				final String fileName = entry.getName();
-				if(fileName.contains(packagee)) {
-					resources.add(fileName);
-				}
-			}
-			zip.close();
-		}
-		catch(final Exception ex) {
-			ErrorDialog.errorMessage(null, ex, true);
-		}
-		return resources;
-	}
-
-	private static final Collection<String> getResourcesFromDirectory(final File directory, final String packagee) {
-		final ArrayList<String> values = new ArrayList<String>();
-		for(final File file : directory.listFiles()) {
-			if(file.isDirectory()) {
-				values.addAll(getResourcesFromDirectory(file, packagee));
-			}
-			else {
-				try {
-					final String fileName = file.getCanonicalPath();
-					if(fileName.contains(packagee)) {
-						values.add(fileName);
-					}
-				}
-				catch(final Exception ex) {
-					ErrorDialog.errorMessage(null, ex, true);
-				}
-			}
-		}
-		return values;
 	}
 
 }

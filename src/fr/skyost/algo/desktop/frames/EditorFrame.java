@@ -479,15 +479,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
 				try {
-					final StringBuilder builder = new StringBuilder();
-					builder.append(Utils.getNodeContent(variables, new StringBuilder()));
-					builder.append(Utils.getNodeContent(beginning, new StringBuilder()));
-					builder.append(new AlgoTreeNode(Keyword.END));
 					final PrintRequestAttributeSet printRequest = new HashPrintRequestAttributeSet();
 					final DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
 					final PrintService service = ServiceUI.printDialog(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration(), 200, 200, PrintServiceLookup.lookupPrintServices(flavor, printRequest), PrintServiceLookup.lookupDefaultPrintService(), flavor, printRequest);
 					if(service != null) {
-						service.createPrintJob().print(new SimpleDoc(new ByteArrayInputStream(new String("<html>" + builder.toString().replace("<html>", "").replace("</html>", "") + "</html>").getBytes(StandardCharsets.UTF_8)), flavor, new HashDocAttributeSet()), printRequest);
+						service.createPrintJob().print(new SimpleDoc(new ByteArrayInputStream(algorithm.toLanguage(new TextLanguage()).getBytes(StandardCharsets.UTF_8)), flavor, new HashDocAttributeSet()), printRequest);
 					}
 				}
 				catch(final Exception ex) {

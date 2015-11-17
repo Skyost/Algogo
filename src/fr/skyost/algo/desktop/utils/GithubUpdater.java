@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.regex.Pattern;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 
 /**
@@ -54,7 +55,7 @@ public class GithubUpdater extends Thread {
 			}
 			final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
 			final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-			final JsonArray releases = JsonArray.readFrom(bufferedReader.readLine());
+			final JsonArray releases = Json.parse(bufferedReader.readLine()).asArray();
 			if(releases.size() < 1) {
 				return;
 			}

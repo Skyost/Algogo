@@ -1,9 +1,7 @@
 package fr.skyost.algo.desktop.utils;
 
-import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,20 +30,20 @@ public class LanguageManager {
 	
 	public static final String PACKAGE = "/fr/skyost/algo/desktop/res/lang/";
 	
-	private static final HashMap<String, String> languages = new HashMap<String, String>();
+	/**
+	 * The available languages.
+	 */
+	
+	public static final HashMap<String, String> AVAILABLE_LANGUAGES = new HashMap<String, String>();
+	
 	private static final HashMap<String, String> strings = new HashMap<String, String>();
 	static {
 		try {
-			final Collection<String> availableLanguages = Utils.getResourcesInPackage(PACKAGE.replace("/", File.separator));
-			if(availableLanguages != null && availableLanguages.size() > 0) {
+			AVAILABLE_LANGUAGES.put("fr", "Français");
+			AVAILABLE_LANGUAGES.put("en", "English");
+			if(AVAILABLE_LANGUAGES != null && AVAILABLE_LANGUAGES.size() > 0) {
 				final Properties properties = new Properties();
-				for(final String language : availableLanguages) {
-					final String languageCode = language.substring(language.lastIndexOf(File.separator) + 1);
-					properties.load(new InputStreamReader(AlgogoDesktop.class.getResourceAsStream(PACKAGE + languageCode), StandardCharsets.UTF_8));
-					languages.put(languageCode.substring(0, languageCode.lastIndexOf(".")), properties.getProperty("language.name"));
-					properties.clear();
-				}
-				properties.load(new InputStreamReader(AlgogoDesktop.class.getResourceAsStream(PACKAGE + (languages.get(AlgogoDesktop.SETTINGS.customLanguage) == null ? "en" : AlgogoDesktop.SETTINGS.customLanguage) + ".lang"), StandardCharsets.UTF_8));
+				properties.load(new InputStreamReader(AlgogoDesktop.class.getResourceAsStream(PACKAGE + (AVAILABLE_LANGUAGES.get(AlgogoDesktop.SETTINGS.customLanguage) == null ? "en" : AlgogoDesktop.SETTINGS.customLanguage) + ".lang"), StandardCharsets.UTF_8));
 				for(final Entry<Object, Object> entry : properties.entrySet()) {
 					strings.put(entry.getKey().toString(), entry.getValue().toString());
 				}
@@ -102,7 +100,7 @@ public class LanguageManager {
 	 */
 	
 	public static final Map<String, String> getAvailableLanguages() {
-		return new HashMap<String, String>(languages);
+		return new HashMap<String, String>(AVAILABLE_LANGUAGES);
 	}
 
 }
