@@ -32,7 +32,7 @@ public class AlgogoDesktop {
 			Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
 				@Override
-				public void uncaughtException(final Thread thread, final Throwable throwable) {
+				public final void uncaughtException(final Thread thread, final Throwable throwable) {
 					ErrorDialog.errorMessage(null, throwable);
 				}
 				

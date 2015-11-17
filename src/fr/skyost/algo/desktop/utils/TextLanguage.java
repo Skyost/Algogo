@@ -12,7 +12,7 @@ public class TextLanguage extends AlgorithmLanguage {
 
 	@Override
 	public final String getName() {
-		return "Text File";
+		return LanguageManager.getString("utils.language.text");
 	}
 
 	@Override

@@ -150,7 +150,7 @@ preferences.save=Save
 
 
 utils.tip=Tip
-
+utils.language.text=Text File
 
 joptionpane.error=Error !
 joptionpane.invalidtitle=Invalid title "%s" !

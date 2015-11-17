@@ -150,6 +150,7 @@ preferences.save=Enregistrer
 
 
 utils.tip=Conseil
+utils.language.text=Fichier Texte
 
 
 joptionpane.error=Erreur !
