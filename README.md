@@ -17,8 +17,8 @@ Algogo Desktop is the desktop implementation of Algogo.
 * Export your algorithm to other languages (PHP, JS, ...).
 
 ## Screenshots
-![Screenshot 1](http://www.algogo.xyz/assets/img/screenshots/0.png)
-![Screenshot 2](http://www.algogo.xyz/assets/img/screenshots/1.png)
+![Screenshot 1](http://www.algogo.xyz/assets/img/screenshots/en/0.png)
+![Screenshot 2](http://www.algogo.xyz/assets/img/screenshots/en/1.png)
 
 ## Videos
 Check the website [here](http://www.algogo.xyz).
