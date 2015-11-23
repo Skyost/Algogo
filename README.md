@@ -24,7 +24,7 @@ Algogo Desktop is the desktop implementation of Algogo.
 Check the website [here](http://www.algogo.xyz).
 
 ## Credits
-This software has been written in Java using AlgogoCore (see it in the branches) and [JTattoo v1.6.11](http://www.jtattoo.net/).
+This software has been written in Java using AlgogoCore (see it in the branches), [ComponentBorder](https://tips4java.wordpress.com/2009/09/27/component-border/) and [JTattoo v1.6.11](http://www.jtattoo.net/) .
 <br>It is licensed under [GNU GPL v3](http://choosealicense.com/licenses/gpl-3.0/).
 
 ## Share the word !
