@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +20,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
+
+import fr.skyost.algo.desktop.AlgogoDesktop;
 
 public class Utils {
 
@@ -141,11 +142,11 @@ public class Utils {
 	 * 
 	 * @return The JAR parent folder.
 	 * 
-	 * @throws UnsupportedEncodingException If the URLDecoder fails to decode the string.
+	 * @throws URISyntaxException If the destination is not a valid path.
 	 */
 
-	public static final File getParentFolder() throws UnsupportedEncodingException {
-		return new File(URLDecoder.decode(ClassLoader.getSystemClassLoader().getResource(".").getPath(), StandardCharsets.UTF_8.toString()));
+	public static final File getParentFolder() throws URISyntaxException {
+		return new File(AlgogoDesktop.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
 	}
 
 	/**
