@@ -6,7 +6,7 @@
  <name>AlgogoDesktop</name>
  <version>0.2.3</version>
  <url>http://www.algogo.xyz/</url>
- <groupId>xyz.algogo.desktop</groupId>
+ <groupId>xyz.algogo</groupId>
  <artifactId>algogo-desktop</artifactId>
  <build>
   <sourceDirectory>src</sourceDirectory>
