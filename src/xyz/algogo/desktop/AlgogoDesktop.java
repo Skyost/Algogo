@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop;
+package xyz.algogo.desktop;
 
 import java.awt.Font;
 import java.io.File;
@@ -11,14 +11,14 @@ import javax.swing.UIManager;
 
 import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
 
-import fr.skyost.algo.desktop.dialogs.ErrorDialog;
-import fr.skyost.algo.desktop.frames.EditorFrame;
-import fr.skyost.algo.desktop.utils.Utils;
+import xyz.algogo.desktop.dialogs.ErrorDialog;
+import xyz.algogo.desktop.frames.EditorFrame;
+import xyz.algogo.desktop.utils.Utils;
 
 public class AlgogoDesktop {
 	
 	public static final String APP_NAME = "Algogo Desktop";
-	public static final String APP_VERSION = "0.2.2";
+	public static final String APP_VERSION = "0.2.3";
 	public static final String[] APP_AUTHORS = new String[]{"Skyost"};
 	public static final String APP_WEBSITE = "http://www.algogo.xyz";
 	
@@ -46,7 +46,7 @@ public class AlgogoDesktop {
 			final Icon empty = new ImageIcon();
 			UIManager.put("Tree.collapsedIcon", empty);
 			UIManager.put("Tree.expandedIcon", empty);
-			CONSOLE_FONT = Font.createFont(Font.TRUETYPE_FONT, AlgogoDesktop.class.getResourceAsStream("/fr/skyost/algo/desktop/res/fonts/DejaVuSansMono.ttf")).deriveFont(12.0f);
+			CONSOLE_FONT = Font.createFont(Font.TRUETYPE_FONT, AlgogoDesktop.class.getResourceAsStream("/xyz/algogo/desktop/res/fonts/DejaVuSansMono.ttf")).deriveFont(12.0f);
 			SwingUtilities.invokeLater(new Runnable() {
 	
 				@Override

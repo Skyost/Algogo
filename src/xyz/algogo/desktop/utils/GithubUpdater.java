@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop.utils;
+package xyz.algogo.desktop.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

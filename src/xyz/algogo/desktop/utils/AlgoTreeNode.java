@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop.utils;
+package xyz.algogo.desktop.utils;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-import fr.skyost.algo.core.AlgoLine;
-import fr.skyost.algo.core.Instruction;
-import fr.skyost.algo.core.Keyword;
+import xyz.algogo.core.AlgoLine;
+import xyz.algogo.core.Instruction;
+import xyz.algogo.core.Keyword;
 
 /**
  * Used to handle algo lines and tree nodes.

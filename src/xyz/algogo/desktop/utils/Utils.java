@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop.utils;
+package xyz.algogo.desktop.utils;
 
 import java.awt.Component;
 import java.io.ByteArrayInputStream;
@@ -21,7 +21,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
-import fr.skyost.algo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.AlgogoDesktop;
 
 public class Utils {
 

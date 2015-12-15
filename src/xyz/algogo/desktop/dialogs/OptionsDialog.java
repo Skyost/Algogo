@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop.dialogs;
+package xyz.algogo.desktop.dialogs;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -12,12 +12,13 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.SwingConstants;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import xyz.algogo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.frames.EditorFrame;
+import xyz.algogo.desktop.utils.LanguageManager;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
-
-import fr.skyost.algo.desktop.AlgogoDesktop;
-import fr.skyost.algo.desktop.frames.EditorFrame;
-import fr.skyost.algo.desktop.utils.LanguageManager;
 
 public class OptionsDialog extends JDialog {
 
@@ -27,7 +28,7 @@ public class OptionsDialog extends JDialog {
 		final String algoTitle = EditorFrame.algorithm.getTitle();
 		final String algoAuthor = EditorFrame.algorithm.getAuthor();
 		this.setTitle(LanguageManager.getString("options.title"));
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 		this.setSize(476, 198);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(ModalityType.APPLICATION_MODAL);

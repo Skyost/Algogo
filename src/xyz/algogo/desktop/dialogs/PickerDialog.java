@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop.dialogs;
+package xyz.algogo.desktop.dialogs;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -6,10 +6,10 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import fr.skyost.algo.desktop.utils.LanguageManager;
-import fr.skyost.algo.desktop.utils.Utils;
 import fr.skyost.heartbeat.Expression;
 import fr.skyost.heartbeat.Expression.Function;
+import xyz.algogo.desktop.utils.LanguageManager;
+import xyz.algogo.desktop.utils.Utils;
 
 import javax.swing.JList;
 import javax.swing.JScrollPane;

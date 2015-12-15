@@ -4,9 +4,9 @@
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <modelVersion>4.0.0</modelVersion>
  <name>AlgogoDesktop</name>
- <version>0.2.2</version>
+ <version>0.2.3</version>
  <url>http://www.algogo.xyz/</url>
- <groupId>fr.skyost.algo.desktop</groupId>
+ <groupId>xyz.algogo.desktop</groupId>
  <artifactId>algogo-desktop</artifactId>
  <build>
   <sourceDirectory>src</sourceDirectory>
@@ -29,7 +29,7 @@
     <configuration>
      <archive>
       <manifest>
-       <mainClass>fr.skyost.algo.desktop.AlgogoDesktop</mainClass>
+       <mainClass>xyz.algogo.desktop.AlgogoDesktop</mainClass>
       </manifest>
      </archive>
      <descriptorRefs>
@@ -63,9 +63,9 @@
  </build>
  <dependencies>
   <dependency>
-   <groupId>fr.skyost.algo.core</groupId>
+   <groupId>xyz.algogo</groupId>
    <artifactId>algogo-core</artifactId>
-   <version>0.3.2</version>
+   <version>0.4</version>
   </dependency>
  </dependencies>
 </project>

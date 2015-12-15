@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop.utils;
+package xyz.algogo.desktop.utils;
 
 import java.awt.Cursor;
 import java.awt.Desktop;
@@ -9,7 +9,7 @@ import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 
-import fr.skyost.algo.desktop.dialogs.ErrorDialog;
+import xyz.algogo.desktop.dialogs.ErrorDialog;
 
 /**
  * A clickable label.

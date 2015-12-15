@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop.dialogs;
+package xyz.algogo.desktop.dialogs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,14 +8,14 @@ import java.util.Map.Entry;
 
 import javax.swing.JDialog;
 
-import fr.skyost.algo.core.AlgoLine;
-import fr.skyost.algo.core.Instruction;
-import fr.skyost.algo.core.utils.VariableHolder.VariableType;
-import fr.skyost.algo.desktop.AlgogoDesktop;
-import fr.skyost.algo.desktop.frames.EditorFrame;
-import fr.skyost.algo.desktop.utils.AlgoTreeNode;
-import fr.skyost.algo.desktop.utils.LanguageManager;
-import fr.skyost.algo.desktop.utils.Utils;
+import xyz.algogo.core.AlgoLine;
+import xyz.algogo.core.Instruction;
+import xyz.algogo.core.utils.VariableHolder.VariableType;
+import xyz.algogo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.frames.EditorFrame;
+import xyz.algogo.desktop.utils.AlgoTreeNode;
+import xyz.algogo.desktop.utils.LanguageManager;
+import xyz.algogo.desktop.utils.Utils;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -42,7 +42,7 @@ public class AddLineDialog extends JDialog {
 	
 	public AddLineDialog(final Component component, final AlgoLineListener caller) {
 		this.setTitle(LanguageManager.getString("addline.title"));
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 		this.setSize(500, 212);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
@@ -451,7 +451,7 @@ public class AddLineDialog extends JDialog {
 	 */
 	
 	public static final void attachPickerButton(final Component parent, final JTextField textField) {
-		final JButton picker = new JButton(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_picker.png")));
+		final JButton picker = new JButton(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_picker.png")));
 		picker.addActionListener(new ActionListener() {
 
 			@Override

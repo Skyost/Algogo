@@ -1,12 +1,12 @@
-package fr.skyost.algo.desktop.utils;
+package xyz.algogo.desktop.utils;
 
 import java.util.List;
 
-import fr.skyost.algo.core.AlgoLine;
-import fr.skyost.algo.core.Algorithm;
-import fr.skyost.algo.core.Instruction;
-import fr.skyost.algo.core.Keyword;
-import fr.skyost.algo.core.language.AlgorithmLanguage;
+import xyz.algogo.core.AlgoLine;
+import xyz.algogo.core.Algorithm;
+import xyz.algogo.core.Instruction;
+import xyz.algogo.core.Keyword;
+import xyz.algogo.core.language.AlgorithmLanguage;
 
 public class TextLanguage extends AlgorithmLanguage {
 

@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop.frames;
+package xyz.algogo.desktop.frames;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -9,17 +9,17 @@ import java.awt.Container;
 
 import javax.swing.JTextField;
 
-import fr.skyost.algo.core.AlgoLine;
-import fr.skyost.algo.core.AlgoRunnable;
-import fr.skyost.algo.core.Instruction;
-import fr.skyost.algo.core.AlgorithmListener.AlgorithmThreadListener;
-import fr.skyost.algo.core.utils.VariableHolder.VariableType;
-import fr.skyost.algo.core.utils.VariableHolder.VariableValue;
-import fr.skyost.algo.desktop.AlgogoDesktop;
-import fr.skyost.algo.desktop.dialogs.AddLineDialog;
-import fr.skyost.algo.desktop.dialogs.ErrorDialog;
-import fr.skyost.algo.desktop.utils.LanguageManager;
-import fr.skyost.algo.desktop.utils.Utils;
+import xyz.algogo.core.AlgoLine;
+import xyz.algogo.core.AlgoRunnable;
+import xyz.algogo.core.Instruction;
+import xyz.algogo.core.AlgorithmListener.AlgorithmThreadListener;
+import xyz.algogo.core.utils.VariableHolder.VariableType;
+import xyz.algogo.core.utils.VariableHolder.VariableValue;
+import xyz.algogo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.dialogs.AddLineDialog;
+import xyz.algogo.desktop.dialogs.ErrorDialog;
+import xyz.algogo.desktop.utils.LanguageManager;
+import xyz.algogo.desktop.utils.Utils;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -55,7 +55,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
 	public ConsoleFrame(final Component component) {
 		this.setTitle(LanguageManager.getString("console.title"));
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 		this.setSize(500, 376);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.addWindowListener(new WindowListener() {
@@ -222,11 +222,11 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		}
 		if(state) {
 			button.setText(LanguageManager.getString("console.buttons.run"));
-			button.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_run.png")));
+			button.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_run.png")));
 		}
 		else {
 			button.setText(LanguageManager.getString("console.buttons.stop"));
-			button.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_stop.png")));
+			button.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_stop.png")));
 		}
 		return button;
 	}

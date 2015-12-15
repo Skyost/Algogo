@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop.dialogs;
+package xyz.algogo.desktop.dialogs;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -19,8 +19,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import fr.skyost.algo.desktop.AlgogoDesktop;
-import fr.skyost.algo.desktop.utils.JLabelLink;
+import xyz.algogo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.utils.JLabelLink;
 
 public class ErrorDialog extends JDialog {
 
@@ -39,7 +39,7 @@ public class ErrorDialog extends JDialog {
 		throwable.printStackTrace(printWriter);
 		this.setTitle(error);
 		this.setSize(600, 600);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		final JLabel lblMessage = new JLabel("An error occured : \"" + error + "\", here is the stacktrace :");

@@ -1,10 +1,10 @@
-package fr.skyost.algo.desktop.dialogs;
+package xyz.algogo.desktop.dialogs;
 
-import fr.skyost.algo.core.AlgogoCore;
-import fr.skyost.algo.desktop.AlgogoDesktop;
-import fr.skyost.algo.desktop.utils.JLabelLink;
-import fr.skyost.algo.desktop.utils.LanguageManager;
-import fr.skyost.algo.desktop.utils.Utils;
+import xyz.algogo.core.AlgogoCore;
+import xyz.algogo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.utils.JLabelLink;
+import xyz.algogo.desktop.utils.LanguageManager;
+import xyz.algogo.desktop.utils.Utils;
 
 import javax.swing.JLabel;
 
@@ -43,13 +43,13 @@ public class AboutDialog extends JDialog {
 			lblAppName.setHorizontalAlignment(SwingConstants.CENTER);
 			lblAppName.setFont(lblAppName.getFont().deriveFont(Font.BOLD).deriveFont(30.0f));
 			lblAppName.setForeground(Color.decode("#3b3b3b"));
-			lblAppName.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
+			lblAppName.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 			final JLabelLink lblAppDesktopInfos = new JLabelLink(LanguageManager.getString("about.desktopinfos", AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION, authors), new URL(AlgogoDesktop.APP_WEBSITE));
 			lblAppDesktopInfos.setHorizontalAlignment(SwingConstants.CENTER);
 			final JLabelLink lblAppCoreInfos = new JLabelLink(LanguageManager.getString("about.coreinfos", AlgogoCore.APP_NAME, AlgogoCore.APP_VERSION, Utils.join(" ", AlgogoCore.APP_AUTHORS)), new URL(AlgogoCore.APP_WEBSITE));
 			lblAppCoreInfos.setHorizontalAlignment(SwingConstants.CENTER);
 			final JPanel panel = new JPanel();
-			final JLabelLink lblAnimation = new JLabelLink(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/images/about_animation.gif")), new URL(AlgogoDesktop.APP_WEBSITE));
+			final JLabelLink lblAnimation = new JLabelLink(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/images/about_animation.gif")), new URL(AlgogoDesktop.APP_WEBSITE));
 			lblAnimation.setHorizontalAlignment(SwingConstants.CENTER);
 			lblAnimation.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			panel.add(lblAnimation);
@@ -58,7 +58,7 @@ public class AboutDialog extends JDialog {
 			final Container content = this.getContentPane();
 			final JButton btnDonate = new JButton(LanguageManager.getString("about.donate"));
 			btnDonate.setFont(btnDonate.getFont().deriveFont(Font.BOLD));
-			btnDonate.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/btn_donate.png")));
+			btnDonate.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_donate.png")));
 			btnDonate.addActionListener(new ActionListener() {
 
 				@Override

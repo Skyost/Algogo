@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop.dialogs;
+package xyz.algogo.desktop.dialogs;
 
 import javax.swing.JDialog;
 
@@ -17,8 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import fr.skyost.algo.desktop.AlgogoDesktop;
-import fr.skyost.algo.desktop.utils.LanguageManager;
+import xyz.algogo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.utils.LanguageManager;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -31,7 +31,7 @@ public class PreferencesDialog extends JDialog {
 		this.setTitle(LanguageManager.getString("preferences.title"));
 		this.setSize(420, 346);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/fr/skyost/algo/desktop/res/icons/app_icon.png")));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setModal(true);
 		final Map<String, String> languages = LanguageManager.getAvailableLanguages();

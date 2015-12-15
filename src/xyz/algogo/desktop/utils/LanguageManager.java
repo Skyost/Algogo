@@ -1,14 +1,15 @@
-package fr.skyost.algo.desktop.utils;
+package xyz.algogo.desktop.utils;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 
-import fr.skyost.algo.desktop.AlgogoDesktop;
-import fr.skyost.algo.desktop.dialogs.ErrorDialog;
+import xyz.algogo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.dialogs.ErrorDialog;
+
+import java.util.Properties;
 
 /**
  * A language manager, used to translate Algogo.
@@ -28,7 +29,7 @@ public class LanguageManager {
 	 * The languages package.
 	 */
 	
-	public static final String PACKAGE = "/fr/skyost/algo/desktop/res/lang/";
+	public static final String PACKAGE = "/xyz/algogo/desktop/res/lang/";
 	
 	/**
 	 * The available languages.

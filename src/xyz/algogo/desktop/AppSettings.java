@@ -1,4 +1,4 @@
-package fr.skyost.algo.desktop;
+package xyz.algogo.desktop;
 
 import java.io.File;
 import java.io.IOException;
