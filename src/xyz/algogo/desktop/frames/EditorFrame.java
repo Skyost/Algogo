@@ -43,7 +43,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.GroupLayout;
-import javax.swing.JTree;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
@@ -51,7 +50,6 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -59,7 +57,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
-import xyz.algogo.core.Keyword;
 import xyz.algogo.core.AlgorithmListener.AlgorithmOptionsListener;
 import xyz.algogo.core.language.AlgorithmLanguage;
 import xyz.algogo.core.language.JavaLanguage;
@@ -72,7 +69,8 @@ import xyz.algogo.desktop.dialogs.ErrorDialog;
 import xyz.algogo.desktop.dialogs.OptionsDialog;
 import xyz.algogo.desktop.dialogs.PreferencesDialog;
 import xyz.algogo.desktop.dialogs.AddLineDialog.AlgoLineListener;
-import xyz.algogo.desktop.utils.AlgoTreeNode;
+import xyz.algogo.desktop.utils.AlgorithmTree;
+import xyz.algogo.desktop.utils.AlgorithmTree.AlgorithmUserObject;
 import xyz.algogo.desktop.utils.GithubUpdater;
 import xyz.algogo.desktop.utils.JLabelLink;
 import xyz.algogo.desktop.utils.LanguageManager;
@@ -82,7 +80,7 @@ import xyz.algogo.desktop.utils.GithubUpdater.GithubUpdaterResultListener;
 
 import javax.swing.JMenuBar;
 
-public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOptionsListener, GithubUpdaterResultListener {
+public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOptionsListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -91,14 +89,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	protected static String algoPath;
 	protected static boolean algoChanged;
 
-	public static JTree tree;
-	public static AlgoTreeNode variables;
-	public static AlgoTreeNode beginning;
-	public static AlgoTreeNode end;
+	public static final AlgorithmTree tree = new AlgorithmTree();
 
-	public static final List<AlgoTreeNode> clipboard = new ArrayList<AlgoTreeNode>();
+	public static final List<DefaultMutableTreeNode> clipboard = new ArrayList<DefaultMutableTreeNode>();
 
-	private final JScrollPane scrollPane = new JScrollPane();
+	private final JScrollPane scrollPane = new JScrollPane(tree);
 	private final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
 	private final JButton btnEditLine = new JButton(LanguageManager.getString("editor.button.editline"));
 	private final JButton btnUp = new JButton(LanguageManager.getString("editor.button.up"));
@@ -109,6 +104,47 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		this.setSize(800, 600);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setLocationRelativeTo(null);
+		tree.setShowsRootHandles(true);
+		tree.setRootVisible(false);
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+
+			@Override
+			public final void valueChanged(final TreeSelectionEvent event) {
+				final TreePath path = event.getNewLeadSelectionPath();
+				if(path == null) {
+					for(final JButton button : new JButton[]{btnRemoveLine, btnEditLine, btnUp, btnDown}) {
+						button.setEnabled(false);
+					}
+					return;
+				}
+				final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)path.getLastPathComponent();
+				final boolean enabled = !selected.equals(tree.variables) && !selected.equals(tree.beginning) && !selected.equals(tree.end);
+				for(final JButton button : new JButton[]{btnRemoveLine, btnEditLine, btnUp, btnDown}) {
+					button.setEnabled(enabled);
+				}
+			}
+
+		});
+		tree.addKeyListener(new KeyListener() {
+
+			@Override
+			public final void keyPressed(final KeyEvent event) {}
+
+			@Override
+			public final void keyReleased(final KeyEvent event) {}
+
+			@Override
+			public final void keyTyped(final KeyEvent event) {
+				if(event.getKeyChar() == '\177') {
+					btnRemoveLine.getActionListeners()[0].actionPerformed(null);
+				}
+			}
+
+		});
+		final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)tree.getCellRenderer();
+		renderer.setLeafIcon(null);
+		renderer.setClosedIcon(null);
+		renderer.setOpenIcon(null);
 		resetEditor();
 		final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
 		btnAddLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_add.png")));
@@ -162,8 +198,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
 				for(final TreePath path : tree.getSelectionPaths()) {
-					final AlgoTreeNode node = (AlgoTreeNode)path.getLastPathComponent();
-					if(!node.getAlgoLine().isKeyword()) {
+					final DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+					if(!AlgorithmTree.getAttachedAlgoLine(node).isKeyword()) {
 						removeNode(node);
 					}
 				}
@@ -174,7 +210,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				AddLineDialog.listenerForInstruction(EditorFrame.this, EditorFrame.this, (AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent(), null).actionPerformed(event);
+				AddLineDialog.listenerForInstruction(EditorFrame.this, EditorFrame.this, (DefaultMutableTreeNode)tree.getSelectionPaths()[0].getLastPathComponent(), null).actionPerformed(event);
 			}
 
 		});
@@ -182,24 +218,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				final AlgoTreeNode node = (AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
-				final AlgoLine line = node.getAlgoLine();
-				if(line.getInstruction() == Instruction.ELSE) {
-					return;
-				}
-				int step = -1;
-				final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
-				final AlgoTreeNode before = (AlgoTreeNode)parent.getChildBefore(node);
-				if(before != null && before.getAlgoLine().getInstruction() == Instruction.ELSE) {
-					step--;
-				}
-				final AlgoTreeNode after = (AlgoTreeNode)parent.getChildAfter(node);
-				boolean refreshAfter = after != null && line.getInstruction() == Instruction.IF && after.getAlgoLine().getInstruction() == Instruction.ELSE;
-				if(!moveNode(node, step, !refreshAfter)) {
-					return;
-				}
-				if(refreshAfter) {
-					moveNode(after, step, true);
+				final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
+				final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)selected.getParent();
+				if(AlgorithmTree.up(parent, parent.getIndex(selected))) {
+					Utils.reloadTree(tree, parent);
+					tree.setSelectionPath(new TreePath(selected.getPath()));
+					algorithmChanged(true);
 				}
 			}
 
@@ -208,34 +232,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				final AlgoTreeNode node = (AlgoTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
-				final AlgoLine line = node.getAlgoLine();
-				if(line.getInstruction() == Instruction.ELSE) {
-					return;
+				final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
+				final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)selected.getParent();
+				if(AlgorithmTree.down(parent, parent.getIndex(selected))) {
+					Utils.reloadTree(tree, parent);
+					tree.setSelectionPath(new TreePath(selected.getPath()));
+					algorithmChanged(true);
 				}
-				int step = 1;
-				final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
-				final AlgoTreeNode after = (AlgoTreeNode)parent.getChildAfter(node);
-				if(after != null) {
-					final Instruction afterInstruction = after.getAlgoLine().getInstruction();
-					if(line.getInstruction() == Instruction.IF && afterInstruction == Instruction.ELSE) {
-						final AlgoTreeNode afterAfter = (AlgoTreeNode)parent.getChildAfter(after);
-						if(afterAfter == null) {
-							return;
-						}
-						else if(afterAfter.getAlgoLine().getInstruction() == Instruction.IF && ((AlgoTreeNode)parent.getChildAfter(afterAfter)).getAlgoLine().getInstruction() == Instruction.ELSE) {
-							step++;
-						}
-						moveNode(after, step, false);
-					}
-					else if(afterInstruction == Instruction.IF) {
-						final AlgoTreeNode afterAfter = (AlgoTreeNode)parent.getChildAfter(after);
-						if(afterAfter != null && afterAfter.getAlgoLine().getInstruction() == Instruction.ELSE) {
-							step++;
-						}
-					}
-				}
-				moveNode(node, step, true);
 			}
 
 		});
@@ -247,31 +250,33 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 
 		});
+		this.setJMenuBar(createEditorMenuBar());
 		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain && !AlgogoDesktop.DEBUG) {
-			new GithubUpdater("Skyost", "Algogo", AlgogoDesktop.APP_VERSION, this).start();
+			new GithubUpdater("Skyost", "Algogo", AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater()).start();
 		}
 	}
 
 	@Override
 	public final void lineAdded(final Instruction instruction, final String... args) {
-		addNode(new AlgoTreeNode(instruction, args));
+		addNode(new AlgoLine(instruction, args));
 	}
 
 	@Override
-	public final void lineEdited(final AlgoTreeNode node, final String... args) {
-		final AlgoLine line = node.getAlgoLine();
+	public final void nodeEdited(final DefaultMutableTreeNode node, final String... args) {
+		final AlgoLine line = AlgorithmTree.getAttachedAlgoLine(node);
 		final String[] currentArgs = line.getArgs();
 		if(currentArgs.equals(args)) {
 			return;
 		}
 		if(line.getInstruction() == Instruction.IF && (Boolean.valueOf(currentArgs[1]) && !Boolean.valueOf(args[1]))) {
-			final AlgoTreeNode els = ((AlgoTreeNode)((AlgoTreeNode)node.getParent()).getChildAfter(node));
-			if(els != null && els.getAlgoLine().getInstruction() == Instruction.ELSE) {
-				els.removeFromParent();
+			final DefaultMutableTreeNode elsee = ((DefaultMutableTreeNode)((DefaultMutableTreeNode)node.getParent()).getChildAfter(node));
+			if(elsee != null && AlgorithmTree.getAttachedAlgoLine(elsee).getInstruction() == Instruction.ELSE) {
+				elsee.removeFromParent();
 			}
 		}
 		line.setArgs(args);
 		Utils.reloadTree(tree, node.getParent());
+		tree.setSelectionPath(new TreePath(node));
 		algorithmChanged(true);
 	}
 
@@ -296,37 +301,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		JOptionPane.showMessageDialog(this, LanguageManager.getString("joptionpane.invalidauthor", newAuthor), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 		return false;
 	}
-
-	@Override
-	public final void updaterStarted() {}
-
-	@Override
-	public final void updaterException(final Exception ex) {
-		ErrorDialog.errorMessage(this, ex);
-	}
-
-	@Override
-	public final void updaterResponse(final String response) {}
-
-	@Override
-	public final void updaterUpdateAvailable(final String localVersion, final String remoteVersion) {
-		try {
-			final JCheckBox doNotShowItAgain = new JCheckBox(LanguageManager.getString("joptionpane.updateavailable.objects.donotautocheckagain"));
-			doNotShowItAgain.setSelected(AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain);
-			JOptionPane.showMessageDialog(this, new Object[]{new JLabelLink(LanguageManager.getString("joptionpane.updateavailable.message", remoteVersion, AlgogoDesktop.APP_WEBSITE), new URL(AlgogoDesktop.APP_WEBSITE)), doNotShowItAgain}, LanguageManager.getString("joptionpane.updateavailable.title"), JOptionPane.INFORMATION_MESSAGE);
-			final boolean value = doNotShowItAgain.isSelected();
-			if(AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain != value) {
-				AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain = value;
-				AlgogoDesktop.SETTINGS.save();
-			}
-		}
-		catch(final Exception ex) {
-			ErrorDialog.errorMessage(this, ex);
-		}
-	}
-
-	@Override
-	public final void updaterNoUpdate(final String localVersion, final String remoteVersion) {}
 
 	/**
 	 * Creates the menu bar of the editor.
@@ -528,8 +502,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				if(paths == null) {
 					return;
 				}
-				for(final AlgoTreeNode node : clipboard) {
-					addNode(node.clone()); // We clone it twice.
+				for(final DefaultMutableTreeNode node : clipboard) {
+					addNode(AlgorithmTree.getAttachedAlgoLine(node).clone());
 				}
 			}
 
@@ -548,14 +522,14 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				if(paths == null || paths.length < 0) {
 					return;
 				}
-				final AlgoTreeNode selected = (AlgoTreeNode)paths[0].getLastPathComponent();
-				if(selected.equals(variables) || selected.equals(beginning) || selected.equals(end)) {
+				final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)paths[0].getLastPathComponent();
+				if(selected.equals(tree.variables) || selected.equals(tree.beginning) || selected.equals(tree.end)) {
 					return;
 				}
 				clipboard.clear();
 				for(final TreePath path : paths) {
-					final AlgoTreeNode node = (AlgoTreeNode)path.getLastPathComponent();
-					clipboard.add(node.clone());
+					final DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+					clipboard.add((DefaultMutableTreeNode)node.clone());
 					removeNode(node);
 				}
 				paste.setEnabled(true);
@@ -575,13 +549,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				if(paths == null || paths.length < 0) {
 					return;
 				}
-				final AlgoTreeNode selected = (AlgoTreeNode)paths[0].getLastPathComponent();
-				if(selected.equals(variables) || selected.equals(beginning) || selected.equals(end)) {
+				final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)paths[0].getLastPathComponent();
+				if(selected.equals(tree.variables) || selected.equals(tree.beginning) || selected.equals(tree.end)) {
 					return;
 				}
 				clipboard.clear();
 				for(final TreePath path : paths) {
-					clipboard.add(((AlgoTreeNode)path.getLastPathComponent()).clone());
+					clipboard.add((DefaultMutableTreeNode)((DefaultMutableTreeNode)path.getLastPathComponent()).clone());
 				}
 				paste.setEnabled(true);
 			}
@@ -606,18 +580,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				new GithubUpdater("Skyost", "Algogo", AlgogoDesktop.APP_VERSION, new GithubUpdaterResultListener() {
-
-					@Override
-					public final void updaterStarted() {}
-
-					@Override
-					public final void updaterException(final Exception ex) {
-						ErrorDialog.errorMessage(EditorFrame.this, ex);
-					}
-
-					@Override
-					public final void updaterResponse(final String response) {}
+				new GithubUpdater("Skyost", "Algogo", AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater() {
 
 					@Override
 					public final void updaterUpdateAvailable(final String localVersion, final String remoteVersion) {
@@ -711,35 +674,35 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @param node The editor.
 	 */
 
-	private final void addNode(final AlgoTreeNode node) {
-		final AlgoLine line = node.getAlgoLine();
+	private final void addNode(final AlgoLine line) {
+		final DefaultMutableTreeNode node = new DefaultMutableTreeNode(new AlgorithmUserObject(line));
 		final Instruction instruction = line.getInstruction();
 		if(instruction == Instruction.CREATE_VARIABLE) {
-			variables.add(node);
-			Utils.reloadTree(tree, variables);
-			tree.expandPath(new TreePath(variables.getPath()));
+			tree.variables.add(node);
+			Utils.reloadTree(tree, tree.variables);
+			tree.expandPath(new TreePath(tree.variables.getPath()));
 			algorithmChanged(true);
 			tree.setSelectionPath(new TreePath(node.getPath()));
 			return;
 		}
-		final AlgoTreeNode selected = (AlgoTreeNode)tree.getLastSelectedPathComponent();
-		if(selected == null || selected.equals(variables) || selected.equals(beginning) || selected.equals(end)) {
-			beginning.add(node);
-			Utils.reloadTree(tree, beginning);
-			tree.expandPath(new TreePath(beginning.getPath()));
+		final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		if(selected == null || selected.equals(tree.variables) || selected.equals(tree.beginning) || selected.equals(tree.end)) {
+			tree.beginning.add(node);
+			Utils.reloadTree(tree, tree.beginning);
+			tree.expandPath(new TreePath(tree.beginning.getPath()));
 			algorithmChanged(true);
 			tree.setSelectionPath(new TreePath(node.getPath()));
 			return;
 		}
-		if(selected.getAllowsChildren() && instruction != Instruction.ELSE) {
+		if(AlgorithmTree.getAttachedAlgoLine(selected).getAllowsChildren() && instruction != Instruction.ELSE) {
 			selected.add(node);
 			Utils.reloadTree(tree, selected);
 			tree.expandPath(new TreePath(selected.getPath()));
 		}
 		else {
-			AlgoTreeNode parent = (AlgoTreeNode)selected.getParent();
-			if(parent.equals(variables)) {
-				parent = beginning;
+			DefaultMutableTreeNode parent = (DefaultMutableTreeNode)selected.getParent();
+			if(parent.equals(tree.variables)) {
+				parent = tree.beginning;
 			}
 			parent.insert(node, parent.getIndex(selected) + 1);
 			Utils.reloadTree(tree, parent);
@@ -755,11 +718,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @param node The editor.
 	 */
 
-	private final void removeNode(final AlgoTreeNode node) {
-		final AlgoLine line = node.getAlgoLine();
+	private final void removeNode(final DefaultMutableTreeNode node) {
+		final AlgoLine line = AlgorithmTree.getAttachedAlgoLine(node);
 		if(line.getInstruction() == Instruction.IF && Boolean.valueOf(line.getArgs()[1])) {
-			final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
-			((AlgoTreeNode)parent.getChildAt(parent.getIndex(node) + 1)).removeFromParent();
+			final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+			((DefaultMutableTreeNode)parent.getChildAt(parent.getIndex(node) + 1)).removeFromParent();
 		}
 		node.removeFromParent();
 		Utils.reloadTree(tree, node.getParent());
@@ -771,68 +734,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 */
 
 	private final void resetEditor() {
-		if(variables != null) {
-			variables.removeAllChildren();
-		}
-		if(beginning != null) {
-			beginning.removeAllChildren();
-		}
-		if(tree != null) {
-			Utils.reloadTree(tree);
-		}
 		algoPath = null;
 		algoChanged = false;
 		algorithm = new Algorithm(LanguageManager.getString("editor.defaultalgorithm.untitled"), LanguageManager.getString("editor.defaultalgorithm.anonymous"));
 		algorithm.addOptionsListener(this);
 		this.setTitle(buildTitle());
-		final DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-		root.add(variables = new AlgoTreeNode(algorithm.getVariables()));
-		root.add(beginning = new AlgoTreeNode(algorithm.getInstructions()));
-		root.add(end = new AlgoTreeNode(Keyword.END));
-		tree = new JTree(root);
-		tree.setShowsRootHandles(true);
-		tree.setRootVisible(false);
-		tree.addTreeSelectionListener(new TreeSelectionListener() {
-
-			@Override
-			public final void valueChanged(final TreeSelectionEvent event) {
-				final TreePath path = event.getNewLeadSelectionPath();
-				if(path == null) {
-					for(final JButton button : new JButton[]{btnRemoveLine, btnEditLine, btnUp, btnDown}) {
-						button.setEnabled(false);
-					}
-					return;
-				}
-				final AlgoTreeNode selected = (AlgoTreeNode)path.getLastPathComponent();
-				final boolean enabled = !selected.equals(variables) && !selected.equals(beginning) && !selected.equals(end);
-				for(final JButton button : new JButton[]{btnRemoveLine, btnEditLine, btnUp, btnDown}) {
-					button.setEnabled(enabled);
-				}
-			}
-
-		});
-		tree.addKeyListener(new KeyListener() {
-
-			@Override
-			public final void keyPressed(final KeyEvent event) {}
-
-			@Override
-			public final void keyReleased(final KeyEvent event) {}
-
-			@Override
-			public final void keyTyped(final KeyEvent event) {
-				if(event.getKeyChar() == '\177') {
-					btnRemoveLine.getActionListeners()[0].actionPerformed(null);
-				}
-			}
-
-		});
-		final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)tree.getCellRenderer();
-		renderer.setLeafIcon(null);
-		renderer.setClosedIcon(null);
-		renderer.setOpenIcon(null);
-		scrollPane.setViewportView(tree);
-		EditorFrame.this.setJMenuBar(createEditorMenuBar());
+		tree.fromAlgorithm(algorithm);
 		Utils.reloadTree(tree);
 	}
 
@@ -875,16 +782,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 			EditorFrame.algorithm = algorithm;
 			algorithm.addOptionsListener(EditorFrame.this);
-			variables.removeAllChildren();
-			variables.setAlgoLine(algorithm.getVariables());
-			beginning.removeAllChildren();
-			beginning.setAlgoLine(algorithm.getInstructions());
-			for(final AlgoLine variable : algorithm.getVariables().getChildren()) {
-				variables.add(new AlgoTreeNode(variable), false);
-			}
-			for(final AlgoLine instruction : algorithm.getInstructions().getChildren()) {
-				beginning.add(new AlgoTreeNode(instruction), false);
-			}
+			tree.fromAlgorithm(algorithm);
 			algoPath = file.getPath();
 			algoChanged = false;
 			Utils.reloadTree(tree);
@@ -946,36 +844,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	}
 
 	/**
-	 * Moves a node (into the tree).
-	 * 
-	 * @param node The node.
-	 * @param step Steps (forward or backward).
-	 * @param reload Reload the tree and sets the selection path.
-	 * 
-	 * @return <b>true</b> If the node has successfully moved.
-	 * <br><b>false</b> Otherwise.
-	 */
-
-	private final boolean moveNode(final AlgoTreeNode node, final int step, final boolean reload) {
-		if(step == 0) {
-			return false;
-		}
-		final AlgoTreeNode parent = (AlgoTreeNode)node.getParent();
-		final int index = parent.getIndex(node) + step;
-		if(index > parent.getChildCount() - 1 || index < 0) {
-			return false;
-		}
-		final TreePath path = tree.getSelectionPath();
-		((DefaultTreeModel)tree.getModel()).insertNodeInto(node, parent, index);
-		if(reload) {
-			Utils.reloadTree(tree, parent);
-			tree.setSelectionPath(path);
-			algorithmChanged(true);
-		}
-		return true;
-	}
-
-	/**
 	 * Must be called when the algorithm is changed.
 	 * 
 	 * @param setTitle <b>true</b> If you want to change the editor's title.
@@ -983,10 +851,46 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 */
 
 	public final void algorithmChanged(final boolean setTitle) {
+		algorithm = tree.toAlgorithm(algorithm.getTitle(), algorithm.getAuthor());
 		algoChanged = true;
 		if(setTitle) {
 			this.setTitle(buildTitle());
 		}
+	}
+	
+	private class DefaultGithubUpdater implements GithubUpdaterResultListener {
+		
+		@Override
+		public final void updaterStarted() {}
+
+		@Override
+		public final void updaterException(final Exception ex) {
+			ErrorDialog.errorMessage(EditorFrame.this, ex);
+		}
+
+		@Override
+		public final void updaterResponse(final String response) {}
+
+		@Override
+		public void updaterUpdateAvailable(final String localVersion, final String remoteVersion) {
+			try {
+				final JCheckBox doNotShowItAgain = new JCheckBox(LanguageManager.getString("joptionpane.updateavailable.objects.donotautocheckagain"));
+				doNotShowItAgain.setSelected(AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain);
+				JOptionPane.showMessageDialog(EditorFrame.this, new Object[]{new JLabelLink(LanguageManager.getString("joptionpane.updateavailable.message", remoteVersion, AlgogoDesktop.APP_WEBSITE), new URL(AlgogoDesktop.APP_WEBSITE)), doNotShowItAgain}, LanguageManager.getString("joptionpane.updateavailable.title"), JOptionPane.INFORMATION_MESSAGE);
+				final boolean value = doNotShowItAgain.isSelected();
+				if(AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain != value) {
+					AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain = value;
+					AlgogoDesktop.SETTINGS.save();
+				}
+			}
+			catch(final Exception ex) {
+				ErrorDialog.errorMessage(EditorFrame.this, ex);
+			}
+		}
+
+		@Override
+		public void updaterNoUpdate(final String localVersion, final String remoteVersion) {}
+		
 	}
 
 }

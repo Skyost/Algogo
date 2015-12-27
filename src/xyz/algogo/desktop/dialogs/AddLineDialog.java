@@ -13,7 +13,7 @@ import xyz.algogo.core.Instruction;
 import xyz.algogo.core.utils.VariableHolder.VariableType;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.frames.EditorFrame;
-import xyz.algogo.desktop.utils.AlgoTreeNode;
+import xyz.algogo.desktop.utils.AlgorithmTree;
 import xyz.algogo.desktop.utils.LanguageManager;
 import xyz.algogo.desktop.utils.Utils;
 
@@ -33,6 +33,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.wordpress.tips4java.ComponentBorder;
 
@@ -137,13 +138,13 @@ public class AddLineDialog extends JDialog {
 	 * 
 	 * @param caller Used to send the response.
 	 * @param component The parent component (will be used in dialogs).
-	 * @param node The algo line.
+	 * @param node The node.
 	 * @param after Will be run after if the user clicks on "OK".
 	 * 
 	 * @return The action listener.
 	 */
 
-	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final AlgoTreeNode node, final Runnable after) {
+	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final DefaultMutableTreeNode node, final Runnable after) {
 		final List<String> variables = new ArrayList<String>(getVariables().keySet());
 		return listenerForInstruction(caller, component, node, after, variables.toArray(new String[variables.size()]));
 	}
@@ -153,14 +154,14 @@ public class AddLineDialog extends JDialog {
 	 * 
 	 * @param caller Used to send the response.
 	 * @param component The parent component (will be used in dialogs).
-	 * @param node The algo line.
+	 * @param node The node.
 	 * @param after Will be run after if the user clicks on "OK".
 	 * @param variables The variables (for instructions like SHOW_VARIABLE, FOR, ...).
 	 * 
 	 * @return The action listener.
 	 */
 
-	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final AlgoTreeNode node, final Runnable after, final String... variables) {
+	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final DefaultMutableTreeNode node, final Runnable after, final String... variables) {
 		return listenerForInstruction(caller, component, null, node, after, variables);
 	}
 	
@@ -171,16 +172,18 @@ public class AddLineDialog extends JDialog {
 	 * @param caller Used to send the response.
 	 * @param component The parent component (will be used in dialogs).
 	 * @param instruction The instruction.
-	 * @param node The algo line.
+	 * @param node The node.
 	 * @param after Will be run after if the user clicks on "OK".
 	 * @param variables The variables (for instructions like SHOW_VARIABLE, FOR, ...).
 	 * 
 	 * @return The action listener.
 	 */
 
-	private static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final Instruction instruction, final AlgoTreeNode node, final Runnable after, final String... variables) {
-		final boolean editMode = node != null;
-		switch(editMode ? node.getAlgoLine().getInstruction() : instruction) {
+	private static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final Instruction instruction, final DefaultMutableTreeNode node, final Runnable after, final String... variables) {
+		final AlgoLine line = node == null ? null : AlgorithmTree.getAttachedAlgoLine(node);
+		final boolean editMode = line != null;
+		final String[] args = line == null ? null : line.getArgs();
+		switch(editMode ? line.getInstruction() : instruction) {
 		case CREATE_VARIABLE:
 			return new ActionListener() {
 
@@ -189,7 +192,6 @@ public class AddLineDialog extends JDialog {
 					final JTextField varName = new JTextField();
 					final JComboBox<String> varTypes = new JComboBox<String>(new String[]{LanguageManager.getString("addline.createvariable.dialog.object.string"), LanguageManager.getString("addline.createvariable.dialog.object.number")});
 					if(editMode) {
-						final String[] args = node.getAlgoLine().getArgs();
 						varName.setText(args[0]);
 						varTypes.setSelectedIndex(Integer.valueOf(args[1]));
 					}
@@ -204,7 +206,7 @@ public class AddLineDialog extends JDialog {
 							return;
 						}
 						if(editMode) {
-							caller.lineEdited(node, var, String.valueOf(varTypes.getSelectedIndex()));
+							caller.nodeEdited(node, var, String.valueOf(varTypes.getSelectedIndex()));
 						}
 						else {
 							caller.lineAdded(instruction, var, String.valueOf(varTypes.getSelectedIndex()));
@@ -225,7 +227,6 @@ public class AddLineDialog extends JDialog {
 					final JTextField value = new JTextField();
 					attachPickerButton(component, value);
 					if(editMode) {
-						final String[] args = node.getAlgoLine().getArgs();
 						if(Arrays.asList(variables).contains(args[0])) {
 							cmboxVariables.setSelectedItem(args[0]);
 						}
@@ -237,8 +238,8 @@ public class AddLineDialog extends JDialog {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						if(node != null) {
-							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString(), newValue);
+						if(editMode) {
+							caller.nodeEdited(node, cmboxVariables.getSelectedItem().toString(), newValue);
 						}
 						else {
 							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), newValue);
@@ -258,15 +259,14 @@ public class AddLineDialog extends JDialog {
 					final JComboBox<String> cmboxVariables = new JComboBox<String>(variables);
 					final JCheckBox lineBreak = new JCheckBox(LanguageManager.getString("addline.showvariable.dialog.object.linebreak"));
 					if(editMode) {
-						final String[] args = node.getAlgoLine().getArgs();
 						if(Arrays.asList(variables).contains(args[0])) {
 							cmboxVariables.setSelectedItem(args[0]);
 						}
 						lineBreak.setSelected(Boolean.valueOf(args[1]));
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.showvariable.dialog.title"), LanguageManager.getString("addline.showvariable.dialog.message"), LanguageManager.getString("addline.showvariable.dialog.tip"), cmboxVariables, lineBreak)) {
-						if(node != null) {
-							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString(), String.valueOf(lineBreak.isSelected()));
+						if(editMode) {
+							caller.nodeEdited(node, cmboxVariables.getSelectedItem().toString(), String.valueOf(lineBreak.isSelected()));
 						}
 						else {
 							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), String.valueOf(lineBreak.isSelected()));
@@ -285,14 +285,13 @@ public class AddLineDialog extends JDialog {
 				public final void actionPerformed(final ActionEvent event) {
 					final JComboBox<String> cmboxVariables = new JComboBox<String>(variables);
 					if(editMode) {
-						final String[] args = node.getAlgoLine().getArgs();
 						if(Arrays.asList(variables).contains(args[0])) {
 							cmboxVariables.setSelectedItem(args[0]);
 						}
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.readvariable.dialog.title"), LanguageManager.getString("addline.readvariable.dialog.message"), LanguageManager.getString("addline.readvariable.dialog.tip"), cmboxVariables)) {
-						if(node != null) {
-							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString());
+						if(editMode) {
+							caller.nodeEdited(node, cmboxVariables.getSelectedItem().toString());
 						}
 						else {
 							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString());
@@ -312,7 +311,6 @@ public class AddLineDialog extends JDialog {
 					final JTextField value = new JTextField();
 					final JCheckBox lineBreak = new JCheckBox(LanguageManager.getString("addline.showmessage.dialog.object.linebreak"));
 					if(editMode) {
-						final String[] args = node.getAlgoLine().getArgs();
 						value.setText(args[0]);
 						lineBreak.setSelected(Boolean.valueOf(args[1]));
 					}
@@ -322,8 +320,8 @@ public class AddLineDialog extends JDialog {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						if(node != null) {
-							caller.lineEdited(node, message, String.valueOf(lineBreak.isSelected()));
+						if(editMode) {
+							caller.nodeEdited(node, message, String.valueOf(lineBreak.isSelected()));
 						}
 						else {
 							caller.lineAdded(instruction, message, String.valueOf(lineBreak.isSelected()));
@@ -344,7 +342,6 @@ public class AddLineDialog extends JDialog {
 					attachPickerButton(component, condition);
 					final JCheckBox addElse = new JCheckBox(LanguageManager.getString("addline.ifelse.dialog.object.addelse"));
 					if(editMode) {
-						final String[] args = node.getAlgoLine().getArgs();
 						condition.setText(args[0]);
 						addElse.setSelected(Boolean.valueOf(args[1]));
 					}
@@ -355,8 +352,8 @@ public class AddLineDialog extends JDialog {
 							return;
 						}
 						final boolean selected = addElse.isSelected();
-						if(node != null) {
-							caller.lineEdited(node, newCondition, String.valueOf(selected));
+						if(editMode) {
+							caller.nodeEdited(node, newCondition, String.valueOf(selected));
 						}
 						else {
 							caller.lineAdded(instruction, newCondition, String.valueOf(selected));
@@ -379,7 +376,6 @@ public class AddLineDialog extends JDialog {
 					final JTextField condition = new JTextField();
 					attachPickerButton(component, condition);
 					if(editMode) {
-						condition.setText(node.getAlgoLine().getArgs()[0]);
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.while.dialog.title"), LanguageManager.getString("addline.while.dialog.message"), LanguageManager.getString("addline.while.dialog.tip"), condition)) {
 						final String newCondition = condition.getText();
@@ -387,8 +383,8 @@ public class AddLineDialog extends JDialog {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						if(node != null) {
-							caller.lineEdited(node, newCondition);
+						if(editMode) {
+							caller.nodeEdited(node, newCondition);
 						}
 						else {
 							caller.lineAdded(instruction, newCondition);
@@ -411,7 +407,6 @@ public class AddLineDialog extends JDialog {
 					final JTextField to = new JTextField();
 					attachPickerButton(component, to);
 					if(editMode) {
-						final String[] args = node.getAlgoLine().getArgs();
 						if(Arrays.asList(variables).contains(args[0])) {
 							cmboxVariables.setSelectedItem(args[0]);
 						}
@@ -425,8 +420,8 @@ public class AddLineDialog extends JDialog {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						if(node != null) {
-							caller.lineEdited(node, cmboxVariables.getSelectedItem().toString(), newFrom, newTo);
+						if(editMode) {
+							caller.nodeEdited(node, cmboxVariables.getSelectedItem().toString(), newFrom, newTo);
 						}
 						else {
 							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), newFrom, newTo);
@@ -484,11 +479,11 @@ public class AddLineDialog extends JDialog {
 		/**
 		 * When a line is edited.
 		 * 
-		 * @param node The AlgoTreeNode.
+		 * @param node The node.
 		 * @param args The arguments.
 		 */
 		
-		public void lineEdited(final AlgoTreeNode node, final String... args);
+		public void nodeEdited(final DefaultMutableTreeNode node, final String... args);
 
 	}
 	
