@@ -19,9 +19,19 @@ public class AlgorithmTree extends JTree {
 	public final DefaultMutableTreeNode beginning = new DefaultMutableTreeNode(new AlgorithmUserObject(new AlgoLine(Keyword.BEGINNING)));
 	public final DefaultMutableTreeNode end = new DefaultMutableTreeNode(new AlgorithmUserObject(new AlgoLine(Keyword.END)));
 	
+	/**
+	 * Creates a new tree.
+	 */
+	
 	public AlgorithmTree() {
 		this(null);
 	}
+	
+	/**
+	 * Creates a new tree with the specified algorithm.
+	 * 
+	 * @param algorithm The algorithm.
+	 */
 	
 	public AlgorithmTree(final Algorithm algorithm) {
 		super(new DefaultMutableTreeNode(AlgogoDesktop.APP_NAME));
@@ -34,6 +44,12 @@ public class AlgorithmTree extends JTree {
 		}
 	}
 	
+	/**
+	 * Loads the specified algorithm.
+	 * 
+	 * @param algorithm The algorithm.
+	 */
+	
 	public final void fromAlgorithm(final Algorithm algorithm) {
 		variables.removeAllChildren();
 		for(final AlgoLine variable : algorithm.getVariables().getChildren()) {
@@ -44,6 +60,15 @@ public class AlgorithmTree extends JTree {
 			beginning.add(asMutableTreeNode(instruction));
 		}
 	}
+	
+	/**
+	 * Converts this tree to an algorithm with the specified author and title.
+	 * 
+	 * @param title The title.
+	 * @param author The author.
+	 * 
+	 * @return The algorithm.
+	 */
 	
 	public final Algorithm toAlgorithm(final String title, final String author) {
 		final Algorithm algorithm = new Algorithm(title, author);
@@ -58,7 +83,15 @@ public class AlgorithmTree extends JTree {
 		return algorithm;
 	}
 	
-	private final DefaultMutableTreeNode asMutableTreeNode(final AlgoLine line) {
+	/**
+	 * Converts a line to a node.
+	 * 
+	 * @param line The line.
+	 * 
+	 * @return The DefaultMutableTreeNode.
+	 */
+	
+	public static final DefaultMutableTreeNode asMutableTreeNode(final AlgoLine line) {
 		final DefaultMutableTreeNode representation = new DefaultMutableTreeNode(new AlgorithmUserObject(line));
 		final List<AlgoLine> children = line.getChildren();
 		if(children != null && children.size() > 0) {
@@ -69,7 +102,15 @@ public class AlgorithmTree extends JTree {
 		return representation;
 	}
 	
-	private final AlgoLine asAlgoLine(final DefaultMutableTreeNode node) {
+	/**
+	 * Converts a node to an algo line.
+	 * 
+	 * @param node The node.
+	 * 
+	 * @return The AlgoLine.
+	 */
+	
+	public static final AlgoLine asAlgoLine(final DefaultMutableTreeNode node) {
 		AlgoLine representation = getAttachedAlgoLine(node);
 		representation = representation.isKeyword() ? new AlgoLine(representation.getKeyword()) : new AlgoLine(representation.getInstruction(), representation.getArgs());
 		for(int i = 0; i != node.getChildCount(); i++) {
@@ -77,6 +118,14 @@ public class AlgorithmTree extends JTree {
 		}
 		return representation;
 	}
+	
+	/**
+	 * Gets the attached algo line of a node.
+	 * 
+	 * @param node The node.
+	 * 
+	 * @return The algo line or null if it does not exist.
+	 */
 	
 	public static final AlgoLine getAttachedAlgoLine(final DefaultMutableTreeNode node) {
 		final Object userObject = node.getUserObject();
@@ -215,6 +264,12 @@ public class AlgorithmTree extends JTree {
 		
 		private final AlgoLine line;
 		
+		/**
+		 * Creates a new user object representation (used to as user object in tree nodes).
+		 * 
+		 * @param line The algo line (used for string representation and to hold some actions).
+		 */
+		
 		public AlgorithmUserObject(final AlgoLine line) {
 			this.line = line;
 		}
@@ -223,6 +278,12 @@ public class AlgorithmTree extends JTree {
 		public final String toString() {
 			return line.isKeyword() ? AlgoLineUtils.getLine(line.getKeyword()) : AlgoLineUtils.getLine(line.getInstruction(), line.getArgs());
 		}
+		
+		/**
+		 * Gets the algo line.
+		 * 
+		 * @return The algo line.
+		 */
 		
 		public final AlgoLine getAlgoLine() {
 			return line;
