@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
@@ -81,6 +82,35 @@ public class AlgorithmTree extends JTree {
 			instructions.addChild(asAlgoLine((DefaultMutableTreeNode)this.beginning.getChildAt(i)));
 		}
 		return algorithm;
+	}
+	
+	/**
+	 * Reloads this tree.
+	 */
+	
+	public final void reload() {
+		reload(null);
+	}
+	
+	/**
+	 * Reloads a node (and its children) in this tree.
+	 * 
+	 * @param node The node.
+	 */
+	
+	public final void reload(final DefaultMutableTreeNode node) {
+		if(node == null) {
+			((DefaultTreeModel)this.getModel()).reload();
+		}
+		else {
+			((DefaultTreeModel)this.getModel()).reload(node);
+		}
+		for(int i = 0; i < this.getRowCount(); i++) {
+			if(this.isExpanded(i)) {
+				continue;
+			}
+			this.expandRow(i);
+		}
 	}
 	
 	/**

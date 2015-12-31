@@ -17,9 +17,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 
 import xyz.algogo.desktop.AlgogoDesktop;
 
@@ -88,35 +85,6 @@ public class Utils {
 			components.add(new JLabel("<html><b>" + LanguageManager.getString("utils.tip") + " :</b> <i>" + tip + "</i></html>"));
 		}
 		return JOptionPane.showConfirmDialog(component, components.toArray(new Object[components.size()]), title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION;
-	}
-
-	/**
-	 * Reloads a JTree.
-	 * 
-	 * @param tree The JTree.
-	 */
-
-	public static final void reloadTree(final JTree tree) {
-		reloadTree(tree, null);
-	}
-
-	/**
-	 * Reloads a node in a JTree.
-	 * 
-	 * @param tree The JTree.
-	 * @param node The node, can be null.
-	 */
-
-	public static final void reloadTree(final JTree tree, final TreeNode node) {
-		if(node == null) {
-			((DefaultTreeModel)tree.getModel()).reload();
-		}
-		else {
-			((DefaultTreeModel)tree.getModel()).reload(node);
-		}
-		for(int i = 0; i < tree.getRowCount(); i++) {
-			tree.expandRow(i);
-		}
 	}
 
 	/**

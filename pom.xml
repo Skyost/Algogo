@@ -65,7 +65,17 @@
   <dependency>
    <groupId>xyz.algogo</groupId>
    <artifactId>algogo-core</artifactId>
-   <version>0.4</version>
+   <version>0.5</version>
   </dependency>
  </dependencies>
+ <repositories>
+  <repository>
+   <id>AlgogoCore-repo</id>
+   <url>https://raw.github.com/Skyost/Algogo/mvn-repo/</url>
+   <snapshots>
+    <enabled>true</enabled>
+    <updatePolicy>always</updatePolicy>
+   </snapshots>
+  </repository>
+ </repositories>
 </project>
