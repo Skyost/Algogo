@@ -53,15 +53,16 @@ public class AlgogoDesktop {
 				public final void run() {
 					final EditorFrame frame = new EditorFrame();
 					frame.setVisible(true);
-					if(args != null && args.length > 0) {
-						final File file = new File(args[0]);
-						if(file.exists()) {
-							try {
-								frame.open(file);
-							}
-							catch(final Exception ex) {
-								ex.printStackTrace();
-							}
+					if(args == null || args.length == 0) {
+						return;
+					}
+					final File file = new File(args[0]);
+					if(file.exists()) {
+						try {
+							frame.open(file);
+						}
+						catch(final Exception ex) {
+							ex.printStackTrace();
 						}
 					}
 				}

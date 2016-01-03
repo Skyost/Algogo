@@ -167,7 +167,6 @@ public class AddLineDialog extends JDialog {
 	
 	/**
 	 * Gets an action listener for the specified instruction.
-	 * <br><b>TODO :</b> Add a verification for expression with brackets (http://stackoverflow.com/a/8910767/3608831).
 	 * 
 	 * @param caller Used to send the response.
 	 * @param component The parent component (will be used in dialogs).
@@ -376,6 +375,7 @@ public class AddLineDialog extends JDialog {
 					final JTextField condition = new JTextField();
 					attachPickerButton(component, condition);
 					if(editMode) {
+						condition.setText(args[0]);
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.while.dialog.title"), LanguageManager.getString("addline.while.dialog.message"), LanguageManager.getString("addline.while.dialog.tip"), condition)) {
 						final String newCondition = condition.getText();
