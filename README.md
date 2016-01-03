@@ -1,7 +1,7 @@
 # <img src="http://www.algogo.xyz/assets/img/icon.png" height="48px" width="48px" title="Icon" alt="Icon"/> Algogo Desktop
 
-[![Downloads](https://img.shields.io/github/downloads/Skyost/Algogo/total.svg)](https://github.com/Skyost/Algogo/releases)
-[![License](https://img.shields.io/github/license/Skyost/Algogo.svg)](https://github.com/Skyost/Algogo/blob/desktop/LICENSE.md)
+[![Downloads](https://img.shields.io/github/downloads/Skyost/Algogo/total.svg?style=flat-square)](https://github.com/Skyost/Algogo/releases)
+[![License](https://img.shields.io/github/license/Skyost/Algogo.svg?style=flat-square)](https://github.com/Skyost/Algogo/blob/desktop/LICENSE.md)
 
 *Algogo is an editor and an algorithm interpreter. Lightweight and easy to use, it is free and open-source.*
 
