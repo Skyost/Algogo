@@ -86,11 +86,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	public static Algorithm algorithm;
 
 	protected static String algoPath;
-	protected static boolean algoChanged;
+	private static boolean algoChanged;
 
-	public static final AlgorithmTree tree = new AlgorithmTree();
+	private static final AlgorithmTree tree = new AlgorithmTree();
 
-	public static final List<DefaultMutableTreeNode> clipboard = new ArrayList<DefaultMutableTreeNode>();
+	private static final List<DefaultMutableTreeNode> clipboard = new ArrayList<DefaultMutableTreeNode>();
 
 	private final JScrollPane scrollPane = new JScrollPane(tree);
 	private final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
@@ -233,7 +233,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		});
 		this.setJMenuBar(createEditorMenuBar());
 		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain && !AlgogoDesktop.DEBUG) {
-			new GithubUpdater("Skyost", "Algogo", AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater()).start();
+			new GithubUpdater(AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater()).start();
 		}
 	}
 
@@ -246,7 +246,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	public final void nodeEdited(final DefaultMutableTreeNode node, final String... args) {
 		final AlgoLine line = AlgorithmTree.getAttachedAlgoLine(node);
 		final String[] currentArgs = line.getArgs();
-		if(currentArgs.equals(args)) {
+		if(currentArgs == args) {
 			return;
 		}
 		if(line.getInstruction() == Instruction.IF && (Boolean.valueOf(currentArgs[1]) && !Boolean.valueOf(args[1]))) {
@@ -500,7 +500,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
 				final TreePath[] paths = tree.getSelectionPaths();
-				if(paths == null || paths.length < 0) {
+				if(paths == null || paths.length < 1) {
 					return;
 				}
 				final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)paths[0].getLastPathComponent();
@@ -527,7 +527,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
 				final TreePath[] paths = tree.getSelectionPaths();
-				if(paths == null || paths.length < 0) {
+				if(paths == null || paths.length < 1) {
 					return;
 				}
 				final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)paths[0].getLastPathComponent();
@@ -561,7 +561,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				new GithubUpdater("Skyost", "Algogo", AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater() {
+				new GithubUpdater(AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater() {
 
 					@Override
 					public final void updaterUpdateAvailable(final String localVersion, final String remoteVersion) {

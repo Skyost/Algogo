@@ -1,9 +1,11 @@
 package xyz.algogo.desktop.utils;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 import com.eclipsesource.json.Json;
@@ -19,25 +21,21 @@ public class GithubUpdater extends Thread {
 	
 	public static final String UPDATER_NAME = "GithubUpdater";
 	public static final String UPDATER_VERSION = "0.1";
-	public static final String[] UPDATER_AUTHORS = new String[]{"Skyost"};
+	
+	public static final String UPDATER_GITHUB_USERNAME = "Skyost";
+	public static final String UPDATER_GITHUB_REPO = "Algogo";
 		
-	private final String githubAuthor;
-	private final String githubRepo;
 	private final String localVersion;
 	private final GithubUpdaterResultListener caller;
 	
 	/**
 	 * Creates a new <b>GithubUpdater</b> instance.
 	 * 
-	 * @param githubAuthor The author of the Github repository.
-	 * @param githubRepo The Github repository.
 	 * @param localVersion The local version.
 	 * @param caller The caller.
 	 */
 	
-	public GithubUpdater(final String githubAuthor, final String githubRepo, final String localVersion, final GithubUpdaterResultListener caller) {
-		this.githubAuthor = githubAuthor;
-		this.githubRepo = githubRepo;
+	public GithubUpdater(final String localVersion, final GithubUpdaterResultListener caller) {
 		this.localVersion = localVersion;
 		this.caller = caller;
 	}
@@ -46,19 +44,23 @@ public class GithubUpdater extends Thread {
 	public final void run() {
 		caller.updaterStarted();
 		try {
-			final HttpURLConnection connection = (HttpURLConnection)new URL("https://api.github.com/repos/" + githubAuthor + "/" + githubRepo + "/releases").openConnection();
-			connection.addRequestProperty("User-Agent", UPDATER_NAME + " by " + Utils.join(" ", UPDATER_AUTHORS) + " v" + UPDATER_VERSION);
+			final HttpURLConnection connection = (HttpURLConnection)new URL("https://api.github.com/repos/" + UPDATER_GITHUB_USERNAME + "/" + UPDATER_GITHUB_REPO + "/releases").openConnection();
+			connection.addRequestProperty("User-Agent", UPDATER_NAME + " by " + UPDATER_GITHUB_USERNAME + " v" + UPDATER_VERSION);
 			final String response = connection.getResponseCode() + " " + connection.getResponseMessage();
 			caller.updaterResponse(response);
 			if(!response.startsWith("2")) {
 				return;
 			}
-			final InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
+			final InputStream input = connection.getInputStream();
+			final InputStreamReader inputStreamReader = new InputStreamReader(input, StandardCharsets.UTF_8);
 			final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 			final JsonArray releases = Json.parse(bufferedReader.readLine()).asArray();
 			if(releases.size() < 1) {
 				return;
 			}
+			input.close();
+			inputStreamReader.close();
+			bufferedReader.close();
 			final String remoteVersion = releases.get(0).asObject().get("tag_name").asString().substring(1);
 			if(compareVersions(remoteVersion, localVersion)) {
 				caller.updaterUpdateAvailable(localVersion, remoteVersion);
