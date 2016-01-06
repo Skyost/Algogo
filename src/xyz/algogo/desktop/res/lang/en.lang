@@ -152,8 +152,13 @@ preferences.language=Language :
 preferences.save=Save
 
 
+wait.title=Please wait...
+wait.message=Checking for updates...
+
+
 utils.tip=Tip
 utils.language.text=Text File
+
 
 joptionpane.error=Error !
 joptionpane.invalidtitle=Invalid title "%s" !

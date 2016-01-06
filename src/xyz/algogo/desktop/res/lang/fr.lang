@@ -155,6 +155,9 @@ preferences.checkforupdates=Chercher automatiquement des mises à jours au déma
 preferences.language=Langage :
 preferences.save=Enregistrer
 
+wait.title=Patientez...
+wait.message=Recherche de mises à jour...
+
 
 utils.tip=Conseil
 utils.language.text=Fichier Texte
@@ -167,6 +170,6 @@ joptionpane.updateavailable.title=Mise à jour disponible !
 joptionpane.updateavailable.objects.donotautocheckagain=Ne plus rechercher des mises à jour automatiquement à l'avenir.
 joptionpane.updateavailable.message=<html><b>Une mise à jour est disponible : v%s.</b><br>Allez sur <i>%s</i> pour télécharger la dernière version.</html>
 joptionpane.updatenotavailable.title=Pas de mise à jour
-joptionpane.updatenotavailable.message=Il n'y a pour l'instant pas de mise à jour disponible.
+joptionpane.updatenotavailable.message=Il n'y a pas de mise à jour disponible pour l'instant.
 joptionpane.settingssaved=Paramètres enregistrés. Veuillez redémarrer l'application.
 joptionpane.fillfields=Vous devez remplir tous les champs !

@@ -1,6 +1,8 @@
 package xyz.algogo.desktop.frames;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
@@ -37,8 +39,10 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -54,6 +58,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
 
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
@@ -562,6 +567,29 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
 				new GithubUpdater(AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater() {
+					
+					private final JDialog dialog = new JDialog();
+					
+					@Override
+					public final void updaterStarted() {
+						dialog.setTitle(LanguageManager.getString("wait.title"));
+						dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+						dialog.setLocationRelativeTo(EditorFrame.this);
+						dialog.setAlwaysOnTop(true);
+						dialog.setResizable(false);
+						final JLabel message = new JLabel(LanguageManager.getString("wait.message"));
+						message.setHorizontalAlignment(SwingConstants.CENTER);
+						message.setFont(message.getFont().deriveFont(Font.ITALIC));
+						dialog.add(message, BorderLayout.CENTER);
+						dialog.pack();
+						dialog.setSize(dialog.getWidth() + 50, dialog.getHeight() + 30);
+						dialog.setVisible(true);
+					}
+					
+					@Override
+					public final void updaterResponse(final String response) {
+						dialog.dispose();
+					}				
 
 					@Override
 					public final void updaterUpdateAvailable(final String localVersion, final String remoteVersion) {
@@ -893,7 +921,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private class DefaultGithubUpdater implements GithubUpdaterResultListener {
 		
 		@Override
-		public final void updaterStarted() {}
+		public void updaterStarted() {}
 
 		@Override
 		public final void updaterException(final Exception ex) {
@@ -901,7 +929,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		}
 
 		@Override
-		public final void updaterResponse(final String response) {}
+		public void updaterResponse(final String response) {}
 
 		@Override
 		public void updaterUpdateAvailable(final String localVersion, final String remoteVersion) {
