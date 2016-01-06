@@ -131,6 +131,9 @@ addline.for.dialog.object.to=To :
 addline.for.dialog.tip=You can use variables here.
 
 
+# No need to specify "error" strings.
+
+
 options.title=Options
 
 options.algorithm.options=Algorithm's Options

@@ -2,6 +2,7 @@ package xyz.algogo.desktop.utils;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,7 +24,19 @@ public class LanguageManager {
 	 * If a key is not found.
 	 */
 	
-	public static final String NOT_FOUND_STRING = "Translation not found";
+	public static final Map<String, String> DEFAULT_STRINGS = Collections.unmodifiableMap(new HashMap<String, String>() {
+
+		private static final long serialVersionUID = 1L;
+		
+		{
+			put("default-string", "Translation not found");
+			put("error.title", "%s");
+			put("error.message", "An error occurred : \"%s\", here is the stacktrace :");
+			put("error.infos", "You can report this issue here.");
+			put("error.close", "Close");
+		}
+		
+	});
 	
 	/**
 	 * The languages package.
@@ -65,11 +78,14 @@ public class LanguageManager {
 	 */
 	
 	public static final String getString(final String key, final Object... args) {
-		final String value = strings.get(key);
+		String value = strings.get(key);
+		if(value == null) {
+			value = DEFAULT_STRINGS.get(key);
+		}
 		if(value != null) {
 			return args == null ? value : String.format(value, args);
 		}
-		return NOT_FOUND_STRING;
+		return DEFAULT_STRINGS.get("default-string");
 	}
 	
 	/**

@@ -131,6 +131,13 @@ addline.for.dialog.object.to=À :
 addline.for.dialog.tip=Vous pouvez aussi utiliser des variables ici.
 
 
+error.title=%s
+
+error.message=Une erreur est survenue : "%s", voici la stacktrace :
+error.infos=Vous pouvez signaler ce problème ici.
+error.close=Fermer
+
+
 options.title=Options
 
 options.algorithm.options=Options de l'Algorithme

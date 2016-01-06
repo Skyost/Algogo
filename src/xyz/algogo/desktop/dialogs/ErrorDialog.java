@@ -21,6 +21,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.utils.JLabelLink;
+import xyz.algogo.desktop.utils.LanguageManager;
 
 public class ErrorDialog extends JDialog {
 
@@ -29,7 +30,7 @@ public class ErrorDialog extends JDialog {
 	private static final String DEFAULT_LINK = "https://github.com/Skyost/Algogo/issues/new?title=Report%20an%20issue&body=**What%20were%20you%20doing%20when%20the%20error%20occurred%20%3F**%0AI%20was%20doing...%0A%0A**OS%20version%20and%20architecture%20(ex.%20Windows%208.1%20-%2064%20bits)%20%3A**%0A%20-%20%20bits%0A%0A**Java%20version%20and%20architecture%20(ex.%20Java%201.7.0_60%20-%2064%20bits)%20%3A**%0AJava%20%20-%20%20bits.%0A%0A**Stacktrace%20(the%20stacktrace%20obtained%20when%20the%20error%20occurred)%20%3A**%0A%s%0A%0A*Be%20sure%20to%20include%20any%20additional%20information%20you%20have%20!%0AThank%20you%20very%20much%20%3B)*";
 	
 	private final JLabel lblSubmitting = new JLabel();
-	private final JLabelLink lblInfos = new JLabelLink("You can report this issue here.", new URL(DEFAULT_LINK.replace("%s", "Paste%20it%20here.")));
+	private final JLabelLink lblInfos = new JLabelLink(LanguageManager.getString("error.infos"), new URL(DEFAULT_LINK.replace("%s", "Paste%20it%20here.")));
 	private final JTextArea errorTextArea = new JTextArea();
 
 	private ErrorDialog(final Component component, final Throwable throwable) throws MalformedURLException {
@@ -37,19 +38,19 @@ public class ErrorDialog extends JDialog {
 		final StringWriter stringWriter = new StringWriter();
 		final PrintWriter printWriter = new PrintWriter(stringWriter);
 		throwable.printStackTrace(printWriter);
-		this.setTitle(error);
+		this.setTitle(LanguageManager.getString("error.title", error));
 		this.setSize(600, 600);
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
-		final JLabel lblMessage = new JLabel("An error occured : \"" + error + "\", here is the stacktrace :");
+		final JLabel lblMessage = new JLabel(LanguageManager.getString("error.message", error));
 		lblMessage.setFont(lblMessage.getFont().deriveFont(Font.BOLD));
 		errorTextArea.setText(stringWriter.toString());
 		errorTextArea.setEditable(false);
 		final JScrollPane scrollPane = new JScrollPane(errorTextArea);
 		lblInfos.setFont(lblMessage.getFont().deriveFont(Font.ITALIC));
 		lblSubmitting.setVisible(false);
-		final JButton btnClose = new JButton("Close");
+		final JButton btnClose = new JButton(LanguageManager.getString("error.close"));
 		btnClose.addActionListener(new ActionListener() {
 
 			@Override
