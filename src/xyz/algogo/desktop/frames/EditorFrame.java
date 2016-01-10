@@ -1,6 +1,7 @@
 package xyz.algogo.desktop.frames;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -149,6 +150,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		renderer.setLeafIcon(null);
 		renderer.setClosedIcon(null);
 		renderer.setOpenIcon(null);
+		renderer.setBorderSelectionColor(Color.decode("#2980B9"));
+		renderer.setBackgroundSelectionColor(Color.decode("#3498DB"));
 		resetEditor();
 		final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
 		btnAddLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_add.png")));
