@@ -11,9 +11,12 @@ import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -23,6 +26,8 @@ public class AppSettings {
 	public boolean updaterDoNotAutoCheckAgain = false;
 	@SerializationOptions(name = "custom-language")
 	public String customLanguage = Locale.getDefault().getLanguage().toLowerCase();
+	@SerializationOptions(name = "recents")
+	public List<String> recents = new ArrayList<String>();
 	
 	private transient File file;
 	
@@ -68,6 +73,14 @@ public class AppSettings {
 				field.set(this, value.asInt());
 				continue;
 			}
+			if(type.equals(List.class)) {
+				final List<String> list = new ArrayList<String>();
+				for(final JsonValue json : value.asArray()) {
+					list.add(json.asString());
+				}
+				field.set(this, list);
+				continue;
+			}
 		}
 		if(needToSave) {
 			save();
@@ -92,6 +105,14 @@ public class AppSettings {
 			}
 			if(type.equals(String.class)) {
 				object.add(options.name(), (String)field.get(this));
+				continue;
+			}
+			if(type.equals(List.class)) {
+				final JsonArray jsonList = new JsonArray();
+				for(final Object item : (List<?>)field.get(this)) {
+					jsonList.add(item.toString());
+				}
+				object.add(options.name(), jsonList);
 				continue;
 			}
 		}

@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private static final List<DefaultMutableTreeNode> clipboard = new ArrayList<DefaultMutableTreeNode>();
 
 	private final JScrollPane scrollPane = new JScrollPane(tree);
+	private final JMenu recents = new JMenu(LanguageManager.getString("editor.menu.file.recents"));
 	private final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
 	private final JButton btnEditLine = new JButton(LanguageManager.getString("editor.button.editline"));
 	private final JButton btnUp = new JButton(LanguageManager.getString("editor.button.up"));
@@ -336,6 +338,18 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		});
 		open.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_open.png")));
 		open.setAccelerator(KeyStroke.getKeyStroke('O', ctrl));
+		for(final String path : AlgogoDesktop.SETTINGS.recents) {
+			final JMenuItem recent = new JMenuItem(path);
+			recent.addActionListener(new ActionListener() {
+				
+				@Override
+				public final void actionPerformed(final ActionEvent event) {
+					
+				}
+				
+			});
+			recents.add(recent);
+		}
 		final JMenuItem save = new JMenuItem(LanguageManager.getString("editor.menu.file.save"));
 		save.addActionListener(new ActionListener() {
 
@@ -646,6 +660,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		final JMenu file = new JMenu(LanguageManager.getString("editor.menu.file"));
 		file.add(neww);
 		file.add(open);
+		file.add(recents);
 		file.add(save);
 		file.add(saveAs);
 		file.addSeparator();
@@ -671,6 +686,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		help.add(about);
 		menuBar.add(help);
 		registerKeyListeners(listeners);
+		refreshPaths();
 		return menuBar;
 	}
 
@@ -809,6 +825,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			algorithm.addOptionsListener(EditorFrame.this);
 			tree.fromAlgorithm(algorithm);
 			algoPath = file.getPath();
+			saveToHistory(algoPath);
 			algoChanged = false;
 			tree.reload();
 			EditorFrame.this.setTitle(buildTitle());
@@ -837,6 +854,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			final AtomicReference<File> reference = new AtomicReference<File>(file);
 			algorithm.saveToFile(reference, AlgorithmFileFormat.DEFAULT_FORMATS[extension.equalsIgnoreCase(".aggc") ? 1 : 0]);
 			algoPath = reference.get().getPath();
+			saveToHistory(algoPath);
 			algoChanged = false;
 			EditorFrame.this.setTitle(buildTitle());
 		}
@@ -865,6 +883,93 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		}
 		catch(final Exception ex) {
 			ErrorDialog.errorMessage(EditorFrame.this, ex);
+		}
+	}
+	
+	/**
+	 * Enregistre le chemin dans l'historique.
+	 * 
+	 * @param path Le chemin.
+	 */
+
+	private final void saveToHistory(final String path) {
+		boolean needSoSave = false;
+		if(AlgogoDesktop.SETTINGS.recents.contains(path)) {
+			AlgogoDesktop.SETTINGS.recents.removeAll(Collections.singleton(path));
+			needSoSave = true;
+		}
+		if(new File(path).exists()) {
+			AlgogoDesktop.SETTINGS.recents.add(0, path);
+			needSoSave = true;
+		}
+		if(needSoSave) {
+			try {
+				AlgogoDesktop.SETTINGS.save();
+			}
+			catch(final Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		refreshPaths();
+	}
+
+	/**
+	 * Rafraichissement des chemins (et donc du menu).
+	 */
+
+	private final void refreshPaths() {
+		boolean needToSave = false;
+		recents.removeAll();
+		for(final String lastFile : new ArrayList<String>(AlgogoDesktop.SETTINGS.recents)) {
+			final File file = new File(lastFile);
+			if(!file.exists()) {
+				AlgogoDesktop.SETTINGS.recents.removeAll(Collections.singleton(lastFile));
+				needToSave = true;
+				continue;
+			}
+			final JMenuItem lastFileItem = new JMenuItem(lastFile);
+			lastFileItem.addActionListener(new ActionListener() {
+
+				@Override
+				public final void actionPerformed(final ActionEvent event) {
+					try {
+						open(file);
+					}
+					catch(final Exception ex) {
+						ErrorDialog.errorMessage(EditorFrame.this, ex);
+					}
+				}
+
+			});
+			recents.add(lastFileItem);
+		}
+		if(needToSave) {
+			try {
+				AlgogoDesktop.SETTINGS.save();
+			}
+			catch(final Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		if(recents.getMenuComponentCount() > 0) {
+			recents.addSeparator();
+			final JMenuItem vider = new JMenuItem(LanguageManager.getString("editor.menu.file.recents.empty"));
+			vider.addActionListener(new ActionListener() {
+
+				@Override
+				public final void actionPerformed(final ActionEvent event) {
+					try {
+						AlgogoDesktop.SETTINGS.recents.clear();
+						AlgogoDesktop.SETTINGS.save();
+						refreshPaths();
+					}
+					catch(final Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+
+			});
+			recents.add(vider);
 		}
 	}
 	
