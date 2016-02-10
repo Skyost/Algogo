@@ -69,6 +69,7 @@ import xyz.algogo.core.AlgorithmListener.AlgorithmOptionsListener;
 import xyz.algogo.core.formats.AlgorithmFileFormat;
 import xyz.algogo.core.language.AlgorithmLanguage;
 import xyz.algogo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.AppSettings;
 import xyz.algogo.desktop.dialogs.AboutDialog;
 import xyz.algogo.desktop.dialogs.AddLineDialog;
 import xyz.algogo.desktop.dialogs.ErrorDialog;
@@ -887,34 +888,32 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	}
 	
 	/**
-	 * Enregistre le chemin dans l'historique.
+	 * Saves the specified path to the "recent files" menu.
 	 * 
-	 * @param path Le chemin.
+	 * @param path The path.
 	 */
 
 	private final void saveToHistory(final String path) {
-		boolean needSoSave = false;
 		if(AlgogoDesktop.SETTINGS.recents.contains(path)) {
 			AlgogoDesktop.SETTINGS.recents.removeAll(Collections.singleton(path));
-			needSoSave = true;
+		}
+		else if(AlgogoDesktop.SETTINGS.recents.size() >= AppSettings.RECENTS_LIMIT) {
+			AlgogoDesktop.SETTINGS.recents.subList(AppSettings.RECENTS_LIMIT - 1, AlgogoDesktop.SETTINGS.recents.size()).clear();
 		}
 		if(new File(path).exists()) {
 			AlgogoDesktop.SETTINGS.recents.add(0, path);
-			needSoSave = true;
 		}
-		if(needSoSave) {
-			try {
-				AlgogoDesktop.SETTINGS.save();
-			}
-			catch(final Exception ex) {
-				ex.printStackTrace();
-			}
+		try {
+			AlgogoDesktop.SETTINGS.save();
+		}
+		catch(final Exception ex) {
+			ex.printStackTrace();
 		}
 		refreshPaths();
 	}
 
 	/**
-	 * Rafraichissement des chemins (et donc du menu).
+	 * Refresh the "recent files" menu.
 	 */
 
 	private final void refreshPaths() {

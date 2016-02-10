@@ -30,6 +30,7 @@ public class AppSettings {
 	public List<String> recents = new ArrayList<String>();
 	
 	private transient File file;
+	public static final transient short RECENTS_LIMIT = 10;
 	
 	public AppSettings(final File file) {
 		this.file = file;
