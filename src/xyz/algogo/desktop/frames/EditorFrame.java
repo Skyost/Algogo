@@ -41,6 +41,7 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -58,6 +59,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
@@ -95,12 +99,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 	protected static String algoPath;
 	private static boolean algoChanged;
+	private static boolean freeEditMode;
 
 	private static final AlgorithmTree tree = new AlgorithmTree();
 
 	private static final List<DefaultMutableTreeNode> clipboard = new ArrayList<DefaultMutableTreeNode>();
 
-	private final JScrollPane scrollPane = new JScrollPane(tree);
+	private final JScrollPane scrollPane = new JScrollPane();
 	private final JMenu recents = new JMenu(LanguageManager.getString("editor.menu.file.recents"));
 	private final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
 	private final JButton btnEditLine = new JButton(LanguageManager.getString("editor.button.editline"));
@@ -339,18 +344,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		});
 		open.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_open.png")));
 		open.setAccelerator(KeyStroke.getKeyStroke('O', ctrl));
-		for(final String path : AlgogoDesktop.SETTINGS.recents) {
-			final JMenuItem recent = new JMenuItem(path);
-			recent.addActionListener(new ActionListener() {
-				
-				@Override
-				public final void actionPerformed(final ActionEvent event) {
-					
-				}
-				
-			});
-			recents.add(recent);
-		}
 		final JMenuItem save = new JMenuItem(LanguageManager.getString("editor.menu.file.save"));
 		save.addActionListener(new ActionListener() {
 
@@ -579,6 +572,21 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 		});
 		preferences.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_preferences.png")));
+		final JCheckBoxMenuItem freeEdit = new JCheckBoxMenuItem(LanguageManager.getString("editor.menu.edit.freeedit"));
+		freeEdit.addActionListener(new ActionListener() {
+
+			@Override
+			public final void actionPerformed(final ActionEvent event) {
+				freeEdit.setSelected(freeEditMode = !freeEditMode);
+				if(freeEditMode) {
+					scrollPane.setViewportView(new RSyntaxTextArea(algorithm.toLanguage(new TextLanguage(false))));
+				}
+				else {
+					scrollPane.setViewportView(tree);
+				}
+			}
+
+		});
 		final JMenuItem checkForUpdates = new JMenuItem(LanguageManager.getString("editor.menu.help.checkforupdates"));
 		checkForUpdates.addActionListener(new ActionListener() {
 
@@ -679,6 +687,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		edit.add(paste);
 		edit.addSeparator();
 		edit.add(preferences);
+		edit.addSeparator();
+		edit.add(freeEdit);
 		menuBar.add(edit);
 		final JMenu help = new JMenu(LanguageManager.getString("editor.menu.help"));
 		help.add(checkForUpdates);
@@ -756,11 +766,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private final void resetEditor() {
 		algoPath = null;
 		algoChanged = false;
+		freeEditMode = false;
 		algorithm = new Algorithm(LanguageManager.getString("editor.defaultalgorithm.untitled"), LanguageManager.getString("editor.defaultalgorithm.anonymous"));
 		algorithm.addOptionsListener(this);
 		this.setTitle(buildTitle());
 		tree.fromAlgorithm(algorithm);
 		tree.reload();
+		scrollPane.setViewportView(tree);
 	}
 	
 	/**

@@ -9,6 +9,16 @@ import xyz.algogo.core.Keyword;
 import xyz.algogo.core.language.AlgorithmLanguage;
 
 public class TextLanguage extends AlgorithmLanguage {
+	
+	private final boolean addWarning;
+	
+	public TextLanguage() {
+		this(true);
+	}
+	
+	public TextLanguage(final boolean addWarning) {
+		this.addWarning = addWarning;
+	}
 
 	@Override
 	public final String getName() {
@@ -23,7 +33,9 @@ public class TextLanguage extends AlgorithmLanguage {
 	@Override
 	public final String translate(final Algorithm algorithm) {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("This is a beta feature : there are still remaining some bugs !" + SEPARATOR + SEPARATOR);
+		if(addWarning) {
+			builder.append("This is a beta feature : there are still remaining some bugs !" + SEPARATOR + SEPARATOR);
+		}
 		builder.append(translate(new AlgoLine(Keyword.VARIABLES)));
 		for(final AlgoLine variable : algorithm.getVariables().getChildren()) {
 			builder.append(translate(variable));
