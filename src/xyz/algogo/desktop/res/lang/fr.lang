@@ -37,7 +37,7 @@ editor.line.instruction.if=SI
 editor.line.instruction.while=TANT_QUE
 editor.line.instruction.else=SINON
 editor.line.instruction.for=POUR
-editor.line.instruction.for.from=ALLANT DE
+editor.line.instruction.for.from=ALLANT_DE
 editor.line.instruction.for.to=À
 
 editor.button.addline=Ajouter ligne...

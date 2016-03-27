@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +22,18 @@ import javax.swing.JOptionPane;
 import xyz.algogo.desktop.AlgogoDesktop;
 
 public class Utils {
+
+	/**
+	 * Strips accents of the input String.
+	 * 
+	 * @param input The input String.
+	 * 
+	 * @return A String without accents.
+	 */
+	
+	public static String stripAccents(final String input) {
+		return Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+	}
 
 	/**
 	 * Escapes HTML characters of the specified String.

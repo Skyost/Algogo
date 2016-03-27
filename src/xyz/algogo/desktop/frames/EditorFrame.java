@@ -60,7 +60,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.irsn.javax.swing.CodeEditorPane;
 
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -69,6 +69,7 @@ import javax.swing.SwingConstants;
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
+import xyz.algogo.core.Keyword;
 import xyz.algogo.core.AlgorithmListener.AlgorithmOptionsListener;
 import xyz.algogo.core.formats.AlgorithmFileFormat;
 import xyz.algogo.core.language.AlgorithmLanguage;
@@ -80,6 +81,7 @@ import xyz.algogo.desktop.dialogs.ErrorDialog;
 import xyz.algogo.desktop.dialogs.OptionsDialog;
 import xyz.algogo.desktop.dialogs.PreferencesDialog;
 import xyz.algogo.desktop.dialogs.AddLineDialog.AlgoLineListener;
+import xyz.algogo.desktop.utils.AlgoLineUtils;
 import xyz.algogo.desktop.utils.AlgorithmTree;
 import xyz.algogo.desktop.utils.AlgorithmTree.AlgorithmUserObject;
 import xyz.algogo.desktop.utils.GithubUpdater;
@@ -102,6 +104,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private static boolean freeEditMode;
 
 	private static final AlgorithmTree tree = new AlgorithmTree();
+	private static final CodeEditorPane textArea = new CodeEditorPane();
 
 	private static final List<DefaultMutableTreeNode> clipboard = new ArrayList<DefaultMutableTreeNode>();
 
@@ -111,6 +114,10 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private final JButton btnEditLine = new JButton(LanguageManager.getString("editor.button.editline"));
 	private final JButton btnUp = new JButton(LanguageManager.getString("editor.button.up"));
 	private final JButton btnDown = new JButton(LanguageManager.getString("editor.button.down"));
+	private final JButton btnTest = new JButton(LanguageManager.getString("editor.button.test"));
+	
+	private final JMenuBar editorMenu = createEditorMenuBar();
+	private final JMenuBar textAreaMenu = createTextAreaMenuBar();
 
 	public EditorFrame() {
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
@@ -171,7 +178,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		btnUp.setEnabled(false);
 		btnDown.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_down.png")));
 		btnDown.setEnabled(false);
-		final JButton btnTest = new JButton(LanguageManager.getString("editor.button.test"));
 		btnTest.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_test.png")));
 		final Container content = this.getContentPane();
 		final GroupLayout groupLayout = new GroupLayout(content);
@@ -248,6 +254,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 		});
 		this.setJMenuBar(createEditorMenuBar());
+		setupHighlighter();
 		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain && !AlgogoDesktop.DEBUG) {
 			new GithubUpdater(AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater()).start();
 		}
@@ -295,6 +302,38 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		}
 		JOptionPane.showMessageDialog(this, LanguageManager.getString("joptionpane.invalidauthor", newAuthor), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 		return false;
+	}
+	
+	/**
+	 * Setups the syntax highlighter.
+	 */
+	
+	public final void setupHighlighter() {
+		final HashMap<String, Color> syntax = new HashMap<String, Color>();
+		for(final Keyword keyword : Keyword.values()) {
+			syntax.put(LanguageManager.getString("editor.line.keyword." + keyword.name().toLowerCase()), Color.decode(AlgoLineUtils.getLineColor(keyword)));
+		}
+		for(final Instruction instruction : Instruction.values()) {
+			syntax.put(LanguageManager.getString("editor.line.instruction." + instruction.name().toLowerCase().replace("_", "")), Color.decode(AlgoLineUtils.getLineColor(instruction)));
+		}
+		for(final String string : new String[]{"editor.line.instruction.createvariable.type", "editor.line.instruction.createvariable.type.string", "editor.line.instruction.createvariable.type.number"}) {
+			final String key = LanguageManager.getString(string);
+			syntax.put(key, Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
+			final String keyWithoutAccent = Utils.stripAccents(key);
+			if(!key.equals(keyWithoutAccent)) {
+				syntax.put(keyWithoutAccent, Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
+			}
+		}
+		for(final String string : new String[]{"editor.line.instruction.for.from", "editor.line.instruction.for.to"}) {
+			final String key = LanguageManager.getString(string);
+			syntax.put(key, Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_2));
+			final String keyWithoutAccent = Utils.stripAccents(key);
+			if(!key.equals(keyWithoutAccent)) {
+				syntax.put(keyWithoutAccent, Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_2));
+			}
+		}
+		textArea.setFont(textArea.getFont().deriveFont(12f));
+		textArea.setKeywordColor(syntax);
 	}
 
 	/**
@@ -572,21 +611,22 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 		});
 		preferences.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_preferences.png")));
-		final JCheckBoxMenuItem freeEdit = new JCheckBoxMenuItem(LanguageManager.getString("editor.menu.edit.freeedit"));
+		final JMenuItem freeEdit = new JMenuItem(LanguageManager.getString("editor.menu.edit.freeedit"));
 		freeEdit.addActionListener(new ActionListener() {
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				freeEdit.setSelected(freeEditMode = !freeEditMode);
-				if(freeEditMode) {
-					scrollPane.setViewportView(new RSyntaxTextArea(algorithm.toLanguage(new TextLanguage(false))));
-				}
-				else {
-					scrollPane.setViewportView(tree);
-				}
+				btnTest.setEnabled(freeEditMode);
+				freeEditMode = !freeEditMode;
+				EditorFrame.this.setJMenuBar(textAreaMenu);
+				textArea.setText(algorithm.toLanguage(new TextLanguage(false)));
+				scrollPane.setViewportView(textArea);
+				EditorFrame.this.revalidate();
+				textArea.requestFocus();
 			}
 
 		});
+		freeEdit.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_unchecked.png"))); // Emulates the JCheckBoxMenuItem.
 		final JMenuItem checkForUpdates = new JMenuItem(LanguageManager.getString("editor.menu.help.checkforupdates"));
 		checkForUpdates.addActionListener(new ActionListener() {
 
@@ -700,6 +740,34 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		refreshPaths();
 		return menuBar;
 	}
+	
+	private final JMenuBar createTextAreaMenuBar() {
+		final HashMap<KeyStroke, ActionListener> listeners = new HashMap<KeyStroke, ActionListener>();
+		final JCheckBoxMenuItem freeEdit = new JCheckBoxMenuItem(LanguageManager.getString("editor.menu.edit.freeedit"));
+		freeEdit.setSelected(true);
+		freeEdit.addActionListener(new ActionListener() {
+
+			@Override
+			public final void actionPerformed(final ActionEvent event) {
+				btnTest.setEnabled(freeEditMode);
+				freeEditMode = !freeEditMode;
+				/* final RSyntaxTextArea textArea = (RSyntaxTextArea)scrollPane.getViewport().getView();
+				 * TODO: parse algorithm
+				 * tree.fromAlgorithm(algorithm);
+				 */
+				EditorFrame.this.setJMenuBar(editorMenu);
+				scrollPane.setViewportView(tree);
+				EditorFrame.this.revalidate();
+			}
+
+		});
+		final JMenuBar menuBar = new JMenuBar();
+		final JMenu edit = new JMenu(LanguageManager.getString("editor.menu.edit"));
+		edit.add(freeEdit);
+		menuBar.add(edit);
+		registerKeyListeners(listeners);
+		return menuBar;
+	}
 
 	public final void registerKeyListeners(final Map<KeyStroke, ActionListener> listeners) {
 		for(final Entry<KeyStroke, ActionListener> entry : listeners.entrySet()) {
@@ -772,6 +840,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		this.setTitle(buildTitle());
 		tree.fromAlgorithm(algorithm);
 		tree.reload();
+		textArea.setText(null);
 		scrollPane.setViewportView(tree);
 	}
 	

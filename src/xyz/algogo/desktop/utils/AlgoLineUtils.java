@@ -6,6 +6,10 @@ import xyz.algogo.core.Keyword;
 
 public class AlgoLineUtils {
 	
+	public static final String KEYWORD_COLOR = "#D35400";
+	public static final String INSTRUCTION_COLOR_1 = "#22313F";
+	public static final String INSTRUCTION_COLOR_2 = "#3498DB";
+	
 	/**
 	 * Checks if the line is an IF and must be followed by an ELSE.
 	 * 
@@ -76,8 +80,8 @@ public class AlgoLineUtils {
 	 * @return The color.
 	 */
 	
-	private static final String getLineColor(final Keyword keyword) {
-		return "#D35400";
+	public static final String getLineColor(final Keyword keyword) {
+		return KEYWORD_COLOR;
 	}
 	
 	/**
@@ -88,16 +92,16 @@ public class AlgoLineUtils {
 	 * @return The color.
 	 */
 	
-	private static final String getLineColor(final Instruction instruction) {
+	public static final String getLineColor(final Instruction instruction) {
 		switch(instruction) {
 		case CREATE_VARIABLE:
 		case ASSIGN_VALUE_TO_VARIABLE:
 		case SHOW_VARIABLE:
 		case READ_VARIABLE:
 		case SHOW_MESSAGE:
-			return "#22313F";
+			return INSTRUCTION_COLOR_1;
 		default:
-			return "#3498DB";
+			return INSTRUCTION_COLOR_2;
 		}
 	}
 
