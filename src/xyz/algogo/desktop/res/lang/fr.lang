@@ -176,3 +176,4 @@ joptionpane.updatenotavailable.title=Pas de mise à jour
 joptionpane.updatenotavailable.message=Il n'y a pas de mise à jour disponible pour l'instant.
 joptionpane.settingssaved=Paramètres enregistrés. Veuillez redémarrer l'application.
 joptionpane.fillfields=Vous devez remplir tous les champs !
+joptionpane.variabledoesnotexist=Cette variable n'existe pas !

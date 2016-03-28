@@ -173,3 +173,4 @@ joptionpane.updatenotavailable.title=No update
 joptionpane.updatenotavailable.message=There is currently no update available.
 joptionpane.settingssaved=Settings saved. Please restart the application.
 joptionpane.fillfields=You must fill all fields !
+joptionpane.variabledoesnotexist=This variable does not exist !

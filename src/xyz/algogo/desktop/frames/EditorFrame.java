@@ -165,8 +165,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		renderer.setLeafIcon(null);
 		renderer.setClosedIcon(null);
 		renderer.setOpenIcon(null);
-		renderer.setBorderSelectionColor(Color.decode("#2980B9"));
-		renderer.setBackgroundSelectionColor(Color.decode("#3498DB"));
+		renderer.setBorderSelectionColor(Color.decode("#95A5A6"));
+		renderer.setBackgroundSelectionColor(Color.decode("#BDC3C7"));
 		resetEditor();
 		final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
 		btnAddLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_add.png")));
@@ -217,7 +217,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				AddLineDialog.listenerForInstruction(EditorFrame.this, EditorFrame.this, (DefaultMutableTreeNode)tree.getSelectionPaths()[0].getLastPathComponent(), null).actionPerformed(event);
+				DefaultMutableTreeNode selected = (DefaultMutableTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
+				if(AlgorithmTree.getAttachedAlgoLine(selected).getInstruction() == Instruction.ELSE) {
+					final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)selected.getParent();
+					selected = (DefaultMutableTreeNode)parent.getChildAt(parent.getIndex(selected) - 1);
+				}
+				AddLineDialog.listenerForInstruction(EditorFrame.this, EditorFrame.this, selected, null).actionPerformed(event);
 			}
 
 		});
@@ -272,10 +277,16 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		if(currentArgs == args) {
 			return;
 		}
-		if(line.getInstruction() == Instruction.IF && (Boolean.valueOf(currentArgs[1]) && !Boolean.valueOf(args[1]))) {
-			final DefaultMutableTreeNode elsee = ((DefaultMutableTreeNode)((DefaultMutableTreeNode)node.getParent()).getChildAfter(node));
-			if(elsee != null && AlgorithmTree.getAttachedAlgoLine(elsee).getInstruction() == Instruction.ELSE) {
-				elsee.removeFromParent();
+		if(line.getInstruction() == Instruction.IF) {
+			if(Boolean.valueOf(currentArgs[1]) && !Boolean.valueOf(args[1])) {
+				final DefaultMutableTreeNode elsee = ((DefaultMutableTreeNode)((DefaultMutableTreeNode)node.getParent()).getChildAfter(node));
+				if(elsee != null && AlgorithmTree.getAttachedAlgoLine(elsee).getInstruction() == Instruction.ELSE) {
+					elsee.removeFromParent();
+				}
+			}
+			else if(!Boolean.valueOf(currentArgs[1]) && Boolean.valueOf(args[1])) {
+				final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+				parent.insert(new DefaultMutableTreeNode(new AlgorithmUserObject(new AlgoLine(Instruction.ELSE))), parent.getIndex(node) + 1);
 			}
 		}
 		line.setArgs(args);
@@ -822,6 +833,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		if(line.getInstruction() == Instruction.IF && Boolean.valueOf(line.getArgs()[1])) {
 			final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
 			((DefaultMutableTreeNode)parent.getChildAt(parent.getIndex(node) + 1)).removeFromParent();
+		}
+		else if(line.getInstruction() == Instruction.ELSE) {
+			final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+			final AlgoLine iffLine = AlgorithmTree.getAttachedAlgoLine(((DefaultMutableTreeNode)parent.getChildAt(parent.getIndex(node) - 1)));
+			iffLine.setArgs(new String[]{iffLine.getArgs()[0], String.valueOf(false)});
 		}
 		node.removeFromParent();
 		algorithmChanged(true, true, (DefaultMutableTreeNode)node.getParent());

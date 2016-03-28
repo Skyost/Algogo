@@ -13,6 +13,7 @@ import xyz.algogo.core.Instruction;
 import xyz.algogo.core.utils.VariableHolder.VariableType;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.frames.EditorFrame;
+import xyz.algogo.desktop.utils.AlgoLineUtils;
 import xyz.algogo.desktop.utils.AlgorithmTree;
 import xyz.algogo.desktop.utils.LanguageManager;
 import xyz.algogo.desktop.utils.Utils;
@@ -195,20 +196,17 @@ public class AddLineDialog extends JDialog {
 						varTypes.setSelectedIndex(Integer.valueOf(args[1]));
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.createvariable.dialog.title"), LanguageManager.getString("addline.createvariable.dialog.message"), LanguageManager.getString("addline.createvariable.dialog.tip"), varName, varTypes)) {
-						final String var = varName.getText();
-						if(!Utils.isAlpha(var) || var.length() == 0) {
-							JOptionPane.showMessageDialog(component, LanguageManager.getString("addline.createvariable.error.notalpha"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
-							return;
-						}
-						if(Arrays.asList(variables).contains(var)) {
-							JOptionPane.showMessageDialog(component, LanguageManager.getString("addline.createvariable.error.alreadyexists"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+						final String[] args = new String[]{varName.getText(), String.valueOf(varTypes.getSelectedIndex())};
+						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						if(error != null) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						if(editMode) {
-							caller.nodeEdited(node, var, String.valueOf(varTypes.getSelectedIndex()));
+							caller.nodeEdited(node, args);
 						}
 						else {
-							caller.lineAdded(instruction, var, String.valueOf(varTypes.getSelectedIndex()));
+							caller.lineAdded(instruction, args);
 						}
 						if(after != null) {
 							after.run();
@@ -232,16 +230,17 @@ public class AddLineDialog extends JDialog {
 						value.setText(args[1]);
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.assignvaluetovariable.dialog.title"), LanguageManager.getString("addline.assignvaluetovariable.dialog.message"), LanguageManager.getString("addline.assignvaluetovariable.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.assignvaluetovariable.dialog.object.value")), value)) {
-						final String newValue = value.getText();
-						if(newValue == null || newValue.length() == 0) {
-							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString(), value.getText()};
+						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						if(error != null) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						if(editMode) {
-							caller.nodeEdited(node, cmboxVariables.getSelectedItem().toString(), newValue);
+							caller.nodeEdited(node, args);
 						}
 						else {
-							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), newValue);
+							caller.lineAdded(instruction, args);
 						}
 						if(after != null) {
 							after.run();
@@ -264,11 +263,17 @@ public class AddLineDialog extends JDialog {
 						lineBreak.setSelected(Boolean.valueOf(args[1]));
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.showvariable.dialog.title"), LanguageManager.getString("addline.showvariable.dialog.message"), LanguageManager.getString("addline.showvariable.dialog.tip"), cmboxVariables, lineBreak)) {
+						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString()};
+						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						if(error != null) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 						if(editMode) {
-							caller.nodeEdited(node, cmboxVariables.getSelectedItem().toString(), String.valueOf(lineBreak.isSelected()));
+							caller.nodeEdited(node, args);
 						}
 						else {
-							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), String.valueOf(lineBreak.isSelected()));
+							caller.lineAdded(instruction, args);
 						}
 						if(after != null) {
 							after.run();
@@ -289,11 +294,17 @@ public class AddLineDialog extends JDialog {
 						}
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.readvariable.dialog.title"), LanguageManager.getString("addline.readvariable.dialog.message"), LanguageManager.getString("addline.readvariable.dialog.tip"), cmboxVariables)) {
+						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString()};
+						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						if(error != null) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 						if(editMode) {
-							caller.nodeEdited(node, cmboxVariables.getSelectedItem().toString());
+							caller.nodeEdited(node, args);
 						}
 						else {
-							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString());
+							caller.lineAdded(instruction, args);
 						}
 						if(after != null) {
 							after.run();
@@ -314,16 +325,17 @@ public class AddLineDialog extends JDialog {
 						lineBreak.setSelected(Boolean.valueOf(args[1]));
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.showmessage.dialog.title"), LanguageManager.getString("addline.showmessage.dialog.message"), LanguageManager.getString("addline.showmessage.dialog.tip"), value, lineBreak)) {
-						final String message = value.getText();
-						if(message.length() == 0) {
-							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+						final String[] args = new String[]{value.getText(), String.valueOf(lineBreak.isSelected())};
+						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						if(error != null) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						if(editMode) {
-							caller.nodeEdited(node, message, String.valueOf(lineBreak.isSelected()));
+							caller.nodeEdited(node, args);
 						}
 						else {
-							caller.lineAdded(instruction, message, String.valueOf(lineBreak.isSelected()));
+							caller.lineAdded(instruction, args);
 						}
 						if(after != null) {
 							after.run();
@@ -345,20 +357,20 @@ public class AddLineDialog extends JDialog {
 						addElse.setSelected(Boolean.valueOf(args[1]));
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.ifelse.dialog.title"), LanguageManager.getString("addline.ifelse.dialog.message"), LanguageManager.getString("addline.ifelse.dialog.tip"), condition, addElse)) {
-						final String newCondition = condition.getText();
-						if(newCondition.length() == 0) {
-							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+						final String[] args = new String[]{condition.getText(), String.valueOf(addElse.isSelected())};
+						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						if(error != null) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						final boolean selected = addElse.isSelected();
 						if(editMode) {
-							caller.nodeEdited(node, newCondition, String.valueOf(selected));
+							caller.nodeEdited(node, args);
 						}
 						else {
-							caller.lineAdded(instruction, newCondition, String.valueOf(selected));
+							caller.lineAdded(instruction, args);
 						}
-						if(selected) {
-							caller.lineAdded(Instruction.ELSE, condition.getText());
+						if(!editMode && addElse.isSelected()) {
+							caller.lineAdded(Instruction.ELSE);
 						}
 						if(after != null) {
 							after.run();
@@ -378,16 +390,17 @@ public class AddLineDialog extends JDialog {
 						condition.setText(args[0]);
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.while.dialog.title"), LanguageManager.getString("addline.while.dialog.message"), LanguageManager.getString("addline.while.dialog.tip"), condition)) {
-						final String newCondition = condition.getText();
-						if(newCondition.length() == 0) {
-							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+						final String[] args = new String[]{condition.getText()};
+						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						if(error != null) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						if(editMode) {
-							caller.nodeEdited(node, newCondition);
+							caller.nodeEdited(node, args);
 						}
 						else {
-							caller.lineAdded(instruction, newCondition);
+							caller.lineAdded(instruction, args);
 						}
 						if(after != null) {
 							after.run();
@@ -414,17 +427,17 @@ public class AddLineDialog extends JDialog {
 						to.setText(args[2]);
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.for.dialog.title"), LanguageManager.getString("addline.for.dialog.message"), LanguageManager.getString("addline.for.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.for.dialog.object.from")), from, new JLabel(LanguageManager.getString("addline.for.dialog.object.to")), to)) {
-						final String newFrom = from.getText();
-						final String newTo = to.getText();
-						if(newFrom.length() == 0 || newTo.length() == 0) {
-							JOptionPane.showMessageDialog(component, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString(), from.getText(), to.getText()};
+						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						if(error != null) {
+							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						if(editMode) {
-							caller.nodeEdited(node, cmboxVariables.getSelectedItem().toString(), newFrom, newTo);
+							caller.nodeEdited(node, args);
 						}
 						else {
-							caller.lineAdded(instruction, cmboxVariables.getSelectedItem().toString(), newFrom, newTo);
+							caller.lineAdded(instruction, args);
 						}
 						if(after != null) {
 							after.run();

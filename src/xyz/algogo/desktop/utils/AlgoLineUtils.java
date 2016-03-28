@@ -1,5 +1,7 @@
 package xyz.algogo.desktop.utils;
 
+import java.util.List;
+
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Instruction;
 import xyz.algogo.core.Keyword;
@@ -64,9 +66,8 @@ public class AlgoLineUtils {
 			builder.append(Utils.escapeHTML(args[0]) + " <b>" + LanguageManager.getString("editor.line.instruction.for.from") + "</b> " + args[1] + " <b>" + LanguageManager.getString("editor.line.instruction.for.to") + "</b> " + args[2]);
 			break;
 		case ELSE:
-			break;
 		default:
-			builder.delete(0, builder.length() - 1);
+			builder.delete(builder.length() - 1, builder.length());
 			break;
 		}
 		return builder.append("</span></html>").toString();
@@ -103,6 +104,52 @@ public class AlgoLineUtils {
 		default:
 			return INSTRUCTION_COLOR_2;
 		}
+	}
+	
+	/**
+	 * Validates a line with its arguments.
+	 * 
+	 * @param variables The algorithm current variables.
+	 * @param instruction The instruction.
+	 * @param args The arguments.
+	 * 
+	 * @return An error message or null if the line can be created.
+	 */
+	
+	public static final String validate(final List<String> variables, final Instruction instruction, final String... args) {
+		switch(instruction) {
+		case CREATE_VARIABLE:
+			if(!Utils.isAlpha(args[0]) || args[0].isEmpty()) {
+				return "addline.createvariable.error.notalpha";
+			}
+			if(variables.contains(args[0])) {
+				return "addline.createvariable.error.alreadyexists";
+			}
+			break;
+		case ASSIGN_VALUE_TO_VARIABLE:
+		case SHOW_MESSAGE:
+		case IF:
+		case WHILE:
+			if(args[0].isEmpty()) {
+				return "joptionpane.fillfields";
+			}
+			break;
+		case FOR:
+			for(final String arg : args) {
+				if(arg.isEmpty()) {
+					return "joptionpane.fillfields";
+				}
+			} // We do not added a break because we want to check if the variable exists.
+		case SHOW_VARIABLE:
+		case READ_VARIABLE:
+			if(!variables.contains(args[0])) {
+				return "joptionpane.variabledoesnotexist";
+			}
+			break;
+		case ELSE:
+			break;
+		}
+		return null;
 	}
 
 }
