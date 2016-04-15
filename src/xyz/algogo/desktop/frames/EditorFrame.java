@@ -50,12 +50,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.KeyStroke;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -65,11 +62,11 @@ import javax.swing.tree.TreePath;
 
 import org.irsn.javax.swing.CodeEditorPane;
 
+import com.wordpress.tips4java.TextLineNumber;
+
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
-
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
@@ -113,7 +110,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private static final List<DefaultMutableTreeNode> clipboard = new ArrayList<DefaultMutableTreeNode>();
 
 	private final JScrollPane scrollPane = new JScrollPane();
-	private final Border scrollPaneBorder = scrollPane.getBorder();
 	private final JMenu recents = new JMenu(LanguageManager.getString("editor.menu.file.recents"));
 	private final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
 	private final JButton btnEditLine = new JButton(LanguageManager.getString("editor.button.editline"));
@@ -348,20 +344,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				syntax.put(keyWithoutAccent, Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_2));
 			}
 		}
-		textArea.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public final void insertUpdate(final DocumentEvent event) {
-				textArea.updateLineNumberView();
-			}
-
-			@Override
-			public final void changedUpdate(final DocumentEvent event) {}
-
-			@Override
-			public final void removeUpdate(final DocumentEvent event) {}
-			
-		});
 		textArea.setFont(textArea.getFont().deriveFont(12f));
 		textArea.setKeywordColor(syntax);
 	}
@@ -650,8 +632,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				freeEditMode = !freeEditMode;
 				EditorFrame.this.setJMenuBar(textAreaMenu);
 				textArea.setText(algorithm.toLanguage(new TextLanguage(false)));
-				scrollPane.setViewportView(textArea.getContainerWithLines());
-				scrollPane.setBorder(BorderFactory.createEmptyBorder());
+				scrollPane.setViewportView(textArea);
+				scrollPane.setRowHeaderView(new TextLineNumber(textArea));
 				EditorFrame.this.revalidate();
 				textArea.requestFocus();
 			}
@@ -788,7 +770,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				 */
 				EditorFrame.this.setJMenuBar(editorMenu);
 				scrollPane.setViewportView(tree);
-				scrollPane.setBorder(scrollPaneBorder);
+				scrollPane.setRowHeaderView(null);
 				EditorFrame.this.revalidate();
 			}
 
