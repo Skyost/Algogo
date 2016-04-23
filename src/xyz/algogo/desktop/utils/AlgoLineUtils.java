@@ -122,7 +122,7 @@ public class AlgoLineUtils {
 			if(!Utils.isAlpha(args[0]) || args[0].isEmpty()) {
 				return "addline.createvariable.error.notalpha";
 			}
-			if(variables.contains(args[0])) {
+			if(variables != null && variables.contains(args[0])) {
 				return "addline.createvariable.error.alreadyexists";
 			}
 			break;
@@ -142,7 +142,7 @@ public class AlgoLineUtils {
 			} // We do not added a break because we want to check if the variable exists.
 		case SHOW_VARIABLE:
 		case READ_VARIABLE:
-			if(!variables.contains(args[0])) {
+			if(variables != null && !variables.contains(args[0])) {
 				return "joptionpane.variabledoesnotexist";
 			}
 			break;
