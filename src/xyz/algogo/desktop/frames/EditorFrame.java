@@ -83,6 +83,8 @@ import xyz.algogo.desktop.dialogs.OptionsDialog;
 import xyz.algogo.desktop.dialogs.PreferencesDialog;
 import xyz.algogo.desktop.dialogs.AddLineDialog.AlgoLineListener;
 import xyz.algogo.desktop.utils.AlgoLineUtils;
+import xyz.algogo.desktop.utils.AlgorithmParser;
+import xyz.algogo.desktop.utils.AlgorithmParser.ParseException;
 import xyz.algogo.desktop.utils.AlgorithmTree;
 import xyz.algogo.desktop.utils.AlgorithmTree.AlgorithmUserObject;
 import xyz.algogo.desktop.utils.GithubUpdater;
@@ -322,26 +324,32 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	
 	public final void setupHighlighter() {
 		final HashMap<String, Color> syntax = new HashMap<String, Color>();
+		final HashMap<Keyword, String> keywordsWithoutAccent = AlgorithmParser.getKeywordsWithoutAccent();
 		for(final Keyword keyword : Keyword.values()) {
-			syntax.put(LanguageManager.getString("editor.line.keyword." + keyword.name().toLowerCase()), Color.decode(AlgoLineUtils.getLineColor(keyword)));
+			syntax.put(LanguageManager.getString("editor.line.keyword." + keyword.name().toLowerCase()), Color.decode(AlgoLineUtils.KEYWORD_COLOR));
+			if(keywordsWithoutAccent.containsKey(keyword)) {
+				syntax.put(keywordsWithoutAccent.get(keyword), Color.decode(AlgoLineUtils.KEYWORD_COLOR));
+			}
 		}
+		final HashMap<Instruction, String> instructionsWithoutAccent = AlgorithmParser.getKeywordsInstructionsAccent();
 		for(final Instruction instruction : Instruction.values()) {
-			syntax.put(LanguageManager.getString("editor.line.instruction." + instruction.name().toLowerCase().replace("_", "")), Color.decode(AlgoLineUtils.getLineColor(instruction)));
+			final Color value = Color.decode(AlgoLineUtils.getLineColor(instruction));
+			syntax.put(LanguageManager.getString("editor.line.instruction." + instruction.name().toLowerCase().replace("_", "")), value);
+			if(instructionsWithoutAccent.containsKey(instruction)) {
+				syntax.put(instructionsWithoutAccent.get(instruction), value);
+			}
 		}
+		final HashMap<String, String> miscWithoutAccent = AlgorithmParser.getMiscWithoutAccent();
 		for(final String string : new String[]{"editor.line.instruction.createvariable.type", "editor.line.instruction.createvariable.type.string", "editor.line.instruction.createvariable.type.number"}) {
-			final String key = LanguageManager.getString(string);
-			syntax.put(key, Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
-			final String keyWithoutAccent = Utils.stripAccents(key);
-			if(!key.equals(keyWithoutAccent)) {
-				syntax.put(keyWithoutAccent, Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
+			syntax.put(LanguageManager.getString(string), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
+			if(miscWithoutAccent.containsKey(string)) {
+				syntax.put(miscWithoutAccent.get(string), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
 			}
 		}
 		for(final String string : new String[]{"editor.line.instruction.for.from", "editor.line.instruction.for.to"}) {
-			final String key = LanguageManager.getString(string);
-			syntax.put(key, Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_2));
-			final String keyWithoutAccent = Utils.stripAccents(key);
-			if(!key.equals(keyWithoutAccent)) {
-				syntax.put(keyWithoutAccent, Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_2));
+			syntax.put(LanguageManager.getString(string), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_2));
+			if(miscWithoutAccent.containsKey(string)) {
+				syntax.put(miscWithoutAccent.get(string), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
 			}
 		}
 		textArea.setFont(textArea.getFont().deriveFont(12f));
@@ -762,16 +770,24 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				btnTest.setEnabled(freeEditMode);
-				freeEditMode = !freeEditMode;
-				/* final RSyntaxTextArea textArea = (RSyntaxTextArea)scrollPane.getViewport().getView();
-				 * TODO: parse algorithm
-				 * tree.fromAlgorithm(algorithm);
-				 */
-				EditorFrame.this.setJMenuBar(editorMenu);
-				scrollPane.setViewportView(tree);
-				scrollPane.setRowHeaderView(null);
-				EditorFrame.this.revalidate();
+				try {
+					final Algorithm parsed = AlgorithmParser.parse(algorithm.getTitle(), algorithm.getAuthor(), textArea.getText());
+					EditorFrame.algorithm = parsed;
+					EditorFrame.algorithm.addOptionsListener(EditorFrame.this);
+					btnTest.setEnabled(freeEditMode);
+					freeEditMode = !freeEditMode;
+					EditorFrame.this.setJMenuBar(editorMenu);
+					scrollPane.setViewportView(tree);
+					scrollPane.setRowHeaderView(null);
+					tree.fromAlgorithm(parsed);
+					tree.reload();
+					algoChanged = true;
+					EditorFrame.this.setTitle(buildTitle());
+					EditorFrame.this.revalidate();
+				}
+				catch(final ParseException ex) {
+					JOptionPane.showMessageDialog(EditorFrame.this, ex.getMessage(), "Error !", JOptionPane.ERROR_MESSAGE); // TODO: Translate it
+				}
 			}
 
 		});
@@ -918,12 +934,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 	public final void open(final File file) throws Exception {
 		try {
-			final Algorithm algorithm = Algorithm.loadFromFile(file);
 			if(file == null) {
 				throw new Exception();
 			}
+			final Algorithm algorithm = Algorithm.loadFromFile(file);
 			EditorFrame.algorithm = algorithm;
-			algorithm.addOptionsListener(EditorFrame.this);
+			EditorFrame.algorithm.addOptionsListener(EditorFrame.this);
 			tree.fromAlgorithm(algorithm);
 			algoPath = file.getPath();
 			saveToHistory(algoPath);
