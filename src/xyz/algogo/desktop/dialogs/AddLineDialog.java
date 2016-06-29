@@ -50,7 +50,7 @@ public class AddLineDialog extends JDialog {
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setModal(true);
 		this.setResizable(false);
-		final LinkedHashMap<String, VariableType> variables = getVariables();
+		final LinkedHashMap<String, VariableType> variables = AlgoLineUtils.getVariables(EditorFrame.algorithm.getVariables());
 		final Runnable dispose = new Runnable() {
 
 			@Override
@@ -93,15 +93,6 @@ public class AddLineDialog extends JDialog {
 		this.setLocationRelativeTo(component);
 	}
 
-	private static final LinkedHashMap<String, VariableType> getVariables() {
-		final LinkedHashMap<String, VariableType> variables = new LinkedHashMap<String, VariableType>();
-		for(final AlgoLine variable : EditorFrame.algorithm.getVariables().getChildren()) {
-			final String[] args = variable.getArgs();
-			variables.put(args[0], args[1].equals("1") ? VariableType.NUMBER : VariableType.STRING);
-		}
-		return variables;
-	}
-	
 	/**
 	 * Gets an action listener for the specified instruction.
 	 * 
@@ -114,7 +105,7 @@ public class AddLineDialog extends JDialog {
 	 */
 
 	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final Instruction instruction, final Runnable after) {
-		final List<String> variables = new ArrayList<String>(getVariables().keySet());
+		final List<String> variables = new ArrayList<String>(AlgoLineUtils.getVariables(EditorFrame.algorithm.getVariables()).keySet());
 		return listenerForInstruction(caller, component, instruction, after, variables.toArray(new String[variables.size()]));
 	}
 	
@@ -146,7 +137,7 @@ public class AddLineDialog extends JDialog {
 	 */
 
 	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final DefaultMutableTreeNode node, final Runnable after) {
-		final List<String> variables = new ArrayList<String>(getVariables().keySet());
+		final List<String> variables = new ArrayList<String>(AlgoLineUtils.getVariables(EditorFrame.algorithm.getVariables()).keySet());
 		return listenerForInstruction(caller, component, node, after, variables.toArray(new String[variables.size()]));
 	}
 	
@@ -263,7 +254,7 @@ public class AddLineDialog extends JDialog {
 						lineBreak.setSelected(Boolean.valueOf(args[1]));
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.showvariable.dialog.title"), LanguageManager.getString("addline.showvariable.dialog.message"), LanguageManager.getString("addline.showvariable.dialog.tip"), cmboxVariables, lineBreak)) {
-						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString()};
+						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString(), String.valueOf(lineBreak.isSelected())};
 						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
 						if(error != null) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);

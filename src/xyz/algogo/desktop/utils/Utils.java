@@ -170,5 +170,23 @@ public class Utils {
 		}
 		return writer.toString();
 	}
+	
+	/**
+	 * Checks if the given String is a boolean.
+	 * 
+	 * @param input The String.
+	 * 
+	 * @return <b>true</b> If the String is a boolean.
+	 * <br><b>false</b> Otherwise.
+	 */
+	
+	public static final boolean isBoolean(final String input) {
+		try {
+			Boolean.valueOf(input);
+			return true;
+		}
+		catch(final Exception ex) {}
+		return false;
+	}
 
 }

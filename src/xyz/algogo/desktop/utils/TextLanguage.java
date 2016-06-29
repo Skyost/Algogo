@@ -67,12 +67,13 @@ public class TextLanguage extends AlgorithmLanguage {
 		case ASSIGN_VALUE_TO_VARIABLE:
 			builder.append(Utils.escapeHTML(args[0]) + " → " + Utils.escapeHTML(args[1]));
 			break;
-		case SHOW_VARIABLE:
 		case READ_VARIABLE:
-		case SHOW_MESSAGE:
 		case IF:
 		case WHILE:
 			builder.append(Utils.escapeHTML(args[0]));
+		case SHOW_VARIABLE:
+		case SHOW_MESSAGE:
+			builder.append(" " + args[1]);
 			break;
 		case FOR:
 			builder.append(Utils.escapeHTML(args[0]) + " " + LanguageManager.getString("editor.line.instruction.for.from") + " " + args[1] + " " + LanguageManager.getString("editor.line.instruction.for.to") + " " + args[2]);

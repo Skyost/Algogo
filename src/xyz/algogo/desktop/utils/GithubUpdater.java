@@ -20,7 +20,7 @@ import com.eclipsesource.json.JsonArray;
 public class GithubUpdater extends Thread {
 	
 	public static final String UPDATER_NAME = "GithubUpdater";
-	public static final String UPDATER_VERSION = "0.1";
+	public static final String UPDATER_VERSION = "0.1.1";
 	
 	public static final String UPDATER_GITHUB_USERNAME = "Skyost";
 	public static final String UPDATER_GITHUB_REPO = "Algogo";
@@ -49,13 +49,14 @@ public class GithubUpdater extends Thread {
 			final String response = connection.getResponseCode() + " " + connection.getResponseMessage();
 			caller.updaterResponse(response);
 			if(!response.startsWith("2")) {
-				return;
+				throw new Exception("Invalid response : " + response);
 			}
 			final InputStream input = connection.getInputStream();
 			final InputStreamReader inputStreamReader = new InputStreamReader(input, StandardCharsets.UTF_8);
 			final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 			final JsonArray releases = Json.parse(bufferedReader.readLine()).asArray();
 			if(releases.size() < 1) {
+				caller.updaterNoUpdate(localVersion, localVersion);
 				return;
 			}
 			input.close();
@@ -77,8 +78,8 @@ public class GithubUpdater extends Thread {
 	/**
 	 * Compares two versions.
 	 * 
-	 * @param version1 The version you want to compare to.
-	 * @param version2 The version you want to compare with.
+	 * @param versionTo The version you want to compare to.
+	 * @param versionWith The version you want to compare with.
 	 * 
 	 * @return <b>true</b> If <b>versionTo</b> is inferior than <b>versionWith</b>.
 	 * <br><b>false</b> If <b>versionTo</b> is superior or equals to <b>versionWith</b>.
@@ -120,7 +121,7 @@ public class GithubUpdater extends Thread {
 		/**
 		 * When an Exception occurs.
 		 * 
-		 * @param ex
+		 * @param ex The Exception.
 		 */
 		
 		public void updaterException(final Exception ex);
@@ -137,7 +138,7 @@ public class GithubUpdater extends Thread {
 		 * If an update is available.
 		 * 
 		 * @param localVersion The local version (used to create the updater).
-		 * @param remoteVersion The remove version.
+		 * @param remoteVersion The remote version.
 		 */
 		
 		public void updaterUpdateAvailable(final String localVersion, final String remoteVersion);
@@ -146,7 +147,7 @@ public class GithubUpdater extends Thread {
 		 * If there is no update.
 		 * 
 		 * @param localVersion The local version (used to create the updater).
-		 * @param remoteVersion The remove version.
+		 * @param remoteVersion The remote version.
 		 */
 		
 		public void updaterNoUpdate(final String localVersion, final String remoteVersion);

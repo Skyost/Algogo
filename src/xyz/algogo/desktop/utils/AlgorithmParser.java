@@ -1,11 +1,14 @@
 package xyz.algogo.desktop.utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
 import xyz.algogo.core.Keyword;
+import xyz.algogo.core.utils.VariableHolder.VariableType;
 
 public class AlgorithmParser {
 	
@@ -19,29 +22,29 @@ public class AlgorithmParser {
 			final String key = "editor.line.keyword." + keyword.name().toLowerCase();
 			final String value = LanguageManager.getString(key);
 			final String withoutAccents = Utils.stripAccents(value);
-			data.put(value, key);
+			data.put(value.toUpperCase(), key);
 			if(!value.equals(withoutAccents)) {
 				keywordsWithoutAccent.put(keyword, withoutAccents);
-				data.put(withoutAccents, key);
+				data.put(withoutAccents.toUpperCase(), key);
 			}
 		}
 		for(final Instruction instruction : Instruction.values()) {
 			final String key = "editor.line.instruction." + instruction.name().toLowerCase().replace("_", "");
 			final String value = LanguageManager.getString(key);
 			final String withoutAccents = Utils.stripAccents(value);
-			data.put(value, key);
+			data.put(value.toUpperCase(), key);
 			if(!value.equals(withoutAccents)) {
 				instructionsWithoutAccent.put(instruction, withoutAccents);
-				data.put(withoutAccents, key);
+				data.put(withoutAccents.toUpperCase(), key);
 			}
 		}
 		for(final String misc : new String[]{"editor.line.instruction.createvariable.type", "editor.line.instruction.createvariable.type.string", "editor.line.instruction.createvariable.type.number", "editor.line.instruction.createvariable.type.string", "editor.line.instruction.createvariable.type.number", "editor.line.instruction.for.from", "editor.line.instruction.for.to"}) {
 			final String value = LanguageManager.getString(misc);
 			final String withoutAccents = Utils.stripAccents(value);
-			data.put(value, misc);
+			data.put(value.toUpperCase(), misc);
 			if(!value.equals(withoutAccents)) {
 				miscWithoutAccent.put(misc, withoutAccents);
-				data.put(withoutAccents, misc);
+				data.put(withoutAccents.toUpperCase(), misc);
 			}
 		}
 	}
@@ -65,7 +68,7 @@ public class AlgorithmParser {
 		final AlgoLine instructions = new AlgoLine(Keyword.BEGINNING);
 		for(int i = 0; i != lines.length; i++) {
 			final String line = lines[i];
-			final AlgoLine algoLine = parseLine(line);
+			final AlgoLine algoLine = parseLine(line, AlgoLineUtils.getVariables(variables));
 			final Instruction instruction = algoLine.getInstruction();
 			if(instruction == null) {
 				continue;
@@ -74,7 +77,7 @@ public class AlgorithmParser {
 				variables.addChild(algoLine);
 				continue;
 			}
-			if(instruction == Instruction.IF || instruction == Instruction.FOR || instruction == Instruction.WHILE) {
+			if(instruction == Instruction.IF || instruction == Instruction.ELSE || instruction == Instruction.FOR || instruction == Instruction.WHILE) {
 				final int tabs = getBeginningTabCount(line);
 				for(int j = i + 1; j != lines.length; j++) {
 					if(getBeginningTabCount(lines[i]) <= tabs) {
@@ -91,9 +94,13 @@ public class AlgorithmParser {
 	}
 	
 	public static final AlgoLine parseLine(String line) throws ParseException {
+		return parseLine(line, null);
+	}
+	
+	public static final AlgoLine parseLine(String line, final LinkedHashMap<String, VariableType> variables) throws ParseException {
 		line = line.replace("\t", "");
 		final String[] parts = line.split(" ");
-		final String first = data.get(parts[0]);
+		final String first = data.get(parts[0].toUpperCase());
 		if(first == null) {
 			throw new ParseException("Syntax error with \"" + parts[0] + "\" (not a keyword or instruction). Please refer to the online help.");
 		}
@@ -105,17 +112,107 @@ public class AlgorithmParser {
 		// Switch not allowed with non constant expressions, sorry :(
 		AlgoLine algoLine = null;
 		if(first.equals("editor.line.instruction.createvariable")) {
-			if(!data.get(parts[2]).equals("editor.line.instruction.createvariable.type")) {
+			if(parts.length < 4) {
+				throw new ParseException("This instruction needs 3 arguments (CREATE_VARIABLE <variable> TYPE <type>).");
+			}
+			if(!data.get(parts[2].toUpperCase()).equals("editor.line.instruction.createvariable.type")) {
 				throw new ParseException("Syntax error with \"" + parts[2] + "\". Please refer to the online help.");
 			}
-			final String key = data.get(parts[3]);
+			final String key = data.get(parts[3].toUpperCase());
 			if(key == null || (!key.equals("editor.line.instruction.createvariable.type.string") && !key.equals("editor.line.instruction.createvariable.type.number"))) {
 				throw new ParseException("Syntax error with \"" + parts[3] + "\". Please refer to the online help.");
 			}
 			algoLine = new AlgoLine(Instruction.CREATE_VARIABLE, parts[1], key.equals("editor.line.instruction.createvariable.type.string") ? "0" : "1");
 		}
 		else if(first.equals("editor.line.instruction.assignvaluetovariable")) {
-			// TODO
+			if(parts.length < 3) {
+				throw new ParseException("This instruction needs 2 arguments (ASSIGN_VALUE_TO_VARIABLE <variable> <value>).");
+			}
+			if(variables.get(parts[1]) == null) {
+				throw new ParseException("Variable not set : \"" + parts[1] + "\".");
+			}
+			if(!parts[2].equals("→") && !parts[2].equals("⇒") && !parts[2].equals("⇾") && !parts[2].equals("->") && !parts[2].equals("=>") && !parts[2].equals(":=") && !parts[2].equals("=") && !parts[2].equals(":")) {
+				throw new ParseException("Syntax error with \"" + parts[2] + "\". Please refer to the online help.");
+			}
+			algoLine = new AlgoLine(Instruction.ASSIGN_VALUE_TO_VARIABLE, parts[1], Utils.join(" ", Arrays.copyOfRange(parts, 3, parts.length)));
+		}
+		else if(first.equals("editor.line.instruction.showvariable")) {
+			if(parts.length < 2) {
+				throw new ParseException("This instruction needs 1 argument (SHOW_VARIABLE <variable> [line-break]).");
+			}
+			if(variables.get(parts[1]) == null) {
+				throw new ParseException("Variable not set : \"" + parts[1] + "\".");
+			}
+			boolean lineBreak = true; // Line break by default.
+			if(parts.length > 2 && Utils.isBoolean(parts[2])) {
+				lineBreak = Boolean.valueOf(parts[2]);
+			}
+			algoLine = new AlgoLine(Instruction.SHOW_VARIABLE, parts[1], String.valueOf(lineBreak));
+		}
+		else if(first.equals("editor.line.instruction.readvariable")) {
+			if(parts.length < 2) {
+				throw new ParseException("This instruction needs 1 argument (READ_VARIABLE <variable>).");
+			}
+			if(variables.get(parts[1]) == null) {
+				throw new ParseException("Variable not set : \"" + parts[1] + "\".");
+			}
+			algoLine = new AlgoLine(Instruction.READ_VARIABLE, parts[1]);
+		}
+		else if(first.equals("editor.line.instruction.showmessage")) {
+			if(parts.length < 2) {
+				throw new ParseException("This instruction needs 1 arguments (SHOW_MESSAGE <message> [line-break]).");
+			}
+			if(variables.get(parts[1]) == null) {
+				throw new ParseException("Variable not set : \"" + parts[1] + "\".");
+			}
+			boolean hasBoolean = false;
+			boolean lineBreak = true; // Line break by default.
+			if(parts.length > 2 && Utils.isBoolean(parts[parts.length - 1])) {
+				lineBreak = Boolean.valueOf(parts[parts.length - 1]);
+				hasBoolean = true;
+			}
+			algoLine = new AlgoLine(Instruction.SHOW_VARIABLE, Utils.join(" ", Arrays.copyOfRange(parts, 1, hasBoolean ? parts.length - 1 : parts.length)), String.valueOf(lineBreak));
+		}
+		else if(first.equals("editor.line.instruction.if")) {
+			if(parts.length < 2) {
+				throw new ParseException("This instruction needs 1 argument (IF <condition>).");
+			}
+			boolean hasElse = false;
+			// TODO: Detected if has else
+			algoLine = new AlgoLine(Instruction.IF, Utils.join(" ", Arrays.copyOfRange(parts, 1, parts.length)), String.valueOf(hasElse));
+		}
+		else if(first.equals("editor.line.instruction.while")) {
+			if(parts.length < 2) {
+				throw new ParseException("This instruction needs 1 argument (WHILE <condition>).");
+			}
+			algoLine = new AlgoLine(Instruction.WHILE, Utils.join(" ", Arrays.copyOfRange(parts, 1, parts.length)));
+		}
+		else if(first.equals("editor.line.instruction.else")) {
+			algoLine = new AlgoLine(Instruction.ELSE);
+		}
+		else if(first.equals("editor.line.instruction.for")) {
+			if(parts.length < 6) {
+				throw new ParseException("This instruction needs 5 arguments (FOR <variable> FROM <value> TO <value>).");
+			}
+			if(variables.get(parts[1]) == null) {
+				throw new ParseException("Variable not set : \"" + parts[1] + "\".");
+			}
+			final String keyFrom = data.get(parts[2].toUpperCase());
+			if(keyFrom == null || keyFrom.equals("editor.line.instruction.for.from")) {
+				throw new ParseException("Syntax error with \"" + parts[2] + "\". Please refer to the online help.");
+			}
+			int toIndex = -1;
+			for(int i = 4; i != parts.length; i++) {
+				final String keyTo = data.get(parts[i].toUpperCase());
+				if(keyTo == null || keyTo.equals("editor.line.instruction.for.to")) {
+					continue;
+				}
+				toIndex = i;
+			}
+			if(toIndex == -1) {
+				throw new ParseException("You need to add a \"TO\" argument in your \"FOR\" instruction. Please refer to the online help.");
+			}
+			algoLine = new AlgoLine(Instruction.FOR, parts[1], Utils.join(" ", Arrays.copyOfRange(parts, 1, toIndex - 1)), Utils.join(" ", Arrays.copyOfRange(parts, toIndex + 1, parts.length)));
 		}
 		if(algoLine == null) {
 			throw new ParseException("Unknown instruction \"" + parts[0] + "\". Please refer to the online help.");

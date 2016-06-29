@@ -1,10 +1,12 @@
 package xyz.algogo.desktop.utils;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Instruction;
 import xyz.algogo.core.Keyword;
+import xyz.algogo.core.utils.VariableHolder.VariableType;
 
 public class AlgoLineUtils {
 	
@@ -126,7 +128,6 @@ public class AlgoLineUtils {
 				return "addline.createvariable.error.alreadyexists";
 			}
 			break;
-		case ASSIGN_VALUE_TO_VARIABLE:
 		case SHOW_MESSAGE:
 		case IF:
 		case WHILE:
@@ -140,6 +141,7 @@ public class AlgoLineUtils {
 					return "joptionpane.fillfields";
 				}
 			} // We do not added a break because we want to check if the variable exists.
+		case ASSIGN_VALUE_TO_VARIABLE:
 		case SHOW_VARIABLE:
 		case READ_VARIABLE:
 			if(variables != null && !variables.contains(args[0])) {
@@ -150,6 +152,25 @@ public class AlgoLineUtils {
 			break;
 		}
 		return null;
+	}
+	
+	/**
+	 * Gets variables as map.
+	 * 
+	 * @param variables The variables.
+	 * 
+	 * @return A map :
+	 * <br><b>Key :</b> The variable's name.
+	 * <br><b>Value :</b> The variable's type.
+	 */
+	
+	public static final LinkedHashMap<String, VariableType> getVariables(final AlgoLine variables) {
+		final LinkedHashMap<String, VariableType> variablesMap = new LinkedHashMap<String, VariableType>();
+		for(final AlgoLine variable : variables.getChildren()) {
+			final String[] args = variable.getArgs();
+			variablesMap.put(args[0], args[1].equals("1") ? VariableType.NUMBER : VariableType.STRING);
+		}
+		return variablesMap;
 	}
 
 }
