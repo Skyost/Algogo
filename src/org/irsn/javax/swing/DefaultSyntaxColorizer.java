@@ -7,6 +7,9 @@ import javax.swing.text.*;
 
 /**This DocumentFilter supports syntax dependant colorization. RegExp are available if RegExpHashMap is used to give KeyWords
  * Yous should consider to simplify this class for better performance.
+ * 
+ * <b>NOTE BY SKYOST :</b> This file was modified to fit with Algogo needs (that's why I added it to the repository).
+ * <br>You still need to get the whole library content here : https://github.com/yannrichet/jxtextpane.
  */
 public class DefaultSyntaxColorizer extends SyntaxColorizer {
 
