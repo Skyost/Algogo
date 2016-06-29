@@ -261,7 +261,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 
 		});
-		this.setJMenuBar(createEditorMenuBar());
+		this.setJMenuBar(editorMenu);
 		setupHighlighter();
 		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain && !AlgogoDesktop.DEBUG) {
 			new GithubUpdater(AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater()).start();
@@ -370,7 +370,9 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				resetEditor();
+				if(askToSaveIfNeeded()) {
+					resetEditor();
+				}
 			}
 
 		});
@@ -647,7 +649,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 
 		});
-		freeEdit.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_unchecked.png"))); // Emulates the JCheckBoxMenuItem.
+		/* Emulates the JCheckBoxMenuItem (because this one takes a margin : */
+		freeEdit.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_unchecked.png")));
 		final JMenuItem checkForUpdates = new JMenuItem(LanguageManager.getString("editor.menu.help.checkforupdates"));
 		checkForUpdates.addActionListener(new ActionListener() {
 
@@ -707,7 +710,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					JLabelLink.openBrowser(new URL("https://github.com/Skyost/Algogo/wiki"));
 				}
 				catch(final Exception ex) {
-					ex.printStackTrace();
+					ErrorDialog.errorMessage(EditorFrame.this, ex);
 				}
 			}
 
@@ -771,7 +774,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
 				try {
+					freeEdit.setSelected(true);
 					final Algorithm parsed = AlgorithmParser.parse(algorithm.getTitle(), algorithm.getAuthor(), textArea.getText());
+					if(!parsed.equals(EditorFrame.algorithm)) {
+						algoChanged = true;
+						EditorFrame.this.setTitle(buildTitle());
+					}
 					EditorFrame.algorithm = parsed;
 					EditorFrame.algorithm.addOptionsListener(EditorFrame.this);
 					btnTest.setEnabled(freeEditMode);
@@ -781,8 +789,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					scrollPane.setRowHeaderView(null);
 					tree.fromAlgorithm(parsed);
 					tree.reload();
-					algoChanged = true;
-					EditorFrame.this.setTitle(buildTitle());
 					EditorFrame.this.revalidate();
 				}
 				catch(final ParseException ex) {
@@ -880,25 +886,39 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	}
 	
 	/**
+	 * Checks if the user wants to save its algorithm before closing it.
+	 * 
+	 * @return <b>true</b> You can close the active algorithm.
+	 * <br><b>false</b> You should not close it.
+	 */
+	
+	public final boolean askToSaveIfNeeded() {
+		if(!algoChanged) {
+			return true;
+		}
+		final int result = JOptionPane.showConfirmDialog(EditorFrame.this, LanguageManager.getString("editor.closedialog", algorithm.getTitle()), AlgogoDesktop.APP_NAME, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if(result == JOptionPane.CANCEL_OPTION) {
+			return false;
+		}
+		else if(result == JOptionPane.YES_OPTION) {
+			if(algoPath == null || !Files.isWritable(Paths.get(algoPath))) {
+				saveAs();
+				return true;
+			}
+			final int index = algoPath.lastIndexOf(".");
+			save(new File(algoPath), index == -1 ? "agg" : algoPath.substring(index));
+		}
+		return true;
+	}
+	
+	/**
 	 * Close the editor with a confirmation.
 	 */
 	
 	public final void closeEditor() {
-		if(algoChanged) {
-			final int result = JOptionPane.showConfirmDialog(EditorFrame.this, LanguageManager.getString("editor.closedialog", algorithm.getTitle()), AlgogoDesktop.APP_NAME, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if(result == JOptionPane.CANCEL_OPTION) {
-				return;
-			}
-			if(result == JOptionPane.YES_OPTION) {
-				if(algoPath == null || !Files.isWritable(Paths.get(algoPath))) {
-					saveAs();
-					return;
-				}
-				final int index = algoPath.lastIndexOf(".");
-				save(new File(algoPath), index == -1 ? "agg" : algoPath.substring(index));
-			}
+		if(askToSaveIfNeeded()) {
+			System.exit(0);
 		}
-		System.exit(0);
 	}
 
 	/**
