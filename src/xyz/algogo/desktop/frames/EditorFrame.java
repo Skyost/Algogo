@@ -326,30 +326,30 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		final HashMap<String, Color> syntax = new HashMap<String, Color>();
 		final HashMap<Keyword, String> keywordsWithoutAccent = AlgorithmParser.getKeywordsWithoutAccent();
 		for(final Keyword keyword : Keyword.values()) {
-			syntax.put(LanguageManager.getString("editor.line.keyword." + keyword.name().toLowerCase()), Color.decode(AlgoLineUtils.KEYWORD_COLOR));
+			syntax.put(LanguageManager.getString("editor.line.keyword." + keyword.name().toLowerCase()).toUpperCase(), Color.decode(AlgoLineUtils.KEYWORD_COLOR));
 			if(keywordsWithoutAccent.containsKey(keyword)) {
-				syntax.put(keywordsWithoutAccent.get(keyword), Color.decode(AlgoLineUtils.KEYWORD_COLOR));
+				syntax.put(keywordsWithoutAccent.get(keyword).toUpperCase(), Color.decode(AlgoLineUtils.KEYWORD_COLOR));
 			}
 		}
 		final HashMap<Instruction, String> instructionsWithoutAccent = AlgorithmParser.getKeywordsInstructionsAccent();
 		for(final Instruction instruction : Instruction.values()) {
 			final Color value = Color.decode(AlgoLineUtils.getLineColor(instruction));
-			syntax.put(LanguageManager.getString("editor.line.instruction." + instruction.name().toLowerCase().replace("_", "")), value);
+			syntax.put(LanguageManager.getString("editor.line.instruction." + instruction.name().toLowerCase().replace("_", "")).toUpperCase(), value);
 			if(instructionsWithoutAccent.containsKey(instruction)) {
-				syntax.put(instructionsWithoutAccent.get(instruction), value);
+				syntax.put(instructionsWithoutAccent.get(instruction).toUpperCase(), value);
 			}
 		}
 		final HashMap<String, String> miscWithoutAccent = AlgorithmParser.getMiscWithoutAccent();
 		for(final String string : new String[]{"editor.line.instruction.createvariable.type", "editor.line.instruction.createvariable.type.string", "editor.line.instruction.createvariable.type.number"}) {
-			syntax.put(LanguageManager.getString(string), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
+			syntax.put(LanguageManager.getString(string).toUpperCase(), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
 			if(miscWithoutAccent.containsKey(string)) {
-				syntax.put(miscWithoutAccent.get(string), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
+				syntax.put(miscWithoutAccent.get(string).toUpperCase(), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
 			}
 		}
 		for(final String string : new String[]{"editor.line.instruction.for.from", "editor.line.instruction.for.to"}) {
-			syntax.put(LanguageManager.getString(string), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_2));
+			syntax.put(LanguageManager.getString(string).toUpperCase(), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_2));
 			if(miscWithoutAccent.containsKey(string)) {
-				syntax.put(miscWithoutAccent.get(string), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
+				syntax.put(miscWithoutAccent.get(string).toUpperCase(), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
 			}
 		}
 		textArea.setFont(textArea.getFont().deriveFont(12f));
