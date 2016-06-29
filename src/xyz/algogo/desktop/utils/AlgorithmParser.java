@@ -68,7 +68,7 @@ public class AlgorithmParser {
 		final AlgoLine instructions = new AlgoLine(Keyword.BEGINNING);
 		for(int i = 0; i != lines.length; i++) {
 			final String line = lines[i];
-			final AlgoLine algoLine = parseLine(line, AlgoLineUtils.getVariables(variables));
+			final AlgoLine algoLine = parseLine(line, i, AlgoLineUtils.getVariables(variables));
 			final Instruction instruction = algoLine.getInstruction();
 			if(instruction == null) {
 				continue;
@@ -80,12 +80,23 @@ public class AlgorithmParser {
 			if(instruction == Instruction.IF || instruction == Instruction.ELSE || instruction == Instruction.FOR || instruction == Instruction.WHILE) {
 				final int tabs = getBeginningTabCount(line);
 				for(int j = i + 1; j != lines.length; j++) {
-					if(getBeginningTabCount(lines[i]) <= tabs) {
+					if(getBeginningTabCount(lines[j]) <= tabs) {
+						i = j - 1;
 						break;
 					}
-					for(final AlgoLine child : parse(lines[i])[0].getChildren()) {
+					for(final AlgoLine child : parse(lines[j])[1].getChildren()) {
 						algoLine.addChild(child);
 					}
+				}
+			}
+			final int previousIndex = instructions.getChildren().size() - 1;
+			if(previousIndex >= 0) {
+				final AlgoLine iff = instructions.getChildAt(previousIndex);
+				if(iff.getInstruction() == Instruction.IF) {
+					iff.setArgs(iff.getArgs()[0], String.valueOf(instruction == Instruction.ELSE));
+				}
+				else if(instruction == Instruction.ELSE) {
+					throw new ParseException("\"ELSE\" must follow an \"IF\".");
 				}
 			}
 			instructions.addChild(algoLine);
@@ -93,13 +104,8 @@ public class AlgorithmParser {
 		return new AlgoLine[]{variables, instructions};
 	}
 	
-	public static final AlgoLine parseLine(String line) throws ParseException {
-		return parseLine(line, null);
-	}
-	
-	public static final AlgoLine parseLine(String line, final LinkedHashMap<String, VariableType> variables) throws ParseException {
-		line = line.replace("\t", "");
-		final String[] parts = line.split(" ");
+	public static final AlgoLine parseLine(final String line, final int lineNumber, final LinkedHashMap<String, VariableType> variables) throws ParseException {
+		final String[] parts = line.replace("\t", "").split(" ");
 		final String first = data.get(parts[0].toUpperCase());
 		if(first == null) {
 			throw new ParseException("Syntax error with \"" + parts[0] + "\" (not a keyword or instruction). Please refer to the online help.");
@@ -162,23 +168,19 @@ public class AlgorithmParser {
 			if(parts.length < 2) {
 				throw new ParseException("This instruction needs 1 arguments (SHOW_MESSAGE <message> [line-break]).");
 			}
-			if(variables.get(parts[1]) == null) {
-				throw new ParseException("Variable not set : \"" + parts[1] + "\".");
-			}
 			boolean hasBoolean = false;
 			boolean lineBreak = true; // Line break by default.
 			if(parts.length > 2 && Utils.isBoolean(parts[parts.length - 1])) {
 				lineBreak = Boolean.valueOf(parts[parts.length - 1]);
 				hasBoolean = true;
 			}
-			algoLine = new AlgoLine(Instruction.SHOW_VARIABLE, Utils.join(" ", Arrays.copyOfRange(parts, 1, hasBoolean ? parts.length - 1 : parts.length)), String.valueOf(lineBreak));
+			algoLine = new AlgoLine(Instruction.SHOW_MESSAGE, Utils.join(" ", Arrays.copyOfRange(parts, 1, hasBoolean ? parts.length - 1 : parts.length)), String.valueOf(lineBreak));
 		}
 		else if(first.equals("editor.line.instruction.if")) {
 			if(parts.length < 2) {
 				throw new ParseException("This instruction needs 1 argument (IF <condition>).");
 			}
-			boolean hasElse = false;
-			// TODO: Detected if has else
+			boolean hasElse = false; // We correct this later.
 			algoLine = new AlgoLine(Instruction.IF, Utils.join(" ", Arrays.copyOfRange(parts, 1, parts.length)), String.valueOf(hasElse));
 		}
 		else if(first.equals("editor.line.instruction.while")) {
