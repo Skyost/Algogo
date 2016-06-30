@@ -181,12 +181,7 @@ public class Utils {
 	 */
 	
 	public static final boolean isBoolean(final String input) {
-		try {
-			Boolean.valueOf(input);
-			return true;
-		}
-		catch(final Exception ex) {}
-		return false;
+		return input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false");
 	}
 
 }

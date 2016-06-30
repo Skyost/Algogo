@@ -6,9 +6,9 @@ import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
 import xyz.algogo.core.Keyword;
-import xyz.algogo.core.language.AlgorithmLanguage;
+import xyz.algogo.core.language.AlgorithmIndentedLanguage;
 
-public class TextLanguage extends AlgorithmLanguage {
+public class TextLanguage extends AlgorithmIndentedLanguage {
 	
 	private final boolean addWarning;
 	
@@ -38,28 +38,25 @@ public class TextLanguage extends AlgorithmLanguage {
 		}
 		builder.append(translate(new AlgoLine(Keyword.VARIABLES)));
 		for(final AlgoLine variable : algorithm.getVariables().getChildren()) {
-			builder.append(translate(variable));
+			builder.append(translate(variable, "\t"));
 		}
 		builder.append(translate(new AlgoLine(Keyword.BEGINNING)));
 		for(final AlgoLine instruction : algorithm.getInstructions().getChildren()) {
-			builder.append(translate(instruction));
+			builder.append(translate(instruction, "\t"));
 		}
 		builder.append(translate(new AlgoLine(Keyword.END)));
-		return builder.toString();
+		final String result = builder.toString();
+		return result.substring(0, result.lastIndexOf(SEPARATOR));
 	}
 
 	@Override
-	public final String translate(final AlgoLine line) {
+	public final String translate(final AlgoLine line, final String indentation) {
 		if(line.isKeyword()) {
 			return LanguageManager.getString("editor.line.keyword." + line.getKeyword().toString().toLowerCase()) + SEPARATOR;
 		}
-		return translate(line, "	");
-	}
-	
-	public final String translate(final AlgoLine line, final String lineOffset) {
 		final Instruction instruction = line.getInstruction();
 		final String[] args = line.getArgs();
-		final StringBuilder builder = new StringBuilder(lineOffset + LanguageManager.getString("editor.line.instruction." + instruction.toString().replace("_", "").toLowerCase()) + " ");
+		final StringBuilder builder = new StringBuilder(indentation + LanguageManager.getString("editor.line.instruction." + instruction.toString().replace("_", "").toLowerCase()) + " ");
 		switch(instruction) {
 		case CREATE_VARIABLE:
 			builder.append(Utils.escapeHTML(args[0]) + " " + LanguageManager.getString("editor.line.instruction.createvariable.type") + " " + (args[1].equals("0") ? LanguageManager.getString("editor.line.instruction.createvariable.type.string") : LanguageManager.getString("editor.line.instruction.createvariable.type.number")));
@@ -87,13 +84,13 @@ public class TextLanguage extends AlgorithmLanguage {
 			final List<AlgoLine> children = line.getChildren();
 			if(children != null && children.size() > 0) {
 				for(final AlgoLine child : children) {
-					builder.append(translate(child, lineOffset + "	"));
+					builder.append(translate(child, indentation + "\t"));
 				}
 			}
 		}
 		return builder.toString();
 	}
-
+	
 	@Override
 	public final boolean canTranslate(final Instruction instruction) {
 		return true;

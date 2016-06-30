@@ -69,7 +69,7 @@ editor.menu.edit.cut=Couper
 editor.menu.edit.copy=Copier
 editor.menu.edit.paste=Coller
 editor.menu.edit.preferences=Préférences...
-editor.menu.edit.freeedit=Édition libre
+editor.menu.edit.freeedit=Édition libre (Bêta)
 
 editor.menu.help=Aide
 editor.menu.help.checkforupdates=Rechercher des mises à jour...
