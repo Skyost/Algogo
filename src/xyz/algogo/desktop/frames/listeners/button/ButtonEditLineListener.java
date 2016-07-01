@@ -1,6 +1,7 @@
 package xyz.algogo.desktop.frames.listeners.button;
 
 import java.awt.event.ActionEvent;
+import java.util.Set;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -8,6 +9,7 @@ import xyz.algogo.core.Instruction;
 import xyz.algogo.desktop.dialogs.AddLineDialog;
 import xyz.algogo.desktop.frames.EditorFrame;
 import xyz.algogo.desktop.frames.listeners.AlgorithmEditorActionListener;
+import xyz.algogo.desktop.utils.AlgoLineUtils;
 import xyz.algogo.desktop.utils.AlgorithmTree;
 
 public class ButtonEditLineListener extends AlgorithmEditorActionListener {
@@ -23,7 +25,8 @@ public class ButtonEditLineListener extends AlgorithmEditorActionListener {
 			final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)selected.getParent();
 			selected = (DefaultMutableTreeNode)parent.getChildAt(parent.getIndex(selected) - 1);
 		}
-		AddLineDialog.listenerForInstruction(editor, editor, selected, null).actionPerformed(event);
+		final Set<String> variables = AlgoLineUtils.getVariables(editor.getAlgorithm().getVariables()).keySet();
+		AddLineDialog.listenerForInstruction(editor, editor, selected, null, variables.toArray(new String[variables.size()])).actionPerformed(event);
 	}
 
 }

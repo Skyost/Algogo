@@ -35,6 +35,7 @@ public class AboutDialog extends JDialog {
 		try {
 			final String authors = Utils.join(" ", AlgogoDesktop.APP_AUTHORS);
 			this.setTitle(LanguageManager.getString("about.title", AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION, authors));
+			this.setIconImages(AlgogoDesktop.ICONS);
 			this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			this.setModalityType(ModalityType.APPLICATION_MODAL);
 			this.setModal(true);
@@ -43,7 +44,7 @@ public class AboutDialog extends JDialog {
 			lblAppName.setHorizontalAlignment(SwingConstants.CENTER);
 			lblAppName.setFont(lblAppName.getFont().deriveFont(Font.BOLD).deriveFont(30.0f));
 			lblAppName.setForeground(Color.decode("#3b3b3b"));
-			lblAppName.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
+			lblAppName.setIcon(new ImageIcon(AlgogoDesktop.ICONS.get(2)));
 			final JLabelLink lblAppDesktopInfos = new JLabelLink(LanguageManager.getString("about.desktopinfos", AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION, authors), new URL(AlgogoDesktop.APP_WEBSITE));
 			lblAppDesktopInfos.setHorizontalAlignment(SwingConstants.CENTER);
 			final JLabelLink lblAppCoreInfos = new JLabelLink(LanguageManager.getString("about.coreinfos", AlgogoCore.APP_NAME, AlgogoCore.APP_VERSION, Utils.join(" ", AlgogoCore.APP_AUTHORS)), new URL(AlgogoCore.APP_WEBSITE));

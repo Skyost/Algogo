@@ -101,7 +101,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private final JMenuBar textAreaMenu = createTextAreaMenuBar();
 
 	public EditorFrame() {
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
+		this.setIconImages(AlgogoDesktop.ICONS);
 		this.setSize(800, 600);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setLocationRelativeTo(null);

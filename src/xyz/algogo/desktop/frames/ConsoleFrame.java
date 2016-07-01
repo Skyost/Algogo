@@ -22,7 +22,6 @@ import xyz.algogo.desktop.dialogs.ErrorDialog;
 import xyz.algogo.desktop.utils.LanguageManager;
 import xyz.algogo.desktop.utils.Utils;
 
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -56,7 +55,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
 	public ConsoleFrame(final Component component, final EditorFrame editor) {
 		this.setTitle(LanguageManager.getString("console.title"));
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
+		this.setIconImages(AlgogoDesktop.ICONS);
 		this.setSize(500, 376);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.addWindowListener(new WindowListener() {

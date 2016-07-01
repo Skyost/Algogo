@@ -1,8 +1,13 @@
 package xyz.algogo.desktop;
 
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -21,6 +26,8 @@ public class AlgogoDesktop {
 	public static final String APP_VERSION = "0.2.4";
 	public static final String[] APP_AUTHORS = new String[]{"Skyost"};
 	public static final String APP_WEBSITE = "http://www.algogo.xyz";
+	
+	public static final List<Image> ICONS = new ArrayList<Image>();
 	
 	public static Font CONSOLE_FONT;
 	public static AppSettings SETTINGS;
@@ -44,6 +51,15 @@ public class AlgogoDesktop {
 			final Icon empty = new ImageIcon();
 			UIManager.put("Tree.collapsedIcon", empty);
 			UIManager.put("Tree.expandedIcon", empty);
+			final Image icon = Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png"));
+			ICONS.addAll(Arrays.asList(
+				icon.getScaledInstance(16, 16, Image.SCALE_SMOOTH),
+				icon.getScaledInstance(32, 32, Image.SCALE_SMOOTH),
+				icon.getScaledInstance(64, 64, Image.SCALE_SMOOTH),
+				icon.getScaledInstance(128, 128, Image.SCALE_SMOOTH),
+				icon.getScaledInstance(256, 256, Image.SCALE_SMOOTH),
+				icon//.getScaledInstance(512, 512, Image.SCALE_SMOOTH) // Already in 512x512.
+			));
 			CONSOLE_FONT = Font.createFont(Font.TRUETYPE_FONT, AlgogoDesktop.class.getResourceAsStream("/xyz/algogo/desktop/res/fonts/DejaVuSansMono.ttf")).deriveFont(12.0f);
 			SwingUtilities.invokeLater(new Runnable() {
 	

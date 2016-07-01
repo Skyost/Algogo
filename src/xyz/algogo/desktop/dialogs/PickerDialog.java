@@ -8,6 +8,7 @@ import javax.swing.JTextField;
 
 import fr.skyost.heartbeat.Expression;
 import fr.skyost.heartbeat.Expression.Function;
+import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.utils.LanguageManager;
 import xyz.algogo.desktop.utils.Utils;
 
@@ -26,6 +27,7 @@ public class PickerDialog extends JDialog {
 	
 	public PickerDialog(final Component parent, final JTextField textField) {
 		this.setTitle(LanguageManager.getString("picker.title"));
+		this.setIconImages(AlgogoDesktop.ICONS);
 		this.setSize(260, 318);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(ModalityType.TOOLKIT_MODAL);

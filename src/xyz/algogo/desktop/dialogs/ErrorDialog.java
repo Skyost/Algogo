@@ -3,7 +3,6 @@ package xyz.algogo.desktop.dialogs;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
@@ -39,8 +38,8 @@ public class ErrorDialog extends JDialog {
 		final PrintWriter printWriter = new PrintWriter(stringWriter);
 		throwable.printStackTrace(printWriter);
 		this.setTitle(LanguageManager.getString("error.title", error));
+		this.setIconImages(AlgogoDesktop.ICONS);
 		this.setSize(600, 600);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		final JLabel lblMessage = new JLabel(LanguageManager.getString("error.message", error));

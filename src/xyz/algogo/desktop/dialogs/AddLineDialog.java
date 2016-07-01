@@ -19,7 +19,6 @@ import xyz.algogo.desktop.utils.Utils;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -43,12 +42,13 @@ public class AddLineDialog extends JDialog {
 	
 	public AddLineDialog(final Component component, final AlgoLineListener caller, final AlgoLine variables) {
 		this.setTitle(LanguageManager.getString("addline.title"));
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
+		this.setIconImages(AlgogoDesktop.ICONS);
 		this.setSize(500, 212);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setModal(true);
 		this.setResizable(false);
+		
 		final LinkedHashMap<String, VariableType> variablesList = AlgoLineUtils.getVariables(variables);
 		final Runnable dispose = new Runnable() {
 
@@ -58,23 +58,34 @@ public class AddLineDialog extends JDialog {
 			}
 
 		};
+		
+		final String[] variablesName = variablesList.keySet().toArray(new String[variablesList.size()]);
+		final boolean hasVariables = variablesName.length > 0;
+		
 		final JButton btnCreateVariable = new JButton(LanguageManager.getString("addline.createvariable"));
-		btnCreateVariable.addActionListener(listenerForInstruction(caller, this, Instruction.CREATE_VARIABLE, dispose));
+		btnCreateVariable.addActionListener(listenerForInstruction(caller, this, Instruction.CREATE_VARIABLE, dispose, variablesName));
+		
 		final JButton btnAssignVariable = new JButton(LanguageManager.getString("addline.assignvaluetovariable"));
-		btnAssignVariable.addActionListener(listenerForInstruction(caller, this, Instruction.ASSIGN_VALUE_TO_VARIABLE, dispose));
-		btnAssignVariable.setEnabled(variablesList.size() > 0);
+		btnAssignVariable.addActionListener(listenerForInstruction(caller, this, Instruction.ASSIGN_VALUE_TO_VARIABLE, dispose, variablesName));
+		btnAssignVariable.setEnabled(hasVariables);
+		
 		final JButton btnShowVariable = new JButton(LanguageManager.getString("addline.showvariable"));
-		btnShowVariable.addActionListener(listenerForInstruction(caller, this, Instruction.SHOW_VARIABLE, dispose));
-		btnShowVariable.setEnabled(variablesList.size() > 0);
+		btnShowVariable.addActionListener(listenerForInstruction(caller, this, Instruction.SHOW_VARIABLE, dispose, variablesName));
+		btnShowVariable.setEnabled(hasVariables);
+		
 		final JButton btnReadVariable = new JButton(LanguageManager.getString("addline.readvariable"));
-		btnReadVariable.addActionListener(listenerForInstruction(caller, this, Instruction.READ_VARIABLE, dispose));
-		btnReadVariable.setEnabled(variablesList.size() > 0);
+		btnReadVariable.addActionListener(listenerForInstruction(caller, this, Instruction.READ_VARIABLE, dispose, variablesName));
+		btnReadVariable.setEnabled(hasVariables);
+		
 		final JButton btnShowMessage = new JButton(LanguageManager.getString("addline.showmessage"));
 		btnShowMessage.addActionListener(listenerForInstruction(caller, this, Instruction.SHOW_MESSAGE, dispose));
+		
 		final JButton btnIfThenElse = new JButton(LanguageManager.getString("addline.ifelse"));
 		btnIfThenElse.addActionListener(listenerForInstruction(caller, this, Instruction.IF, dispose));
+		
 		final JButton btnWhile = new JButton(LanguageManager.getString("addline.while"));
 		btnWhile.addActionListener(listenerForInstruction(caller, this, Instruction.WHILE, dispose));
+		
 		final List<String> variablesNumber = new ArrayList<String>();
 		for(final Entry<String, VariableType> entry : variablesList.entrySet()) {
 			if(entry.getValue() == VariableType.NUMBER) {
@@ -84,6 +95,7 @@ public class AddLineDialog extends JDialog {
 		final JButton btnFor = new JButton(LanguageManager.getString("addline.for"));
 		btnFor.addActionListener(listenerForInstruction(caller, this, Instruction.FOR, dispose, variablesNumber.toArray(new String[variablesNumber.size()])));
 		btnFor.setEnabled(variablesNumber.size() > 0);
+		
 		final Container content = this.getContentPane();
 		final GroupLayout groupLayout = new GroupLayout(content);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout.createSequentialGroup().addContainerGap().addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false).addComponent(btnReadVariable, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnWhile, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnIfThenElse, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnAssignVariable, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 177, Short.MAX_VALUE).addComponent(btnCreateVariable, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 216, GroupLayout.PREFERRED_SIZE)).addPreferredGap(ComponentPlacement.RELATED, 49, Short.MAX_VALUE).addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false).addComponent(btnFor, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnShowMessage, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(btnShowVariable, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)).addContainerGap()));

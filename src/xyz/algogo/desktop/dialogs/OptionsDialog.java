@@ -2,7 +2,6 @@ package xyz.algogo.desktop.dialogs;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -28,7 +27,7 @@ public class OptionsDialog extends JDialog {
 		final String algoTitle = editor.getAlgorithm().getTitle();
 		final String algoAuthor = editor.getAlgorithm().getAuthor();
 		this.setTitle(LanguageManager.getString("options.title"));
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
+		this.setIconImages(AlgogoDesktop.ICONS);
 		this.setSize(476, 198);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(ModalityType.APPLICATION_MODAL);

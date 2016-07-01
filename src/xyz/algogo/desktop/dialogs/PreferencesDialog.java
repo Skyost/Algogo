@@ -4,7 +4,6 @@ import javax.swing.JDialog;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
@@ -29,9 +28,9 @@ public class PreferencesDialog extends JDialog {
 
 	public PreferencesDialog(final Component component) {
 		this.setTitle(LanguageManager.getString("preferences.title"));
+		this.setIconImages(AlgogoDesktop.ICONS);
 		this.setSize(420, 346);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setModal(true);
 		final Map<String, String> languages = LanguageManager.getAvailableLanguages();
