@@ -64,7 +64,6 @@ editor.menu.file.export.image.filter=%s Image
 editor.menu.file.print.title=Print...
 editor.menu.file.print.header=Algorithm "%s" by %s
 editor.menu.file.print.footer=Created with %s v%s - Page {0}
-editor.menu.file.print.footer=Page {0}
 editor.menu.file.close=Close
 
 editor.menu.edit=Edit
