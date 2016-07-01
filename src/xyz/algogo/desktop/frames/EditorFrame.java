@@ -41,7 +41,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
-import org.irsn.javax.swing.CodeEditorPane;
+import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
+import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 
 import com.wordpress.tips4java.TextLineNumber;
 
@@ -50,7 +54,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
-import xyz.algogo.core.Keyword;
 import xyz.algogo.core.AlgorithmListener.AlgorithmOptionsListener;
 import xyz.algogo.core.formats.AlgorithmFileFormat;
 import xyz.algogo.core.language.AlgorithmLanguage;
@@ -85,7 +88,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private boolean freeEditMode;
 
 	private final AlgorithmTree tree = new AlgorithmTree();
-	private final CodeEditorPane textArea = new CodeEditorPane();
+	private final RSyntaxTextArea textArea = new RSyntaxTextArea();
 
 	private final List<DefaultMutableTreeNode> clipboard = new ArrayList<DefaultMutableTreeNode>();
 
@@ -243,37 +246,15 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 */
 	
 	public final void setupHighlighter() {
-		final HashMap<String, Color> syntax = new HashMap<String, Color>();
-		final HashMap<Keyword, String> keywordsWithoutAccent = AlgorithmParser.getKeywordsWithoutAccent();
-		for(final Keyword keyword : Keyword.values()) {
-			syntax.put(LanguageManager.getString("editor.line.keyword." + keyword.name().toLowerCase()).toUpperCase(), Color.decode(AlgoLineUtils.KEYWORD_COLOR));
-			if(keywordsWithoutAccent.containsKey(keyword)) {
-				syntax.put(keywordsWithoutAccent.get(keyword).toUpperCase(), Color.decode(AlgoLineUtils.KEYWORD_COLOR));
-			}
-		}
-		final HashMap<Instruction, String> instructionsWithoutAccent = AlgorithmParser.getKeywordsInstructionsAccent();
-		for(final Instruction instruction : Instruction.values()) {
-			final Color value = Color.decode(AlgoLineUtils.getLineColor(instruction));
-			syntax.put(LanguageManager.getString("editor.line.instruction." + instruction.name().toLowerCase().replace("_", "")).toUpperCase(), value);
-			if(instructionsWithoutAccent.containsKey(instruction)) {
-				syntax.put(instructionsWithoutAccent.get(instruction).toUpperCase(), value);
-			}
-		}
-		final HashMap<String, String> miscWithoutAccent = AlgorithmParser.getMiscWithoutAccent();
-		for(final String string : new String[]{"editor.line.instruction.createvariable.type", "editor.line.instruction.createvariable.type.string", "editor.line.instruction.createvariable.type.number"}) {
-			syntax.put(LanguageManager.getString(string).toUpperCase(), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
-			if(miscWithoutAccent.containsKey(string)) {
-				syntax.put(miscWithoutAccent.get(string).toUpperCase(), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
-			}
-		}
-		for(final String string : new String[]{"editor.line.instruction.for.from", "editor.line.instruction.for.to"}) {
-			syntax.put(LanguageManager.getString(string).toUpperCase(), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_2));
-			if(miscWithoutAccent.containsKey(string)) {
-				syntax.put(miscWithoutAccent.get(string).toUpperCase(), Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1));
-			}
-		}
+		final AbstractTokenMakerFactory tokenMaker = (AbstractTokenMakerFactory)TokenMakerFactory.getDefaultInstance();
+		tokenMaker.putMapping("text/algorithm", "xyz.algogo.desktop.res.lang.highlighting." + LanguageManager.getCurrentLanguageCode());
+		textArea.setSyntaxEditingStyle("text/algorithm");
 		textArea.setFont(textArea.getFont().deriveFont(12f));
-		textArea.setKeywordColor(syntax);
+		final SyntaxScheme scheme = textArea.getSyntaxScheme();
+		scheme.getStyle(Token.RESERVED_WORD).foreground = Color.decode(AlgoLineUtils.KEYWORD_COLOR);
+		scheme.getStyle(Token.RESERVED_WORD_2).foreground = Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1);
+		scheme.getStyle(Token.DATA_TYPE).foreground = Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_2);
+		textArea.revalidate();
 	}
 
 	/**
@@ -471,7 +452,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @return The code editor.
 	 */
 	
-	public final CodeEditorPane getCurrentTextArea() {
+	public final RSyntaxTextArea getCurrentTextArea() {
 		return textArea;
 	}
 	
@@ -506,7 +487,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		else {
 			try {
 				final Algorithm parsed = AlgorithmParser.parse(algorithm.getTitle(), algorithm.getAuthor(), textArea.getText());
-				if(!parsed.equals(algorithm)) {
+				if(!parsed.equals(algorithm)) { // TODO: Does not work
 					algoChanged = true;
 					EditorFrame.this.setTitle(buildTitle());
 				}

@@ -50,14 +50,17 @@ public class LanguageManager {
 	
 	public static final HashMap<String, String> AVAILABLE_LANGUAGES = new HashMap<String, String>();
 	
+	private static String currentLanguageCode;
+	
 	private static final HashMap<String, String> strings = new HashMap<String, String>();
 	static {
 		try {
 			AVAILABLE_LANGUAGES.put("fr", "Français");
 			AVAILABLE_LANGUAGES.put("en", "English");
+			currentLanguageCode = AVAILABLE_LANGUAGES.get(AlgogoDesktop.SETTINGS.customLanguage) == null ? "en" : AlgogoDesktop.SETTINGS.customLanguage;
 			if(AVAILABLE_LANGUAGES != null && AVAILABLE_LANGUAGES.size() > 0) {
 				final Properties properties = new Properties();
-				properties.load(new InputStreamReader(AlgogoDesktop.class.getResourceAsStream(PACKAGE + (AVAILABLE_LANGUAGES.get(AlgogoDesktop.SETTINGS.customLanguage) == null ? "en" : AlgogoDesktop.SETTINGS.customLanguage) + ".lang"), StandardCharsets.UTF_8));
+				properties.load(new InputStreamReader(AlgogoDesktop.class.getResourceAsStream(PACKAGE + currentLanguageCode + ".lang"), StandardCharsets.UTF_8));
 				for(final Entry<Object, Object> entry : properties.entrySet()) {
 					strings.put(entry.getKey().toString(), entry.getValue().toString());
 				}
@@ -96,6 +99,16 @@ public class LanguageManager {
 	
 	public static final String getCurrentLanguageName() {
 		return getString("language.name");
+	}
+	
+	/**
+	 * Gets the language's code.
+	 * 
+	 * @return The language's code.
+	 */
+	
+	public static final String getCurrentLanguageCode() {
+		return currentLanguageCode;
 	}
 	
 	/**
