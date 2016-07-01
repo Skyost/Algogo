@@ -24,9 +24,9 @@ public class OptionsDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	public OptionsDialog(final Component component) {
-		final String algoTitle = EditorFrame.algorithm.getTitle();
-		final String algoAuthor = EditorFrame.algorithm.getAuthor();
+	public OptionsDialog(final Component component, final EditorFrame editor) {
+		final String algoTitle = editor.getAlgorithm().getTitle();
+		final String algoAuthor = editor.getAlgorithm().getAuthor();
 		this.setTitle(LanguageManager.getString("options.title"));
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 		this.setSize(476, 198);
@@ -49,11 +49,11 @@ public class OptionsDialog extends JDialog {
 			public final void actionPerformed(final ActionEvent event) {
 				final String title = txtfldTitle.getText();
 				if(!algoTitle.equals(title)) {
-					EditorFrame.algorithm.setTitle(title);
+					editor.getAlgorithm().setTitle(title);
 				}
 				final String author = txtfldAuthor.getText();
 				if(!algoAuthor.equals(author)) {
-					EditorFrame.algorithm.setAuthor(author);
+					editor.getAlgorithm().setAuthor(author);
 				}
 				OptionsDialog.this.dispose();
 			}

@@ -1,12 +1,7 @@
 package xyz.algogo.desktop.frames;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,11 +9,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -30,22 +22,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.imageio.ImageIO;
-import javax.print.DocFlavor;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.ServiceUI;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashDocAttributeSet;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -66,7 +47,6 @@ import com.wordpress.tips4java.TextLineNumber;
 
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.SwingConstants;
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
@@ -76,11 +56,9 @@ import xyz.algogo.core.formats.AlgorithmFileFormat;
 import xyz.algogo.core.language.AlgorithmLanguage;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.AppSettings;
-import xyz.algogo.desktop.dialogs.AboutDialog;
-import xyz.algogo.desktop.dialogs.AddLineDialog;
 import xyz.algogo.desktop.dialogs.ErrorDialog;
-import xyz.algogo.desktop.dialogs.OptionsDialog;
-import xyz.algogo.desktop.dialogs.PreferencesDialog;
+import xyz.algogo.desktop.frames.listeners.button.*;
+import xyz.algogo.desktop.frames.listeners.menu.*;
 import xyz.algogo.desktop.dialogs.AddLineDialog.AlgoLineListener;
 import xyz.algogo.desktop.utils.AlgoLineUtils;
 import xyz.algogo.desktop.utils.AlgorithmParser;
@@ -100,16 +78,16 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 	private static final long serialVersionUID = 1L;
 
-	public static Algorithm algorithm;
+	private Algorithm algorithm;
 
-	protected static String algoPath;
-	private static boolean algoChanged;
-	private static boolean freeEditMode;
+	protected String algoPath;
+	private boolean algoChanged;
+	private boolean freeEditMode;
 
-	private static final AlgorithmTree tree = new AlgorithmTree();
-	private static final CodeEditorPane textArea = new CodeEditorPane();
+	private final AlgorithmTree tree = new AlgorithmTree();
+	private final CodeEditorPane textArea = new CodeEditorPane();
 
-	private static final List<DefaultMutableTreeNode> clipboard = new ArrayList<DefaultMutableTreeNode>();
+	private final List<DefaultMutableTreeNode> clipboard = new ArrayList<DefaultMutableTreeNode>();
 
 	private final JScrollPane scrollPane = new JScrollPane();
 	private final JMenu recents = new JMenu(LanguageManager.getString("editor.menu.file.recents"));
@@ -195,75 +173,15 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 
 		});
-		btnAddLine.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				new AddLineDialog(EditorFrame.this, EditorFrame.this).setVisible(true);
-			}
-
-		});
-		btnRemoveLine.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				for(final TreePath path : tree.getSelectionPaths()) {
-					final DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-					if(!AlgorithmTree.getAttachedAlgoLine(node).isKeyword()) {
-						removeNode(node);
-					}
-				}
-			}
-
-		});
-		btnEditLine.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				DefaultMutableTreeNode selected = (DefaultMutableTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
-				if(AlgorithmTree.getAttachedAlgoLine(selected).getInstruction() == Instruction.ELSE) {
-					final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)selected.getParent();
-					selected = (DefaultMutableTreeNode)parent.getChildAt(parent.getIndex(selected) - 1);
-				}
-				AddLineDialog.listenerForInstruction(EditorFrame.this, EditorFrame.this, selected, null).actionPerformed(event);
-			}
-
-		});
-		btnUp.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
-				final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)selected.getParent();
-				if(AlgorithmTree.up(parent, parent.getIndex(selected))) {
-					algorithmChanged(true, true, parent, new TreePath(selected.getPath()));
-				}
-			}
-
-		});
-		btnDown.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)tree.getSelectionPaths()[0].getLastPathComponent();
-				final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)selected.getParent();
-				if(AlgorithmTree.down(parent, parent.getIndex(selected))) {
-					algorithmChanged(true, true, parent, new TreePath(selected.getPath()));
-				}
-			}
-
-		});
-		btnTest.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				new ConsoleFrame(EditorFrame.this).setVisible(true);
-			}
-
-		});
+		btnAddLine.addActionListener(new ButtonAddLineListener(this));
+		btnRemoveLine.addActionListener(new ButtonRemoveLineListener(this));
+		btnEditLine.addActionListener(new ButtonEditLineListener(this));
+		btnUp.addActionListener(new ButtonUpListener(this));
+		btnDown.addActionListener(new ButtonDownListener(this));
+		btnTest.addActionListener(new ButtonTestListener(this));
 		this.setJMenuBar(editorMenu);
 		setupHighlighter();
-		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain && !AlgogoDesktop.DEBUG) {
+		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain) {
 			new GithubUpdater(AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater()).start();
 		}
 	}
@@ -299,6 +217,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	@Override
 	public final boolean titleChanged(final Algorithm algorithm, final String title, final String newTitle) {
 		if(newTitle != null && !newTitle.isEmpty()) {
+			algoChanged = true;
 			this.setTitle(buildTitle(newTitle, algorithm.getAuthor()));
 			algorithmChanged(false);
 			return true;
@@ -310,6 +229,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	@Override
 	public final boolean authorChanged(final Algorithm algorithm, final String author, final String newAuthor) {
 		if(newAuthor != null && !newAuthor.isEmpty()) {
+			algoChanged = true;
 			this.setTitle(buildTitle(algorithm.getTitle(), newAuthor));
 			algorithmChanged(false);
 			return true;
@@ -365,370 +285,99 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private final JMenuBar createEditorMenuBar() {
 		final HashMap<KeyStroke, ActionListener> listeners = new HashMap<KeyStroke, ActionListener>();
 		final int ctrl = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+		
 		final JMenuItem neww = new JMenuItem(LanguageManager.getString("editor.menu.file.new"));
-		neww.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				if(askToSaveIfNeeded()) {
-					resetEditor();
-				}
-			}
-
-		});
+		neww.addActionListener(new FileNewListener(this));
 		neww.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_new.png")));
 		neww.setAccelerator(KeyStroke.getKeyStroke('N', ctrl));
+		
 		final JMenuItem open = new JMenuItem(LanguageManager.getString("editor.menu.file.open"));
-		open.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				try {
-					final JFileChooser chooser = new JFileChooser();
-					final File currentDir = Utils.getParentFolder();
-					chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter.algorithms"), "agg", "aggc"));
-					chooser.addChoosableFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter.agg"), "agg"));
-					chooser.addChoosableFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.filter.aggc"), "aggc"));
-					chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
-					chooser.setMultiSelectionEnabled(false);
-					chooser.setCurrentDirectory(currentDir);
-					chooser.setSelectedFile(algoPath == null ? new File(currentDir, EditorFrame.algorithm.getTitle()) : new File(algoPath));
-					if(chooser.showOpenDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
-						open(chooser.getSelectedFile());
-					}
-				}
-				catch(final Exception ex) {
-					ErrorDialog.errorMessage(EditorFrame.this, ex);
-				}
-			}
-
-		});
+		open.addActionListener(new FileOpenListener(this));
 		open.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_open.png")));
 		open.setAccelerator(KeyStroke.getKeyStroke('O', ctrl));
+		
 		final JMenuItem save = new JMenuItem(LanguageManager.getString("editor.menu.file.save"));
-		save.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				if(algoPath == null || !Files.isWritable(Paths.get(algoPath))) {
-					saveAs();
-					return;
-				}
-				final int index = algoPath.lastIndexOf(".");
-				save(new File(algoPath), index == -1 ? "agg" : algoPath.substring(index));
-			}
-
-		});
+		save.addActionListener(new FileSaveListener(this));
 		save.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_save.png")));
 		save.setAccelerator(KeyStroke.getKeyStroke('S', ctrl));
+		
 		final JMenuItem saveAs = new JMenuItem(LanguageManager.getString("editor.menu.file.saveas"));
-		saveAs.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				saveAs();
-			}
-
-		});
+		saveAs.addActionListener(new FileSaveAsListener(this));
+		
 		final JMenu export = new JMenu(LanguageManager.getString("editor.menu.file.export"));
 		final List<AlgorithmLanguage> languages = new ArrayList<AlgorithmLanguage>(Arrays.asList(AlgorithmLanguage.DEFAULT_LANGUAGES));
 		languages.add(new TextLanguage());
 		for(final AlgorithmLanguage language : languages) {
 			final String name = language.getName();
 			final JMenuItem subMenu = new JMenuItem(name);
-			subMenu.addActionListener(new ActionListener() {
-
-				@Override
-				public final void actionPerformed(final ActionEvent event) {
-					try {
-						final String extension = language.getExtension();
-						final JFileChooser chooser = new JFileChooser();
-						final File currentDir = Utils.getParentFolder();
-						chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.export.filter", name, extension), extension));
-						chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
-						chooser.setMultiSelectionEnabled(false);
-						chooser.setCurrentDirectory(currentDir);
-						chooser.setSelectedFile(algoPath == null ? new File(currentDir, EditorFrame.algorithm.getTitle()) : new File(algoPath));
-						if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
-							String path = chooser.getSelectedFile().getPath();
-							if(!path.endsWith("." + extension)) {
-								path += "." + extension;
-							}
-							final File file = new File(path);
-							if(file.exists()) {
-								file.delete();
-								file.createNewFile();
-							}
-							Files.write(Paths.get(path), algorithm.toLanguage(language).getBytes(StandardCharsets.UTF_8));
-						}
-					}
-					catch(final Exception ex) {
-						ErrorDialog.errorMessage(EditorFrame.this, ex);
-					}
-				}
-
-			});
+			subMenu.addActionListener(new FileExportLanguageListener(this, language));
 			export.add(subMenu);
 		}
-		final JMenuItem exportToImage = new JMenuItem(LanguageManager.getString("editor.menu.file.export.png"));
-		exportToImage.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				try {
-					final JFileChooser chooser = new JFileChooser();
-					final File currentDir = Utils.getParentFolder();
-					chooser.setFileFilter(new FileNameExtensionFilter(LanguageManager.getString("editor.menu.file.export.png"), "png"));
-					chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
-					chooser.setMultiSelectionEnabled(false);
-					chooser.setCurrentDirectory(currentDir);
-					chooser.setSelectedFile(algoPath == null ? new File(currentDir, EditorFrame.algorithm.getTitle()) : new File(algoPath));
-					if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
-						String path = chooser.getSelectedFile().getPath();
-						if(!path.endsWith(".png")) {
-							path += ".png";
-						}
-						final File file = new File(path);
-						if(file.exists()) {
-							file.delete();
-							file.createNewFile();
-						}
-						final BufferedImage image = new BufferedImage(tree.getWidth(), tree.getHeight(), BufferedImage.TYPE_INT_RGB);
-						final Graphics graphics = image.getGraphics();
-						graphics.setColor(tree.getForeground());
-						graphics.setFont(tree.getFont());
-						tree.paintAll(graphics);
-						final Rectangle region = new Rectangle(0, 0, image.getWidth(), image.getHeight());
-						ImageIO.write(image.getSubimage(region.x, region.y, region.width, region.height), "PNG", file);
-					}
-				}
-				catch(final Exception ex) {
-					ErrorDialog.errorMessage(EditorFrame.this, ex);
-				}
-			}
-
-		});
+		
+		final JMenuItem exportToImage = new JMenuItem(LanguageManager.getString("editor.menu.file.export.image.title"));
+		exportToImage.addActionListener(new FileExportImageListener(this));
 		export.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_export.png")));
-		final JMenuItem print = new JMenuItem(LanguageManager.getString("editor.menu.file.print"));
-		print.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				try {
-					final PrintRequestAttributeSet printRequest = new HashPrintRequestAttributeSet();
-					final DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
-					final PrintService service = ServiceUI.printDialog(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration(), 200, 200, PrintServiceLookup.lookupPrintServices(flavor, printRequest), PrintServiceLookup.lookupDefaultPrintService(), flavor, printRequest);
-					if(service != null) {
-						service.createPrintJob().print(new SimpleDoc(new ByteArrayInputStream(algorithm.toLanguage(new TextLanguage()).getBytes(StandardCharsets.UTF_8)), flavor, new HashDocAttributeSet()), printRequest);
-					}
-				}
-				catch(final Exception ex) {
-					ErrorDialog.errorMessage(EditorFrame.this, ex);
-				}
-			}
-
-		});
+		
+		final JMenuItem print = new JMenuItem(LanguageManager.getString("editor.menu.file.print.title"));
+		print.addActionListener(new FilePrintListener(this));
 		print.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_print.png")));
 		print.setAccelerator(KeyStroke.getKeyStroke('P', ctrl));
+		
 		final JMenuItem close = new JMenuItem(LanguageManager.getString("editor.menu.file.close"));
-		close.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				closeEditor();
-			}
-
-		});
+		close.addActionListener(new FileCloseListener(this));
 		close.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_close.png")));
 		close.setAccelerator(KeyStroke.getKeyStroke('Q', ctrl));
+		
 		final JMenuItem options = new JMenuItem(LanguageManager.getString("editor.menu.edit.options"));
-		options.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				new OptionsDialog(EditorFrame.this).setVisible(true);
-			}
-
-		});
+		options.addActionListener(new FileOptionsListener(this));
 		options.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_options.png")));
+		
 		final JMenuItem paste = new JMenuItem(LanguageManager.getString("editor.menu.edit.paste"));
-		final ActionListener pasteActionListener = new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				final TreePath[] paths = tree.getSelectionPaths();
-				if(paths == null) {
-					return;
-				}
-				for(final DefaultMutableTreeNode node : clipboard) {
-					addNode(AlgorithmTree.getAttachedAlgoLine(node).clone());
-				}
-			}
-
-		};
+		final ActionListener pasteActionListener = new EditPasteListener(this);
 		paste.addActionListener(pasteActionListener);
 		paste.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_paste.png")));
 		paste.setAccelerator(KeyStroke.getKeyStroke('V', ctrl));
 		listeners.put(KeyStroke.getKeyStroke('V', ctrl), pasteActionListener);
 		paste.setEnabled(false);
+		
 		final JMenuItem cut = new JMenuItem(LanguageManager.getString("editor.menu.edit.cut"));
-		final ActionListener cutActionListener = new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				final TreePath[] paths = tree.getSelectionPaths();
-				if(paths == null || paths.length < 1) {
-					return;
-				}
-				final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)paths[0].getLastPathComponent();
-				if(selected.equals(tree.variables) || selected.equals(tree.beginning) || selected.equals(tree.end)) {
-					return;
-				}
-				clipboard.clear();
-				for(final TreePath path : paths) {
-					final DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-					clipboard.add((DefaultMutableTreeNode)node.clone());
-					removeNode(node);
-				}
-				paste.setEnabled(true);
-			}
-
-		};
+		final ActionListener cutActionListener = new EditCutListener(this, paste);
 		cut.addActionListener(cutActionListener);
 		cut.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_cut.png")));
 		cut.setAccelerator(KeyStroke.getKeyStroke('X', ctrl));
 		listeners.put(KeyStroke.getKeyStroke('X', ctrl), cutActionListener);
+		
 		final JMenuItem copy = new JMenuItem(LanguageManager.getString("editor.menu.edit.copy"));
-		final ActionListener copyActionListener = new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				final TreePath[] paths = tree.getSelectionPaths();
-				if(paths == null || paths.length < 1) {
-					return;
-				}
-				final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)paths[0].getLastPathComponent();
-				if(selected.equals(tree.variables) || selected.equals(tree.beginning) || selected.equals(tree.end)) {
-					return;
-				}
-				clipboard.clear();
-				for(final TreePath path : paths) {
-					clipboard.add((DefaultMutableTreeNode)((DefaultMutableTreeNode)path.getLastPathComponent()).clone());
-				}
-				paste.setEnabled(true);
-			}
-
-		};
+		final ActionListener copyActionListener = new EditCopyListener(this, paste);
 		copy.addActionListener(copyActionListener);
 		copy.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_copy.png")));
 		copy.setAccelerator(KeyStroke.getKeyStroke('C', ctrl));
 		listeners.put(KeyStroke.getKeyStroke('C', ctrl), copyActionListener);
+		
 		final JMenuItem preferences = new JMenuItem(LanguageManager.getString("editor.menu.edit.preferences"));
-		preferences.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				new PreferencesDialog(EditorFrame.this).setVisible(true);
-			}
-
-		});
+		preferences.addActionListener(new EditPreferencesListener(this));
 		preferences.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_preferences.png")));
+		
 		final JMenuItem freeEdit = new JMenuItem(LanguageManager.getString("editor.menu.edit.freeedit"));
-		freeEdit.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				btnTest.setEnabled(freeEditMode);
-				freeEditMode = !freeEditMode;
-				EditorFrame.this.setJMenuBar(textAreaMenu);
-				textArea.setText(algorithm.toLanguage(new TextLanguage(false)));
-				scrollPane.setViewportView(textArea);
-				scrollPane.setRowHeaderView(new TextLineNumber(textArea));
-				EditorFrame.this.revalidate();
-				textArea.requestFocus();
-			}
-
-		});
+		freeEdit.addActionListener(new EditFreeEditModeListener(this, true));
 		/* Emulates the JCheckBoxMenuItem (because this one takes a margin : */
 		freeEdit.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_unchecked.png")));
+		
 		final JMenuItem checkForUpdates = new JMenuItem(LanguageManager.getString("editor.menu.help.checkforupdates"));
-		checkForUpdates.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				new GithubUpdater(AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater() {
-					
-					private final JDialog dialog = new JDialog();
-					
-					@Override
-					public final void updaterStarted() {
-						dialog.setTitle(LanguageManager.getString("wait.title"));
-						dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-						dialog.setLocationRelativeTo(EditorFrame.this);
-						dialog.setAlwaysOnTop(true);
-						dialog.setResizable(false);
-						final JLabel message = new JLabel(LanguageManager.getString("wait.message"));
-						message.setHorizontalAlignment(SwingConstants.CENTER);
-						message.setFont(message.getFont().deriveFont(Font.ITALIC));
-						dialog.add(message, BorderLayout.CENTER);
-						dialog.pack();
-						dialog.setSize(dialog.getWidth() + 50, dialog.getHeight() + 30);
-						dialog.setVisible(true);
-					}
-					
-					@Override
-					public final void updaterResponse(final String response) {
-						dialog.dispose();
-					}				
-
-					@Override
-					public final void updaterUpdateAvailable(final String localVersion, final String remoteVersion) {
-						try {
-							JOptionPane.showMessageDialog(EditorFrame.this, new Object[]{new JLabelLink(LanguageManager.getString("joptionpane.updateavailable.message", remoteVersion, AlgogoDesktop.APP_WEBSITE), new URL(AlgogoDesktop.APP_WEBSITE))}, LanguageManager.getString("joptionpane.updateavailable.title"), JOptionPane.INFORMATION_MESSAGE);
-						}
-						catch(final Exception ex) {
-							ex.printStackTrace();
-						}
-					}
-
-					@Override
-					public final void updaterNoUpdate(final String localVersion, final String remoteVersion) {
-						JOptionPane.showMessageDialog(EditorFrame.this, LanguageManager.getString("joptionpane.updatenotavailable.message"), LanguageManager.getString("joptionpane.updatenotavailable.title"), JOptionPane.INFORMATION_MESSAGE);
-					}
-
-				}).start();
-			}
-
-		});
+		checkForUpdates.addActionListener(new HelpCheckForUpdatesListener(this));
 		checkForUpdates.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_checkforupdates.png")));
+		
 		final JMenuItem onlineHelp = new JMenuItem(LanguageManager.getString("editor.menu.help.onlinehelp"));
-		final ActionListener onlineHelpListener = new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				try {
-					JLabelLink.openBrowser(new URL("https://github.com/Skyost/Algogo/wiki"));
-				}
-				catch(final Exception ex) {
-					ErrorDialog.errorMessage(EditorFrame.this, ex);
-				}
-			}
-
-		};
+		final ActionListener onlineHelpListener = new HelpOnlineHelpListener(this);
 		onlineHelp.addActionListener(onlineHelpListener);
 		onlineHelp.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_onlinehelp.png")));
 		onlineHelp.setAccelerator(KeyStroke.getKeyStroke('H', ctrl));
 		listeners.put(KeyStroke.getKeyStroke('H', ctrl), onlineHelpListener);
+		
 		final JMenuItem about = new JMenuItem(LanguageManager.getString("editor.menu.help.about"));
-		about.addActionListener(new ActionListener() {
-
-			@Override
-			public final void actionPerformed(final ActionEvent event) {
-				new AboutDialog(EditorFrame.this).setVisible(true);
-			}
-
-		});
+		about.addActionListener(new HelpAboutListener(this));
 		about.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_about.png")));
+		
 		final JMenuBar menuBar = new JMenuBar();
 		final JMenu file = new JMenu(LanguageManager.getString("editor.menu.file"));
 		file.add(neww);
@@ -773,30 +422,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
-				try {
-					freeEdit.setSelected(true);
-					final Algorithm parsed = AlgorithmParser.parse(algorithm.getTitle(), algorithm.getAuthor(), textArea.getText());
-					if(!parsed.equals(EditorFrame.algorithm)) {
-						algoChanged = true;
-						EditorFrame.this.setTitle(buildTitle());
-					}
-					EditorFrame.algorithm = parsed;
-					EditorFrame.algorithm.addOptionsListener(EditorFrame.this);
-					btnTest.setEnabled(freeEditMode);
-					freeEditMode = !freeEditMode;
-					EditorFrame.this.setJMenuBar(editorMenu);
-					scrollPane.setViewportView(tree);
-					scrollPane.setRowHeaderView(null);
-					tree.fromAlgorithm(parsed);
-					tree.reload();
-					EditorFrame.this.revalidate();
-				}
-				catch(final ParseException ex) {
-					JOptionPane.showMessageDialog(EditorFrame.this, ex.getMessage(), "Error !", JOptionPane.ERROR_MESSAGE); // TODO: Translate it
-				}
+				freeEdit.setSelected(true);
 			}
 
 		});
+		freeEdit.addActionListener(new EditFreeEditModeListener(this, false));
 		final JMenuBar menuBar = new JMenuBar();
 		final JMenu edit = new JMenu(LanguageManager.getString("editor.menu.edit"));
 		edit.add(freeEdit);
@@ -804,8 +434,106 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		registerKeyListeners(listeners);
 		return menuBar;
 	}
+	
+	/**
+	 * Gets the current algorithm's path on disk.
+	 * 
+	 * @return The current algorithm's path.
+	 */
+	
+	public final String getAlgorithmPath() {
+		return algoPath;
+	}
+	
+	/**
+	 * Gets the current algorithm.
+	 * 
+	 * @return The current algorithm.
+	 */
+	
+	public final Algorithm getAlgorithm() {
+		return algorithm;
+	}
+	
+	/**
+	 * Gets the tree component (even if not showed).
+	 * 
+	 * @return The tree component.
+	 */
+	
+	public final AlgorithmTree getCurrentTreeComponent() {
+		return tree;
+	}
+	
+	/**
+	 * Gets the code editor (even if not showed).
+	 * 
+	 * @return The code editor.
+	 */
+	
+	public final CodeEditorPane getCurrentTextArea() {
+		return textArea;
+	}
+	
+	/**
+	 * Gets the user's clipboard.
+	 * 
+	 * @return The user's clipboard.
+	 */
+	
+	public final List<DefaultMutableTreeNode> getClipboard() {
+		return clipboard;
+	}
+	
+	/**
+	 * Allows you to enable or disable the free edit mode.
+	 * 
+	 * @param freeEditMode <b>true</b> Will enable the free edit mode.
+	 * <br><b>false</b> Will disable the free edit mode.
+	 */
+	
+	public void setFreeEditMode(final boolean freeEditMode) {
+		if(this.freeEditMode == freeEditMode) {
+			return;
+		}
+		if(freeEditMode) {
+			EditorFrame.this.setJMenuBar(textAreaMenu);
+			textArea.setText(algorithm.toLanguage(new TextLanguage(false)));
+			scrollPane.setViewportView(textArea);
+			scrollPane.setRowHeaderView(new TextLineNumber(textArea));
+			textArea.requestFocus();
+		}
+		else {
+			try {
+				final Algorithm parsed = AlgorithmParser.parse(algorithm.getTitle(), algorithm.getAuthor(), textArea.getText());
+				if(!parsed.equals(algorithm)) {
+					algoChanged = true;
+					EditorFrame.this.setTitle(buildTitle());
+				}
+				algorithm = parsed;
+				algorithm.addOptionsListener(EditorFrame.this);
+				EditorFrame.this.setJMenuBar(editorMenu);
+				scrollPane.setViewportView(tree);
+				scrollPane.setRowHeaderView(null);
+				tree.fromAlgorithm(parsed);
+				tree.reload();
+			}
+			catch(final ParseException ex) {
+				JOptionPane.showMessageDialog(EditorFrame.this, ex.getMessage(), "Error !", JOptionPane.ERROR_MESSAGE); // TODO: Translate it
+			}
+		}
+		this.freeEditMode = freeEditMode;
+		btnTest.setEnabled(!freeEditMode);
+		EditorFrame.this.revalidate();
+	}
+	
+	/**
+	 * Attributes the specified actions to the corresponding keys.
+	 * 
+	 * @param listeners A map containing the actions and the keys.
+	 */
 
-	public final void registerKeyListeners(final Map<KeyStroke, ActionListener> listeners) {
+	private final void registerKeyListeners(final Map<KeyStroke, ActionListener> listeners) {
 		for(final Entry<KeyStroke, ActionListener> entry : listeners.entrySet()) {
 			tree.getInputMap().put(entry.getKey(), entry.getValue());
 		}
@@ -817,7 +545,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @param node The editor.
 	 */
 
-	private final void addNode(final AlgoLine line) {
+	public final void addNode(final AlgoLine line) {
 		final DefaultMutableTreeNode node = new DefaultMutableTreeNode(new AlgorithmUserObject(line));
 		final Instruction instruction = line.getInstruction();
 		if(instruction == Instruction.CREATE_VARIABLE) {
@@ -853,7 +581,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @param node The editor.
 	 */
 
-	private final void removeNode(final DefaultMutableTreeNode node) {
+	public final void removeNode(final DefaultMutableTreeNode node) {
 		final AlgoLine line = AlgorithmTree.getAttachedAlgoLine(node);
 		if(line.getInstruction() == Instruction.IF && Boolean.valueOf(line.getArgs()[1])) {
 			final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
@@ -872,7 +600,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * Resets the editor (algorithm, tree, ...).
 	 */
 
-	private final void resetEditor() {
+	public final void resetEditor() {
 		algoPath = null;
 		algoChanged = false;
 		freeEditMode = false;
@@ -927,7 +655,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @return The current title.
 	 */
 
-	private static final String buildTitle() {
+	private final String buildTitle() {
 		return buildTitle(algorithm.getTitle(), algorithm.getAuthor());
 	}
 
@@ -940,7 +668,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @return A title.
 	 */
 
-	private static final String buildTitle(final String title, final String author) {
+	private final String buildTitle(final String title, final String author) {
 		return LanguageManager.getString("editor.title", algoChanged ? "* " : "", title, author, AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION);
 	}
 
@@ -958,8 +686,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				throw new Exception();
 			}
 			final Algorithm algorithm = Algorithm.loadFromFile(file);
-			EditorFrame.algorithm = algorithm;
-			EditorFrame.algorithm.addOptionsListener(EditorFrame.this);
+			this.algorithm = algorithm;
+			this.algorithm.addOptionsListener(EditorFrame.this);
 			tree.fromAlgorithm(algorithm);
 			algoPath = file.getPath();
 			saveToHistory(algoPath);
@@ -1013,7 +741,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 			chooser.setMultiSelectionEnabled(false);
 			chooser.setCurrentDirectory(currentDir);
-			chooser.setSelectedFile(algoPath == null ? new File(currentDir, EditorFrame.algorithm.getTitle()) : new File(algoPath));
+			chooser.setSelectedFile(algoPath == null ? new File(currentDir, algorithm.getTitle()) : new File(algoPath));
 			if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
 				save(chooser.getSelectedFile(), "." + ((FileNameExtensionFilter)chooser.getFileFilter()).getExtensions()[0]);
 			}
@@ -1161,7 +889,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		}
 	}
 	
-	private class DefaultGithubUpdater implements GithubUpdaterResultListener {
+	public class DefaultGithubUpdater implements GithubUpdaterResultListener {
 		
 		@Override
 		public void updaterStarted() {}

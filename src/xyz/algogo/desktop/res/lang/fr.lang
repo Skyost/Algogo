@@ -1,5 +1,5 @@
 language.name=Français
-language.version=4
+language.version=5
 
 
 console.title=Console
@@ -59,8 +59,11 @@ editor.menu.file.saveas=Enregistrer sous...
 editor.menu.file.save=Enregistrer...
 editor.menu.file.export=Exporter...
 editor.menu.file.export.filter=Fichier %s (*.%s)
-editor.menu.file.export.png=Image PNG
-editor.menu.file.print=Imprimer...
+editor.menu.file.export.image.title=Image
+editor.menu.file.export.image.filter=Image %s
+editor.menu.file.print.title=Imprimer...
+editor.menu.file.print.header=Algorithme "%s" par %s
+editor.menu.file.print.footer=Créé avec %s v%s - Page {0}
 editor.menu.file.close=Fermer
 
 editor.menu.edit=Édition

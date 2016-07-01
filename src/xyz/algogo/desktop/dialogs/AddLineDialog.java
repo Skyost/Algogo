@@ -12,7 +12,6 @@ import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Instruction;
 import xyz.algogo.core.utils.VariableHolder.VariableType;
 import xyz.algogo.desktop.AlgogoDesktop;
-import xyz.algogo.desktop.frames.EditorFrame;
 import xyz.algogo.desktop.utils.AlgoLineUtils;
 import xyz.algogo.desktop.utils.AlgorithmTree;
 import xyz.algogo.desktop.utils.LanguageManager;
@@ -42,7 +41,7 @@ public class AddLineDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	
-	public AddLineDialog(final Component component, final AlgoLineListener caller) {
+	public AddLineDialog(final Component component, final AlgoLineListener caller, final AlgoLine variables) {
 		this.setTitle(LanguageManager.getString("addline.title"));
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 		this.setSize(500, 212);
@@ -50,7 +49,7 @@ public class AddLineDialog extends JDialog {
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setModal(true);
 		this.setResizable(false);
-		final LinkedHashMap<String, VariableType> variables = AlgoLineUtils.getVariables(EditorFrame.algorithm.getVariables());
+		final LinkedHashMap<String, VariableType> variablesList = AlgoLineUtils.getVariables(variables);
 		final Runnable dispose = new Runnable() {
 
 			@Override
@@ -63,13 +62,13 @@ public class AddLineDialog extends JDialog {
 		btnCreateVariable.addActionListener(listenerForInstruction(caller, this, Instruction.CREATE_VARIABLE, dispose));
 		final JButton btnAssignVariable = new JButton(LanguageManager.getString("addline.assignvaluetovariable"));
 		btnAssignVariable.addActionListener(listenerForInstruction(caller, this, Instruction.ASSIGN_VALUE_TO_VARIABLE, dispose));
-		btnAssignVariable.setEnabled(variables.size() > 0);
+		btnAssignVariable.setEnabled(variablesList.size() > 0);
 		final JButton btnShowVariable = new JButton(LanguageManager.getString("addline.showvariable"));
 		btnShowVariable.addActionListener(listenerForInstruction(caller, this, Instruction.SHOW_VARIABLE, dispose));
-		btnShowVariable.setEnabled(variables.size() > 0);
+		btnShowVariable.setEnabled(variablesList.size() > 0);
 		final JButton btnReadVariable = new JButton(LanguageManager.getString("addline.readvariable"));
 		btnReadVariable.addActionListener(listenerForInstruction(caller, this, Instruction.READ_VARIABLE, dispose));
-		btnReadVariable.setEnabled(variables.size() > 0);
+		btnReadVariable.setEnabled(variablesList.size() > 0);
 		final JButton btnShowMessage = new JButton(LanguageManager.getString("addline.showmessage"));
 		btnShowMessage.addActionListener(listenerForInstruction(caller, this, Instruction.SHOW_MESSAGE, dispose));
 		final JButton btnIfThenElse = new JButton(LanguageManager.getString("addline.ifelse"));
@@ -77,7 +76,7 @@ public class AddLineDialog extends JDialog {
 		final JButton btnWhile = new JButton(LanguageManager.getString("addline.while"));
 		btnWhile.addActionListener(listenerForInstruction(caller, this, Instruction.WHILE, dispose));
 		final List<String> variablesNumber = new ArrayList<String>();
-		for(final Entry<String, VariableType> entry : variables.entrySet()) {
+		for(final Entry<String, VariableType> entry : variablesList.entrySet()) {
 			if(entry.getValue() == VariableType.NUMBER) {
 				variablesNumber.add(entry.getKey());
 			}
@@ -100,22 +99,6 @@ public class AddLineDialog extends JDialog {
 	 * @param component The parent component (will be used in dialogs).
 	 * @param instruction The instruction.
 	 * @param after Will be run after if the user clicks on "OK".
-	 * 
-	 * @return The action listener.
-	 */
-
-	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final Instruction instruction, final Runnable after) {
-		final List<String> variables = new ArrayList<String>(AlgoLineUtils.getVariables(EditorFrame.algorithm.getVariables()).keySet());
-		return listenerForInstruction(caller, component, instruction, after, variables.toArray(new String[variables.size()]));
-	}
-	
-	/**
-	 * Gets an action listener for the specified instruction.
-	 * 
-	 * @param caller Used to send the response.
-	 * @param component The parent component (will be used in dialogs).
-	 * @param instruction The instruction.
-	 * @param after Will be run after if the user clicks on "OK".
 	 * @param variables The variables (for instructions like SHOW_VARIABLE, FOR, ...).
 	 * 
 	 * @return The action listener.
@@ -123,22 +106,6 @@ public class AddLineDialog extends JDialog {
 
 	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final Instruction instruction, final Runnable after, final String... variables) {
 		return listenerForInstruction(caller, component, instruction, null, after, variables);
-	}
-	
-	/**
-	 * Gets an action listener for the specified instruction.
-	 * 
-	 * @param caller Used to send the response.
-	 * @param component The parent component (will be used in dialogs).
-	 * @param node The node.
-	 * @param after Will be run after if the user clicks on "OK".
-	 * 
-	 * @return The action listener.
-	 */
-
-	public static final ActionListener listenerForInstruction(final AlgoLineListener caller, final Component component, final DefaultMutableTreeNode node, final Runnable after) {
-		final List<String> variables = new ArrayList<String>(AlgoLineUtils.getVariables(EditorFrame.algorithm.getVariables()).keySet());
-		return listenerForInstruction(caller, component, node, after, variables.toArray(new String[variables.size()]));
 	}
 	
 	/**

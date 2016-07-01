@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.AlgoRunnable;
+import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
 import xyz.algogo.core.AlgorithmListener.AlgorithmThreadListener;
 import xyz.algogo.core.utils.VariableHolder.VariableType;
@@ -53,7 +54,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
 	private AlgoRunnable currentThread;
 
-	public ConsoleFrame(final Component component) {
+	public ConsoleFrame(final Component component, final EditorFrame editor) {
 		this.setTitle(LanguageManager.getString("console.title"));
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/app_icon.png")));
 		this.setSize(500, 376);
@@ -104,7 +105,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 					return;
 				}
 				output.setText(null);
-				currentThread = EditorFrame.algorithm.createNewRunnable(ConsoleFrame.this);
+				currentThread = editor.getAlgorithm().createNewRunnable(ConsoleFrame.this);
 				currentThread.start();
 			}
 
@@ -115,11 +116,12 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 			@Override
 			public void actionPerformed(final ActionEvent event) {
 				try {
+					final Algorithm algorithm = editor.getAlgorithm();
 					final StringBuilder builder = new StringBuilder();
 					builder.append("<html>" + LINE_SEPARATOR);
 					builder.append("<head>" + LINE_SEPARATOR);
 					builder.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>" + LINE_SEPARATOR);
-					builder.append("<title>" + EditorFrame.algorithm.getTitle() + " by " + EditorFrame.algorithm.getAuthor() + "</title>" + LINE_SEPARATOR);
+					builder.append("<title>" + algorithm.getTitle() + " by " + algorithm.getAuthor() + "</title>" + LINE_SEPARATOR);
 					builder.append("<meta name=\"generator\" content=\"" + AlgogoDesktop.APP_NAME + "\">" + LINE_SEPARATOR);
 					builder.append("<link rel=\"icon\" type=\"image/png\" href=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAADBUlEQVQ4y1WTvUszWRTGnzv36p2M+TBBk4AowUIEMX40i+UWVrtFWPwHtnFFULHZSrZZm60UXhArt1vZWkHyB8ha6BaLil9ISAJKyGR0ksxkxrn3bBVf3gOnO+fh/J7Dw0qlkgFAT09Pzz49PX3nOA5jjKFfWmvE43HE43GEYQjDMOD7/r/JZPLq4eGBseXlZWSz2fVarfbFNE0jl8sRAAYARATOOZrNJlqtFmKxGJRSEEKAiH6bnZ39nW1tbc1eXl7+Mz8/P7SzsxOl02lGRGCMgYgghMDLywu2t7fx/PyMRCJBURSJwcFBcl33B55MJn8UQqzs7+9H+XxeKKUYAKPfURQZIyMjxtLSknFxcWE0m00jFotFWmuulKoatm2LbDaLdDrNer0eiIhJKWGaJkzThGVZICKMj4/j8PAQhUIBrusyzjk+Pj4GBADq8zLGMDAwgHK5jPv7e2itQUSQUqLVaqFYLOLg4ADr6+uo1WrgnDOhtf5027IslMtlHB0dodPpYGhoCFJKVCoVTE1NIQgCLCwsYG9vD6urq6hUKoYgIhAR+ld0Oh2sra3h9PQUi4uLEELg7OwMGxsb6Ha7uLm5QaFQwOjoKG5vb5nRXzYMA0EQoFQqIZ/Po1arQQiBRqMBAOh2u/A8D6ZpolqtwrZtCCG+ChDRJ7NlWWi328hkMvA8D5ZlwTRNKKWgtQbnHGEYwvM84xuB/t9PTk6glMLw8DA8z0O73cb19TXOz88hpfxE1lp/vaAvEoYhrq6uMDMzA8YYJicn8fr6inK5jLm5OYRh+M28SCQSutFowHEcGhsbg+/72N3dxePjIxzHQaFQwObmJqSUkFKCc47393c4jgPTNBnP5/PS9/2f6/W6KBaLkZSSUqkUpVIpsm2bgiAgy7IIACml6O3tjY6Pj1m1WmWe5/3JVlZWcHd39wfn/NdMJkO5XI71jQqCAK7rQmuNfkIdxyHXdVmv1/u7Xq//0g8On5iY+AnA977vG598QkAphTAMPwWklIii6D/btv8C8PY/UiSkDy2ZQVMAAAAASUVORK5CYII=\"/>" + LINE_SEPARATOR);
 					builder.append("</head>" + LINE_SEPARATOR);
@@ -133,7 +135,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 					chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 					chooser.setMultiSelectionEnabled(false);
 					chooser.setCurrentDirectory(currentDir);
-					chooser.setSelectedFile(EditorFrame.algoPath == null ? new File(currentDir, EditorFrame.algorithm.getTitle()) : new File(EditorFrame.algoPath));
+					chooser.setSelectedFile(editor.algoPath == null ? new File(currentDir, algorithm.getTitle()) : new File(editor.algoPath));
 					if(chooser.showSaveDialog(ConsoleFrame.this) == JFileChooser.APPROVE_OPTION) {
 						String path = chooser.getSelectedFile().getPath();
 						if(!path.endsWith(".html")) {
