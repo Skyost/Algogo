@@ -66,26 +66,26 @@ public class TextLanguage extends AlgorithmIndentedLanguage {
 		builder.append(LanguageManager.getString("editor.line.instruction." + instruction.toString().replace("_", "").toLowerCase()) + " ");
 		switch(instruction) {
 		case CREATE_VARIABLE:
-			builder.append(Utils.escapeHTML(args[0]) + " " + LanguageManager.getString("editor.line.instruction.createvariable.type") + " ");
+			builder.append(args[0] + " " + LanguageManager.getString("editor.line.instruction.createvariable.type") + " ");
 			builder.append(args[1].equals("0") ? LanguageManager.getString("editor.line.instruction.createvariable.type.string") : LanguageManager.getString("editor.line.instruction.createvariable.type.number"));
 			break;
 		case ASSIGN_VALUE_TO_VARIABLE:
-			builder.append(Utils.escapeHTML(args[0]) + " → " + Utils.escapeHTML(args[1]));
+			builder.append(args[0] + " → " + args[1]);
 			break;
 		case READ_VARIABLE:
 		case IF:
 		case WHILE:
-			builder.append(Utils.escapeHTML(args[0]));
+			builder.append(args[0]);
 			break;
 		case SHOW_VARIABLE:
 		case SHOW_MESSAGE:
-			builder.append(Utils.escapeHTML(args[0]));
+			builder.append(args[0]);
 			if(showLineBreaks) {
 				builder.append(" " + args[1]);
 			}
 			break;
 		case FOR:
-			builder.append(Utils.escapeHTML(args[0]) + " " + LanguageManager.getString("editor.line.instruction.for.from") + " " + args[1] + " " + LanguageManager.getString("editor.line.instruction.for.to") + " " + args[2]);
+			builder.append(args[0] + " " + LanguageManager.getString("editor.line.instruction.for.from") + " " + args[1] + " " + LanguageManager.getString("editor.line.instruction.for.to") + " " + args[2]);
 			break;
 		case ELSE:
 			break;

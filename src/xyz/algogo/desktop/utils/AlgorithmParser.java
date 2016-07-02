@@ -1,8 +1,13 @@
 package xyz.algogo.desktop.utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
@@ -49,9 +54,20 @@ public class AlgorithmParser {
 		}
 	}
 	
-	public static final Algorithm parse(final String title, final String author, final String text) throws ParseException {
+	public static final Algorithm parse(final String title, final String author, final String text) throws ParseException, IOException {
 		final Algorithm algorithm = new Algorithm(title, author);
-		final AlgoLine[] parsed = parse(null, text.split(System.lineSeparator()));
+		final List<String> lines = new ArrayList<String>();
+		
+		final BufferedReader reader = new BufferedReader(new StringReader(text));
+		String line;
+		while((line = reader.readLine()) != null) {
+			if(line.length() == 0 || line.replace(" ", "").length() == 0 || line.replace("\t", "").length() == 0) {
+				continue;
+			}
+			lines.add(line);
+		}
+		
+		final AlgoLine[] parsed = parse(null, lines.toArray(new String[lines.size()]));
 		final AlgoLine variables = algorithm.getVariables();
 		for(final AlgoLine variable : parsed[0].getChildren()) {
 			variables.addChild(variable);
@@ -69,7 +85,7 @@ public class AlgorithmParser {
 		}
 		final AlgoLine variables = new AlgoLine(Keyword.VARIABLES);
 		final AlgoLine instructions = new AlgoLine(Keyword.BEGINNING);
-		for(int i = 0; i != lines.length; i++) {
+		for(int i = 0; i != lines.length; i++) { // TODO: Afficher progression.
 			final String line = lines[i];
 			final AlgoLine algoLine = parseLine(line, i, globalVariables);
 			final Instruction instruction = algoLine.getInstruction();

@@ -215,15 +215,14 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 		}
 		line.setArgs(args);
-		algorithmChanged(true, true, (DefaultMutableTreeNode)node.getParent(), new TreePath(node.getPath()));
+		algorithmChanged(true, true, true, (DefaultMutableTreeNode)node.getParent(), new TreePath(node.getPath()));
 	}
 
 	@Override
 	public final boolean titleChanged(final Algorithm algorithm, final String title, final String newTitle) {
 		if(newTitle != null && !newTitle.isEmpty()) {
-			algoChanged = true;
-			this.setTitle(buildTitle(newTitle, algorithm.getAuthor()));
 			algorithmChanged(false);
+			this.setTitle(buildTitle(newTitle, algorithm.getAuthor()));
 			return true;
 		}
 		JOptionPane.showMessageDialog(this, LanguageManager.getString("joptionpane.invalidtitle", newTitle), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
@@ -233,9 +232,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	@Override
 	public final boolean authorChanged(final Algorithm algorithm, final String author, final String newAuthor) {
 		if(newAuthor != null && !newAuthor.isEmpty()) {
-			algoChanged = true;
-			this.setTitle(buildTitle(algorithm.getTitle(), newAuthor));
 			algorithmChanged(false);
+			this.setTitle(buildTitle(algorithm.getTitle(), newAuthor));
 			return true;
 		}
 		JOptionPane.showMessageDialog(this, LanguageManager.getString("joptionpane.invalidauthor", newAuthor), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
@@ -483,7 +481,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		}
 		if(freeEditMode) {
 			EditorFrame.this.setJMenuBar(textAreaMenu);
-			textArea.setText(algorithm.toLanguage(new TextLanguage(false)));
+			textArea.setText(algorithm.toLanguage(new TextLanguage(false)).replace("→", "->"));
 			scrollPane.setViewportView(textArea);
 			scrollPane.setRowHeaderView(new TextLineNumber(textArea));
 			textArea.requestFocus();
@@ -495,6 +493,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					algoChanged = true;
 					EditorFrame.this.setTitle(buildTitle());
 				}
+				textArea.setText(null);
 				algorithm = parsed;
 				algorithm.addOptionsListener(EditorFrame.this);
 				EditorFrame.this.setJMenuBar(editorMenu);
@@ -504,6 +503,10 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				tree.reload();
 			}
 			catch(final ParseException ex) {
+				JOptionPane.showMessageDialog(EditorFrame.this, ex.getMessage(), "Error !", JOptionPane.ERROR_MESSAGE); // TODO: Translate it
+				return;
+			}
+			catch(final Exception ex) {
 				JOptionPane.showMessageDialog(EditorFrame.this, ex.getMessage(), "Error !", JOptionPane.ERROR_MESSAGE); // TODO: Translate it
 				return;
 			}
@@ -536,13 +539,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		final Instruction instruction = line.getInstruction();
 		if(instruction == Instruction.CREATE_VARIABLE) {
 			tree.variables.add(node);
-			algorithmChanged(true, true, tree.variables, new TreePath(node.getPath()));
+			algorithmChanged(true, true, true, tree.variables, new TreePath(node.getPath()));
 			return;
 		}
 		final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		if(selected == null || selected.equals(tree.variables) || selected.equals(tree.beginning) || selected.equals(tree.end)) {
 			tree.beginning.add(node);
-			algorithmChanged(true, true, tree.beginning, new TreePath(node.getPath()));
+			algorithmChanged(true, true, true, tree.beginning, new TreePath(node.getPath()));
 			return;
 		}
 		final DefaultMutableTreeNode changed;
@@ -558,7 +561,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			parent.insert(node, parent.getIndex(selected) + 1);
 			changed = parent;
 		}
-		algorithmChanged(true, true, changed, new TreePath(node.getPath()));
+		algorithmChanged(true, true, true, changed, new TreePath(node.getPath()));
 	}
 
 	/**
@@ -579,7 +582,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			iffLine.setArgs(new String[]{iffLine.getArgs()[0], String.valueOf(false)});
 		}
 		node.removeFromParent();
-		algorithmChanged(true, true, (DefaultMutableTreeNode)node.getParent());
+		algorithmChanged(true, true, true, (DefaultMutableTreeNode)node.getParent());
 	}
 
 	/**
@@ -827,13 +830,10 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * 
 	 * @param setTitle <b>true</b> If you want to change the editor's title.
 	 * <br><b>false</b> Otherwise.
-	 * @param reloadTree <b>true</b> If you want to reload the tree.
-	 * <br><b>false</b> Otherwise.
-	 * @param node The node that will be reloaded. If null, the whole tree will be reloaded.
 	 */
 
 	public final void algorithmChanged(final boolean setTitle) {
-		algorithmChanged(setTitle, false, null);
+		algorithmChanged(setTitle, false, false, null);
 	}
 	
 	/**
@@ -843,11 +843,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * <br><b>false</b> Otherwise.
 	 * @param reloadTree <b>true</b> If you want to reload the tree.
 	 * <br><b>false</b> Otherwise.
+	 * @param refreshAlgorithm <b>true</b> If you want to refresh the algorithm.
+	 * <br><b>false</b> Otherwise.
 	 * @param node The node that will be reloaded. If null, the whole tree will be reloaded.
 	 */
 
-	public final void algorithmChanged(final boolean setTitle, final boolean reloadTree, final DefaultMutableTreeNode node) {
-		algorithmChanged(setTitle, reloadTree, node, (TreePath[])null);
+	public final void algorithmChanged(final boolean setTitle, final boolean reloadTree, final boolean refreshAlgorithm, final DefaultMutableTreeNode node) {
+		algorithmChanged(setTitle, reloadTree, refreshAlgorithm, node, (TreePath[])null);
 	}
 
 	/**
@@ -857,19 +859,23 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * <br><b>false</b> Otherwise.
 	 * @param reloadTree <b>true</b> If you want to reload the tree.
 	 * <br><b>false</b> Otherwise.
+	 * @param refreshAlgorithm <b>true</b> If you want to refresh the algorithm.
+	 * <br><b>false</b> Otherwise.
 	 * @param node The node that will be reloaded. If null, the whole tree will be reloaded.
 	 * @param selection Apply a selection after the tree getting reloaded. Can be null.
 	 */
 
-	public final void algorithmChanged(final boolean setTitle, final boolean reloadTree, final DefaultMutableTreeNode node, final TreePath... selection) {
+	public final void algorithmChanged(final boolean setTitle, final boolean reloadTree, final boolean refreshAlgorithm, final DefaultMutableTreeNode node, final TreePath... selection) {
+		algoChanged = true;
 		if(reloadTree) {
 			tree.reload(node);
 		}
 		if(selection != null) {
 			tree.setSelectionPaths(selection);
 		}
-		algorithm = tree.toAlgorithm(algorithm.getTitle(), algorithm.getAuthor());
-		algoChanged = true;
+		if(refreshAlgorithm) {
+			algorithm = tree.toAlgorithm(algorithm.getTitle(), algorithm.getAuthor());
+		}
 		if(setTitle) {
 			this.setTitle(buildTitle());
 		}
