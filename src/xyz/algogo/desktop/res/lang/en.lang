@@ -164,6 +164,7 @@ wait.message=Checking for updates...
 
 utils.tip=Tip
 utils.language.text=Text File
+utils.language.html=HTML Document
 
 
 joptionpane.error=Error !

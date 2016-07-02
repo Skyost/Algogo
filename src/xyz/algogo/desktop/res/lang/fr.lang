@@ -167,6 +167,7 @@ wait.message=Recherche de mises à jour...
 
 utils.tip=Conseil
 utils.language.text=Fichier Texte
+utils.language.html=Document HTML
 
 
 joptionpane.error=Erreur !

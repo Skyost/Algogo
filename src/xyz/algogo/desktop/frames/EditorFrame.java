@@ -74,6 +74,7 @@ import xyz.algogo.desktop.utils.LanguageManager;
 import xyz.algogo.desktop.utils.TextLanguage;
 import xyz.algogo.desktop.utils.Utils;
 import xyz.algogo.desktop.utils.GithubUpdater.GithubUpdaterResultListener;
+import xyz.algogo.desktop.utils.HtmlLanguage;
 
 import javax.swing.JMenuBar;
 
@@ -250,10 +251,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		tokenMaker.putMapping("text/algorithm", "xyz.algogo.desktop.res.lang.highlighting." + LanguageManager.getCurrentLanguageCode());
 		textArea.setSyntaxEditingStyle("text/algorithm");
 		textArea.setFont(textArea.getFont().deriveFont(12f));
+		
 		final SyntaxScheme scheme = textArea.getSyntaxScheme();
 		scheme.getStyle(Token.RESERVED_WORD).foreground = Color.decode(AlgoLineUtils.KEYWORD_COLOR);
 		scheme.getStyle(Token.RESERVED_WORD_2).foreground = Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_1);
 		scheme.getStyle(Token.DATA_TYPE).foreground = Color.decode(AlgoLineUtils.INSTRUCTION_COLOR_2);
+		
 		textArea.revalidate();
 	}
 
@@ -288,6 +291,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		final JMenu export = new JMenu(LanguageManager.getString("editor.menu.file.export"));
 		final List<AlgorithmLanguage> languages = new ArrayList<AlgorithmLanguage>(Arrays.asList(AlgorithmLanguage.DEFAULT_LANGUAGES));
 		languages.add(new TextLanguage());
+		languages.add(new HtmlLanguage());
 		for(final AlgorithmLanguage language : languages) {
 			final String name = language.getName();
 			final JMenuItem subMenu = new JMenuItem(name);
@@ -501,6 +505,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			}
 			catch(final ParseException ex) {
 				JOptionPane.showMessageDialog(EditorFrame.this, ex.getMessage(), "Error !", JOptionPane.ERROR_MESSAGE); // TODO: Translate it
+				return;
 			}
 		}
 		this.freeEditMode = freeEditMode;
