@@ -14,8 +14,6 @@ import xyz.algogo.core.AlgoRunnable;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
 import xyz.algogo.core.AlgorithmListener.AlgorithmThreadListener;
-import xyz.algogo.core.utils.VariableHolder.VariableType;
-import xyz.algogo.core.utils.VariableHolder.VariableValue;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.dialogs.AddLineDialog;
 import xyz.algogo.desktop.dialogs.ErrorDialog;
@@ -181,17 +179,24 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	}
 
 	@Override
-	public final String actionRequired(final AlgoRunnable thread, final AlgoLine line, final VariableValue variable) {
+	public final String actionRequired(final AlgoRunnable thread, final AlgoLine line, final Object variable) {
 		if(thread != currentThread) {
 			return null;
 		}
 		final JTextField value = new JTextField();
 		AddLineDialog.attachPickerButton(this, value);
-		final String currentValue = variable.getValue();
-		if(currentValue != null) {
-			value.setText(currentValue);
+		if(variable != null) {
+			value.setText(variable.toString());
 		}
-		if(Utils.createDialog(this, LanguageManager.getString("console.actionrequired.dialog.title"), LanguageManager.getString("console.actionrequired.dialog.message", line.getArgs()[0], LanguageManager.getString(variable.getType() == VariableType.STRING ? "editor.line.instruction.createvariable.type.string" : "editor.line.instruction.createvariable.type.number")), LanguageManager.getString("console.actionrequired.dialog.tip"), value)) {
+		final String[] args = line.getArgs();
+		boolean isString = true;
+		for(final AlgoLine algorithmVariable : thread.getAlgorithm().getVariables().getChildren()) {
+			if(!algorithmVariable.getArgs()[0].equals(args[0])) {
+				continue;
+			}
+			isString = algorithmVariable.getArgs()[1].equals("0");
+		}
+		if(Utils.createDialog(this, LanguageManager.getString("console.actionrequired.dialog.title"), LanguageManager.getString("console.actionrequired.dialog.message", args[0], LanguageManager.getString(isString ? "editor.line.instruction.createvariable.type.string" : "editor.line.instruction.createvariable.type.number")), LanguageManager.getString("console.actionrequired.dialog.tip"), value)) {
 			return value.getText();
 		}
 		return null;

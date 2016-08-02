@@ -6,7 +6,6 @@ import java.util.List;
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Instruction;
 import xyz.algogo.core.Keyword;
-import xyz.algogo.core.utils.VariableHolder.VariableType;
 
 public class AlgoLineUtils {
 	
@@ -164,7 +163,7 @@ public class AlgoLineUtils {
 	 * <br><b>Value :</b> The variable's type.
 	 */
 	
-	public static final LinkedHashMap<String, VariableType> getVariables(final AlgoLine variables) {
+	public static final LinkedHashMap<String, Boolean> getVariables(final AlgoLine variables) {
 		return getVariables(variables, false);
 	}
 	
@@ -176,14 +175,15 @@ public class AlgoLineUtils {
 	 * 
 	 * @return A map :
 	 * <br><b>Key :</b> The variable's name.
-	 * <br><b>Value :</b> The variable's type.
+	 * <br><b>Value : true</b> If the variable is a String.
+	 * <br><b>false</b> If the variable is a Number.
 	 */
 	
-	public static final LinkedHashMap<String, VariableType> getVariables(final AlgoLine variables, final boolean normalize) {
-		final LinkedHashMap<String, VariableType> variablesMap = new LinkedHashMap<String, VariableType>();
+	public static final LinkedHashMap<String, Boolean> getVariables(final AlgoLine variables, final boolean normalize) {
+		final LinkedHashMap<String, Boolean> variablesMap = new LinkedHashMap<String, Boolean>();
 		for(final AlgoLine variable : variables.getChildren()) {
 			final String[] args = variable.getArgs();
-			variablesMap.put(args[0].toLowerCase(), args[1].equals("1") ? VariableType.NUMBER : VariableType.STRING);
+			variablesMap.put(args[0].toLowerCase(), args[1].equals("0"));
 		}
 		return variablesMap;
 	}

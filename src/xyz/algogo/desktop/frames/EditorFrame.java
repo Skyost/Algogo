@@ -578,8 +578,10 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		}
 		else if(line.getInstruction() == Instruction.ELSE) {
 			final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
-			final AlgoLine iffLine = AlgorithmTree.getAttachedAlgoLine(((DefaultMutableTreeNode)parent.getChildAt(parent.getIndex(node) - 1)));
-			iffLine.setArgs(new String[]{iffLine.getArgs()[0], String.valueOf(false)});
+			if(parent != null) {
+				final AlgoLine iffLine = AlgorithmTree.getAttachedAlgoLine(((DefaultMutableTreeNode)parent.getChildAt(parent.getIndex(node) - 1)));
+				iffLine.setArgs(new String[]{iffLine.getArgs()[0], String.valueOf(false)});
+			}
 		}
 		node.removeFromParent();
 		algorithmChanged(true, true, true, (DefaultMutableTreeNode)node.getParent());

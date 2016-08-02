@@ -13,7 +13,6 @@ import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
 import xyz.algogo.core.Keyword;
-import xyz.algogo.core.utils.VariableHolder.VariableType;
 
 public class AlgorithmParser {
 	
@@ -79,9 +78,9 @@ public class AlgorithmParser {
 		return algorithm;
 	}
 	
-	public static final AlgoLine[] parse(LinkedHashMap<String, VariableType> globalVariables, final String... lines) throws ParseException {
+	public static final AlgoLine[] parse(LinkedHashMap<String, Boolean> globalVariables, final String... lines) throws ParseException {
 		if(globalVariables == null) {
-			globalVariables = new LinkedHashMap<String, VariableType>();
+			globalVariables = new LinkedHashMap<String, Boolean>();
 		}
 		final AlgoLine variables = new AlgoLine(Keyword.VARIABLES);
 		final AlgoLine instructions = new AlgoLine(Keyword.BEGINNING);
@@ -95,7 +94,7 @@ public class AlgorithmParser {
 			if(instruction == Instruction.CREATE_VARIABLE) {
 				final String[] args = algoLine.getArgs();
 				variables.addChild(algoLine);
-				globalVariables.put(args[0].toUpperCase(), args[1].equals("0") ? VariableType.STRING : VariableType.NUMBER);
+				globalVariables.put(args[0].toUpperCase(), args[1].equals("0"));
 				continue;
 			}
 			if(algoLine.getAllowsChildren()) {
@@ -126,7 +125,7 @@ public class AlgorithmParser {
 		return new AlgoLine[]{variables, instructions};
 	}
 	
-	public static final AlgoLine parseLine(final String line, final int lineNumber, final LinkedHashMap<String, VariableType> globalVariables) throws ParseException {
+	public static final AlgoLine parseLine(final String line, final int lineNumber, final LinkedHashMap<String, Boolean> globalVariables) throws ParseException {
 		final String[] parts = line.replace("\t", "").split(" ");
 		final String first = data.get(parts[0].toUpperCase());
 		if(first == null) {

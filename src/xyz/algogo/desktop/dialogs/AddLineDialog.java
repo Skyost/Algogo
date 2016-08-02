@@ -10,7 +10,6 @@ import javax.swing.JDialog;
 
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Instruction;
-import xyz.algogo.core.utils.VariableHolder.VariableType;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.utils.AlgoLineUtils;
 import xyz.algogo.desktop.utils.AlgorithmTree;
@@ -49,7 +48,7 @@ public class AddLineDialog extends JDialog {
 		this.setModal(true);
 		this.setResizable(false);
 		
-		final LinkedHashMap<String, VariableType> variablesList = AlgoLineUtils.getVariables(variables);
+		final LinkedHashMap<String, Boolean> variablesList = AlgoLineUtils.getVariables(variables);
 		final Runnable dispose = new Runnable() {
 
 			@Override
@@ -87,8 +86,8 @@ public class AddLineDialog extends JDialog {
 		btnWhile.addActionListener(listenerForInstruction(caller, this, Instruction.WHILE, dispose));
 		
 		final List<String> variablesNumber = new ArrayList<String>();
-		for(final Entry<String, VariableType> entry : variablesList.entrySet()) {
-			if(entry.getValue() == VariableType.NUMBER) {
+		for(final Entry<String, Boolean> entry : variablesList.entrySet()) {
+			if(!entry.getValue()) {
 				variablesNumber.add(entry.getKey());
 			}
 		}
