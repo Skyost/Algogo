@@ -3,6 +3,7 @@ package xyz.algogo.desktop.utils;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import fr.skyost.heartbeat.Heartbeat;
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Instruction;
 import xyz.algogo.core.Keyword;
@@ -120,7 +121,7 @@ public class AlgoLineUtils {
 	public static final String validate(final List<String> variables, final Instruction instruction, final String... args) {
 		switch(instruction) {
 		case CREATE_VARIABLE:
-			if(!Utils.isAlpha(args[0]) || args[0].isEmpty()) {
+			if(new Heartbeat().hasConstant(args[0]) || !Utils.isAlpha(args[0]) || args[0].isEmpty()) {
 				return "addline.createvariable.error.notalpha";
 			}
 			if(variables != null && variables.contains(args[0])) {

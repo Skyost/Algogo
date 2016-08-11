@@ -23,7 +23,7 @@ import xyz.algogo.desktop.utils.Utils;
 public class AlgogoDesktop {
 	
 	public static final String APP_NAME = "Algogo Desktop";
-	public static final String APP_VERSION = "0.2.4";
+	public static final String APP_VERSION = "0.3";
 	public static final String[] APP_AUTHORS = new String[]{"Skyost"};
 	public static final String APP_WEBSITE = "http://www.algogo.xyz";
 	

@@ -6,8 +6,12 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import fr.skyost.heartbeat.Heartbeat;
+import fr.skyost.heartbeat.Heartbeat.Function;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.utils.LanguageManager;
+import xyz.algogo.desktop.utils.Utils;
+
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
@@ -28,46 +32,19 @@ public class PickerDialog extends JDialog {
 			this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			this.setModalityType(ModalityType.TOOLKIT_MODAL);
 			this.setModal(true);
-			final DefaultListModel<String> model = new DefaultListModel<String>();
-			final JList<String> list = new JList<String>();
+			final Heartbeat heartbeat = new Heartbeat();
+			final PickerModel model = new PickerModel(heartbeat.getFunctions());
+			final JList<Function> list = new JList<Function>();
 			list.setModel(model);
-			
-			model.addElement("sin(expression)");
-			model.addElement("cos(expression)");
-			model.addElement("tan(expression)");
-			model.addElement("asin(expression)");
-			model.addElement("acos(expression)");
-			model.addElement("atan(expression)");
-
-			model.addElement("sinh(expression)");
-			model.addElement("cosh(expression)");
-			model.addElement("tanh(expression)");
-			model.addElement("asinh(expression)");
-			model.addElement("acosh(expression)");
-			model.addElement("atanh(expression)");
-
-			model.addElement("log(expression)");
-			model.addElement("ln(expression)");
-
-			model.addElement("sqrt(expression)");
-			model.addElement("angle(x, y)");
-			model.addElement("abs(expression)");
-			model.addElement("mod(dividen, divisor)");
-			model.addElement("sum(expression)");
-
-			model.addElement("rand()");
 			list.setCellRenderer(new DefaultListCellRenderer() {
-	
+
 				private static final long serialVersionUID = 1L;
 				
 				@Override
 				public final Component getListCellRendererComponent(final JList<?> list, final Object value, final int index, final boolean isSelected, final boolean cellHasFocus) {
-					final String function = (String)value;
-					final int firstParenthesis = function.indexOf("(");
-					final StringBuilder builder = new StringBuilder("<html><span><b>" + function.substring(0, firstParenthesis) + "(</b><i>");
-					builder.append(function.substring(firstParenthesis + 1, function.length() - 1));
-					builder.append("</i><b>)</b></span></html>");
-					final JLabel label = new JLabel(builder.toString());
+					final Function function = (Function)value;
+					final String[] params = function.getParameters();
+					final JLabel label = new JLabel("<html><span><b>" + function.getName() + "(</b><i>" + (params == null ? "..." : Utils.join(", ", params)) + "</i><b>)</b></span></html>");
 					if(isSelected) {
 						label.setText(label.getText().replace("<span>", "<span style=\"background-color: #BDC3C7;\">"));
 					}
@@ -82,7 +59,7 @@ public class PickerDialog extends JDialog {
 					if(event.getClickCount() != 2) {
 						return;
 					}
-					textField.setText(textField.getText() + model.getElementAt(list.locationToIndex(event.getPoint())));
+					textField.setText(model.getElementAt(list.locationToIndex(event.getPoint())).getName() + "(" + textField.getText() + ")");
 					PickerDialog.this.dispose();
 				}
 				
@@ -93,6 +70,18 @@ public class PickerDialog extends JDialog {
 		catch(final Exception ex) {
 			ErrorDialog.errorMessage(this, ex);
 		}
+	}
+	
+	private class PickerModel extends DefaultListModel<Function> {
+
+		private static final long serialVersionUID = 1L;
+		
+		private PickerModel(final Heartbeat.Function... functions) {
+			for(final Function function : functions) {
+				this.addElement(function);
+			}
+		}
+		
 	}
 
 }

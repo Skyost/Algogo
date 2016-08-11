@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,6 +40,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultCaret;
+
+import fr.skyost.heartbeat.Heartbeat.VariableType;
+import fr.skyost.heartbeat.Heartbeat.VariableValue;
 
 public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
@@ -179,24 +183,16 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	}
 
 	@Override
-	public final String actionRequired(final AlgoRunnable thread, final AlgoLine line, final Object variable) {
+	public final String actionRequired(final AlgoRunnable thread, final AlgoLine line, final VariableValue variable) {
 		if(thread != currentThread) {
 			return null;
 		}
 		final JTextField value = new JTextField();
 		AddLineDialog.attachPickerButton(this, value);
 		if(variable != null) {
-			value.setText(variable.toString());
+			value.setText(variable.getType() == VariableType.STRING ? variable.getValue().toString() : ((BigDecimal)variable.getValue()).toPlainString());
 		}
-		final String[] args = line.getArgs();
-		boolean isString = true;
-		for(final AlgoLine algorithmVariable : thread.getAlgorithm().getVariables().getChildren()) {
-			if(!algorithmVariable.getArgs()[0].equals(args[0])) {
-				continue;
-			}
-			isString = algorithmVariable.getArgs()[1].equals("0");
-		}
-		if(Utils.createDialog(this, LanguageManager.getString("console.actionrequired.dialog.title"), LanguageManager.getString("console.actionrequired.dialog.message", args[0], LanguageManager.getString(isString ? "editor.line.instruction.createvariable.type.string" : "editor.line.instruction.createvariable.type.number")), LanguageManager.getString("console.actionrequired.dialog.tip"), value)) {
+		if(Utils.createDialog(this, LanguageManager.getString("console.actionrequired.dialog.title"), LanguageManager.getString("console.actionrequired.dialog.message", line.getArgs()[0], LanguageManager.getString(variable.getType() == VariableType.STRING ? "editor.line.instruction.createvariable.type.string" : "editor.line.instruction.createvariable.type.number")), LanguageManager.getString("console.actionrequired.dialog.tip"), value)) {
 			return value.getText();
 		}
 		return null;
