@@ -807,8 +807,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		}
 		if(recents.getMenuComponentCount() > 0) {
 			recents.addSeparator();
-			final JMenuItem vider = new JMenuItem(LanguageManager.getString("editor.menu.file.recents.empty"));
-			vider.addActionListener(new ActionListener() {
+			final JMenuItem empty = new JMenuItem(LanguageManager.getString("editor.menu.file.recents.empty"));
+			empty.addActionListener(new ActionListener() {
 
 				@Override
 				public final void actionPerformed(final ActionEvent event) {
@@ -823,7 +823,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				}
 
 			});
-			recents.add(vider);
+			recents.add(empty);
+		}
+		else {
+			final JMenuItem nothing = new JMenuItem(LanguageManager.getString("editor.menu.file.recents.nothing"));
+			nothing.setEnabled(false);
+			recents.add(nothing);
 		}
 	}
 	

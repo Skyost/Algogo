@@ -54,6 +54,7 @@ editor.menu.file.filter.aggc=Fichier d'Algorithme Algogo compressé (*.aggc)
 editor.menu.file.new=Nouveau
 editor.menu.file.open=Ouvrir...
 editor.menu.file.recents=Fichiers récents
+editor.menu.file.recents.nothing=Vide
 editor.menu.file.recents.empty=Vider la liste
 editor.menu.file.saveas=Enregistrer sous...
 editor.menu.file.save=Enregistrer...
@@ -87,7 +88,7 @@ about.title=%s v%s - Par %s
 
 about.desktopinfos=<html><b>%s</b> <i>v%s - Par %s</i></html>
 about.coreinfos=<html><b>%s</b> <i>v%s - Par %s</i></html>
-about.builtusing=Fait avec %s, %s et %s.
+about.builtusing=Fait avec %s, %s, %s et %s.
 about.donate=Payez moi un café !
 
 

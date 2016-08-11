@@ -12,21 +12,15 @@
   <sourceDirectory>.</sourceDirectory>
   <plugins>
    <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-compiler-plugin</artifactId>
-    <configuration>
-     <includes>
-      <include>src/**/*.java</include>
-      <include>libs/**/*.java</include>
-     </includes>
-    </configuration>
-   </plugin>
-   <plugin>
     <artifactId>maven-compiler-plugin</artifactId>
     <version>3.3</version>
     <configuration>
      <source>1.7</source>
      <target>1.7</target>
+     <includes>
+      <include>src/**/*.java</include>
+      <include>libs/**/*.java</include>
+     </includes>
     </configuration>
    </plugin>
    <plugin>
@@ -65,6 +59,23 @@
     </executions>
    </plugin>
   </plugins>
+  <resources>
+   <resource>
+    <targetPath>xyz/algogo/desktop/res</targetPath>
+    <directory>src/xyz/algogo/desktop/res</directory>
+    <excludes>
+     <exclude>**/*.java</exclude>
+    </excludes>
+   </resource>
+   <resource>
+    <targetPath>com/jtattoo/plaf/acryl/icons</targetPath>
+    <directory>libs/com/jtattoo/plaf/acryl/icons</directory>
+   </resource>
+   <resource>
+    <targetPath>com/jtattoo/plaf/icons</targetPath>
+    <directory>libs/com/jtattoo/plaf/icons</directory>
+   </resource>
+  </resources>
  </build>
  <dependencies>
   <dependency>

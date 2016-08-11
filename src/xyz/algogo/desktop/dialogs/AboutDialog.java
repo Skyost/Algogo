@@ -22,6 +22,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import fr.skyost.heartbeat.Heartbeat;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -54,7 +57,7 @@ public class AboutDialog extends JDialog {
 			lblAnimation.setHorizontalAlignment(SwingConstants.CENTER);
 			lblAnimation.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			panel.add(lblAnimation);
-			final JLabel lblBuiltUsing = new JLabel(LanguageManager.getString("about.builtusing", "minimal-json v0.9.2", "ComponentBorder", "JTattoo v1.6.11"));
+			final JLabel lblBuiltUsing = new JLabel(LanguageManager.getString("about.builtusing", "minimal-json v0.9.2", "ComponentBorder", "JTattoo v1.6.11", Heartbeat.APP_NAME + " v" + Heartbeat.APP_VERSION));
 			lblBuiltUsing.setHorizontalAlignment(SwingConstants.CENTER);
 			final Container content = this.getContentPane();
 			final JButton btnDonate = new JButton(LanguageManager.getString("about.donate"));
