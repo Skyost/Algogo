@@ -15,6 +15,8 @@ console.actionrequired.dialog.title=Enter a value for a variable
 console.actionrequired.dialog.message=Enter the value of "%s" (%s) :
 console.actionrequired.dialog.tip=You can use variables here.
 
+console.exception=[%d] An error occurred : %s. Please tick the debug box if you want more informations.
+
 
 editor.title=%s%s by %s - %s v%s
 

@@ -12,11 +12,12 @@ import javax.swing.JTextField;
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.AlgoRunnable;
 import xyz.algogo.core.Algorithm;
-import xyz.algogo.core.Instruction;
+import xyz.algogo.core.AlgoRunnable.AlgorithmExecutionException;
 import xyz.algogo.core.AlgorithmListener.AlgorithmThreadListener;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.dialogs.AddLineDialog;
 import xyz.algogo.desktop.dialogs.ErrorDialog;
+import xyz.algogo.desktop.utils.AlgoLineUtils;
 import xyz.algogo.desktop.utils.LanguageManager;
 import xyz.algogo.desktop.utils.Utils;
 
@@ -29,6 +30,8 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -47,7 +50,9 @@ import fr.skyost.heartbeat.Heartbeat.VariableValue;
 public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
 	private static final long serialVersionUID = 1L;
+	
 	private static final String LINE_SEPARATOR = System.lineSeparator();
+	private static final Pattern HTML_TAGS = Pattern.compile("<.+?>");
 
 	private final JCheckBox chckbxDebug = new JCheckBox(LanguageManager.getString("console.buttons.debug"));
 	private final JTextArea output = new JTextArea();
@@ -199,22 +204,26 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	}
 
 	@Override
-	public final void lineExecuted(final AlgoRunnable runnable, final AlgoLine line, final boolean before) {
+	public final void lineExecuted(final AlgoRunnable runnable, final AlgoLine line, final int lineNumber, final boolean before) {
 		if(chckbxDebug.isSelected() && before) {
-			output.append(LanguageManager.getString("console.buttons.debug.message", getLine(line.getInstruction(), line.getArgs())) + LINE_SEPARATOR);
+			if(!output.getText().endsWith(LINE_SEPARATOR) && output.getText().length() != 0) {
+				output.append(LINE_SEPARATOR);
+			}
+			final Matcher matcher = HTML_TAGS.matcher(AlgoLineUtils.getLine(line.getInstruction(), line.getArgs()));
+			output.append(LanguageManager.getString("console.buttons.debug.message", matcher.replaceAll("")) + LINE_SEPARATOR);
 		}
 	}
 
 	@Override
-	public final void threadInterrupted(final AlgoRunnable thread, final Exception ex) {
+	public final void threadInterrupted(final AlgoRunnable thread, final AlgorithmExecutionException ex) {
 		if(thread != currentThread) {
 			return;
 		}
 		changeButtonState(btnRun, true);
 		currentThread = null;
 		if(ex != null) {
-			output.append("Exception occurred :\"" + ex.getClass().getName() + "\", please check the error log." + LINE_SEPARATOR);
-			ErrorDialog.errorMessage(this, ex);
+			output.append(LanguageManager.getString("console.exception", ex.getLineNumber(), ex.getMessage()) + LINE_SEPARATOR);
+			//ErrorDialog.errorMessage(this, ex);
 		}
 	}
 
@@ -231,34 +240,6 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 			button.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_stop.png")));
 		}
 		return button;
-	}
-
-	private final String getLine(final Instruction instruction, final String... args) {
-		final StringBuilder builder = new StringBuilder(Utils.escapeHTML(instruction.toString()) + " ");
-		switch(instruction) {
-		case CREATE_VARIABLE:
-			builder.append("TYPE" + (args[0].equals("0") ? " String" : " Number"));
-			break;
-		case ASSIGN_VALUE_TO_VARIABLE:
-			builder.append(Utils.escapeHTML(args[0]) + " → " + Utils.escapeHTML(args[1]));
-			break;
-		case SHOW_VARIABLE:
-		case READ_VARIABLE:
-		case SHOW_MESSAGE:
-		case IF:
-		case WHILE:
-			builder.append(Utils.escapeHTML(args[0]));
-			break;
-		case FOR:
-			builder.append(Utils.escapeHTML(args[0]) + " " + "FROM" + " " + args[1] + " " + "TO" + " " + args[2]);
-			break;
-		case ELSE:
-			break;
-		default:
-			builder.delete(0, builder.length() - 1);
-			break;
-		}
-		return builder.toString();
 	}
 
 }
