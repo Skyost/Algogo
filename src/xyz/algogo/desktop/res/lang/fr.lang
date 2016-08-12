@@ -7,7 +7,7 @@ console.title=Console
 console.buttons.run=Lancer
 console.buttons.stop=Arrêter
 console.buttons.debug=Debug
-console.buttons.debug.message=Exécution de la ligne "%s"...
+console.buttons.debug.message=[Ligne %d] Exécution de la ligne "%s"...
 console.buttons.saveoutput=Enregistrer...
 console.buttons.saveoutput.filter=Fichier HTML (*.html)
 
@@ -15,7 +15,7 @@ console.actionrequired.dialog.title=Entrer la valeur d'une variable
 console.actionrequired.dialog.message=Entrer la valeur de "%s" (%s) :
 console.actionrequired.dialog.tip=Vous pouvez utiliser des variables ici.
 
-console.exception=[%d] Une erreur est survenue : %s. Veuillez cocher la case debug si vous voulez plus d'informations.
+console.exception=[Ligne %d] Une erreur est survenue : %s. Veuillez cocher la case debug si vous voulez plus d'informations.
 
 
 editor.title=%s%s par %s - %s v%s

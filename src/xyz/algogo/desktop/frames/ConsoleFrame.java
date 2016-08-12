@@ -169,16 +169,16 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	}
 
 	@Override
-	public final void threadLaunched(final AlgoRunnable thread) {
-		if(thread != currentThread) {
+	public final void threadLaunched(final AlgoRunnable runnable) {
+		if(runnable != currentThread) {
 			return;
 		}
 		changeButtonState(btnRun, false);
 	}
 
 	@Override
-	public final void lineOutputed(final AlgoRunnable thread, final String line, final boolean lineBreak) {
-		if(thread != currentThread) {
+	public final void lineOutputed(final AlgoRunnable runnable, final String line, final boolean lineBreak) {
+		if(runnable != currentThread) {
 			return;
 		}
 		output.append(line);
@@ -188,8 +188,8 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	}
 
 	@Override
-	public final String actionRequired(final AlgoRunnable thread, final AlgoLine line, final VariableValue variable) {
-		if(thread != currentThread) {
+	public final String actionRequired(final AlgoRunnable runnable, final AlgoLine line, final VariableValue variable) {
+		if(runnable != currentThread) {
 			return null;
 		}
 		final JTextField value = new JTextField();
@@ -210,13 +210,13 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 				output.append(LINE_SEPARATOR);
 			}
 			final Matcher matcher = HTML_TAGS.matcher(AlgoLineUtils.getLine(line.getInstruction(), line.getArgs()));
-			output.append(LanguageManager.getString("console.buttons.debug.message", matcher.replaceAll("")) + LINE_SEPARATOR);
+			output.append(LanguageManager.getString("console.buttons.debug.message", lineNumber, matcher.replaceAll("")) + LINE_SEPARATOR);
 		}
 	}
 
 	@Override
-	public final void threadInterrupted(final AlgoRunnable thread, final AlgorithmExecutionException ex) {
-		if(thread != currentThread) {
+	public final void threadInterrupted(final AlgoRunnable runnable, final AlgorithmExecutionException ex) {
+		if(runnable != currentThread) {
 			return;
 		}
 		changeButtonState(btnRun, true);
