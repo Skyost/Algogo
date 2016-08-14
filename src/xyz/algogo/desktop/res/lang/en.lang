@@ -101,14 +101,14 @@ addline.createvariable.dialog.title=Create a variable...
 addline.createvariable.dialog.message=Name your variable :
 addline.createvariable.dialog.object.string=String
 addline.createvariable.dialog.object.number=Number
-addline.createvariable.dialog.tip=You can only define a variable here.<br>By default, the value of a number is 0.
+addline.createvariable.dialog.tip=You can only define a variable here.<br>By default, the value of a number is 0 and the value of a string is "".
 addline.createvariable.error.alreadyexists=This variable (or constant) already exists !
 addline.createvariable.error.notalpha=A variable name must only contain alpha characters.
 addline.assignvaluetovariable=Assign a value to a variable...
 addline.assignvaluetovariable.dialog.title=Assign a value to a variable...
 addline.assignvaluetovariable.dialog.message=The variable :
 addline.assignvaluetovariable.dialog.object.value=The value :
-addline.assignvaluetovariable.dialog.tip=You can use variables here.
+addline.assignvaluetovariable.dialog.tip=You can use variables here.<br>Strings must be between quotations ("example").
 addline.showvariable=Show a variable...
 addline.showvariable.dialog.title=Show a variable...
 addline.showvariable.dialog.message=Show the variable :
@@ -127,17 +127,17 @@ addline.ifelse=If... Else...
 addline.ifelse.dialog.title=Add a condition...
 addline.ifelse.dialog.message=If :
 addline.ifelse.dialog.object.addelse=Add Else
-addline.ifelse.dialog.tip=At the moment, you can only compare numbers.<br>You can put a simple boolean here too.
+addline.ifelse.dialog.tip=You can put a simple boolean here if you want.
 addline.while=While...
 addline.while.dialog.title=Add a loop...
 addline.while.dialog.message=While :
-addline.while.dialog.tip=At the moment, you can only compare numbers.<br>You can put a simple boolean here too.
+addline.while.dialog.tip=You can put a simple boolean here if you want.
 addline.for=For...
 addline.for.dialog.title=Add a for loop...
 addline.for.dialog.message=For :
 addline.for.dialog.object.from=From :
 addline.for.dialog.object.to=To :
-addline.for.dialog.tip=You can use variables here.
+addline.for.dialog.tip=You can also use variables and expressions here.
 
 
 # No need to specify "error" strings.
@@ -149,6 +149,12 @@ options.algorithm.options=Algorithm's Options
 options.algorithm.title=Title :
 options.algorithm.author=Author :
 options.save=Save
+
+
+parser.waitdialog.title=Parsing...
+parser.waitdialog.message=Parsing your code, please wait...
+
+parser.error=Error line %d : "%s".
 
 
 picker.title=Function picker

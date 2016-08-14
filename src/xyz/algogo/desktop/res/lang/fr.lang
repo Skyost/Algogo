@@ -101,14 +101,14 @@ addline.createvariable.dialog.title=Créer une variable...
 addline.createvariable.dialog.message=Nommez votre variable :
 addline.createvariable.dialog.object.string=Chaîne de caractères
 addline.createvariable.dialog.object.number=Nombre
-addline.createvariable.dialog.tip=Vous ne pouvez que définir une variable ici.<br>Par défaut, la valeur d'un nombre est 0.
+addline.createvariable.dialog.tip=Vous ne pouvez que définir une variable ici.<br>Par défaut, la valeur d'un nombre est 0 et celle d'une chaîne est "".
 addline.createvariable.error.alreadyexists=Cette variable (ou constante) existe déjà !
 addline.createvariable.error.notalpha=Le nom d'une variable ne doit contenir que des lettres.
 addline.assignvaluetovariable=Assigner une valeur à une variable...
 addline.assignvaluetovariable.dialog.title=Assigner une valeur à une variable...
 addline.assignvaluetovariable.dialog.message=La variable :
 addline.assignvaluetovariable.dialog.object.value=La valeur :
-addline.assignvaluetovariable.dialog.tip=Vous pouvez utiliser des variables ici.
+addline.assignvaluetovariable.dialog.tip=Vous pouvez utiliser des variables ici.<br>Les chaînes de caractères doivent être entre guillemets ("exemple").
 addline.showvariable=Afficher une variable...
 addline.showvariable.dialog.title=Afficher une variable...
 addline.showvariable.dialog.message=Afficher la variable :
@@ -127,17 +127,17 @@ addline.ifelse=Si... Sinon...
 addline.ifelse.dialog.title=Ajouter une condition...
 addline.ifelse.dialog.message=Si :
 addline.ifelse.dialog.object.addelse=Ajouter Sinon
-addline.ifelse.dialog.tip=Pour le moment vous ne pouvez comparer que les nombres.<br>Vous ne pouvez mettre aussi qu'un booléen.
+addline.ifelse.dialog.tip=Si vous le souhaitez, vous pouvez n'entrer qu'un simple booléen.
 addline.while=Tant que...
 addline.while.dialog.title=Ajouter une boucle...
 addline.while.dialog.message=Tant que :
-addline.while.dialog.tip=Pour le moment vous ne pouvez comparer que les nombres.<br>Vous ne pouvez mettre aussi qu'un booléen.
+addline.while.dialog.tip=Si vous le souhaitez, vous pouvez n'entrer qu'un simple booléen.
 addline.for=Pour...
 addline.for.dialog.title=Ajouter une boucle pour...
 addline.for.dialog.message=Pour :
 addline.for.dialog.object.from=Allant de :
 addline.for.dialog.object.to=À :
-addline.for.dialog.tip=Vous pouvez aussi utiliser des variables ici.
+addline.for.dialog.tip=Vous pouvez aussi utiliser des variables ici ainsi que des expressions.
 
 
 error.title=%s
@@ -153,6 +153,12 @@ options.algorithm.options=Options de l'Algorithme
 options.algorithm.title=Titre :
 options.algorithm.author=Auteur :
 options.save=Enregistrer
+
+
+parser.waitdialog.title=Analyse...
+parser.waitdialog.message=Analyse de votre code, veuillez patienter...
+
+parser.error=Erreur ligne %d : "%s".
 
 
 picker.title=Sélecteur de fonction

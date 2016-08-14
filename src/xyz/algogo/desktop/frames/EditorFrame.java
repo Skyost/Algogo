@@ -25,8 +25,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -485,31 +487,51 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			scrollPane.setViewportView(textArea);
 			scrollPane.setRowHeaderView(new TextLineNumber(textArea));
 			textArea.requestFocus();
+			textArea.setCaretPosition(0);
 		}
 		else {
-			try {
-				final Algorithm parsed = AlgorithmParser.parse(algorithm.getTitle(), algorithm.getAuthor(), textArea.getText());
-				if(!parsed.equals(algorithm)) { // TODO: Does not work
-					algoChanged = true;
-					EditorFrame.this.setTitle(buildTitle());
+			new Thread() {
+				
+				@Override
+				public final void run() {
+					final JLabel waitMessage = new JLabel(LanguageManager.getString("parser.waitdialog.message"));
+					waitMessage.setHorizontalAlignment(JLabel.CENTER);
+					final JDialog waitDialog = new JDialog(EditorFrame.this);
+					waitDialog.setTitle(LanguageManager.getString("parser.waitdialog.title"));
+					waitDialog.add(waitMessage);
+					waitDialog.pack();
+					waitDialog.setSize(waitDialog.getWidth() + 10, waitDialog.getHeight() + 10);
+					waitDialog.setLocationRelativeTo(EditorFrame.this);
+					waitDialog.setVisible(true);
+					try {
+						final Algorithm parsed = new AlgorithmParser().parse(algorithm.getTitle(), algorithm.getAuthor(), textArea.getText());
+						if(!parsed.equals(algorithm)) {
+							algoChanged = true;
+							EditorFrame.this.setTitle(buildTitle());
+						}
+						textArea.setText(null);
+						algorithm = parsed;
+						algorithm.addOptionsListener(EditorFrame.this);
+						EditorFrame.this.setJMenuBar(editorMenu);
+						scrollPane.setViewportView(tree);
+						scrollPane.setRowHeaderView(null);
+						tree.fromAlgorithm(parsed);
+						tree.reload();
+					}
+					catch(final ParseException ex) {
+						waitDialog.dispose();
+						JOptionPane.showMessageDialog(EditorFrame.this, LanguageManager.getString("parser.error", ex.getCurrentLine(), ex.getMessage()), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					catch(final Exception ex) {
+						waitDialog.dispose();
+						ErrorDialog.errorMessage(EditorFrame.this, ex);
+						return;
+					}
+					waitDialog.dispose();
 				}
-				textArea.setText(null);
-				algorithm = parsed;
-				algorithm.addOptionsListener(EditorFrame.this);
-				EditorFrame.this.setJMenuBar(editorMenu);
-				scrollPane.setViewportView(tree);
-				scrollPane.setRowHeaderView(null);
-				tree.fromAlgorithm(parsed);
-				tree.reload();
-			}
-			catch(final ParseException ex) {
-				JOptionPane.showMessageDialog(EditorFrame.this, ex.getMessage(), "Error !", JOptionPane.ERROR_MESSAGE); // TODO: Translate it
-				return;
-			}
-			catch(final Exception ex) {
-				JOptionPane.showMessageDialog(EditorFrame.this, ex.getMessage(), "Error !", JOptionPane.ERROR_MESSAGE); // TODO: Translate it
-				return;
-			}
+				
+			}.start();
 		}
 		this.freeEditMode = freeEditMode;
 		btnTest.setEnabled(!freeEditMode);
@@ -674,7 +696,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	public final void open(final File file) throws Exception {
 		try {
 			if(file == null) {
-				throw new Exception();
+				throw new Exception("File can't be null.");
 			}
 			final Algorithm algorithm = Algorithm.loadFromFile(file);
 			this.algorithm = algorithm;
