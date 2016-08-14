@@ -20,7 +20,7 @@ public class ButtonUpListener extends AlgorithmEditorActionListener {
 		final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)editor.getCurrentTreeComponent().getSelectionPaths()[0].getLastPathComponent();
 		final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)selected.getParent();
 		if(AlgorithmTree.up(parent, parent.getIndex(selected))) {
-			editor.algorithmChanged(true, true, true, parent, new TreePath(selected.getPath()));
+			editor.algorithmChanged(true, true, true, true, parent, new TreePath(selected.getPath()));
 		}
 	}
 

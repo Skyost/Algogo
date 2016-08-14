@@ -15,7 +15,7 @@ console.actionrequired.dialog.title=Entrer la valeur d'une variable
 console.actionrequired.dialog.message=Entrer la valeur de "%s" (%s) :
 console.actionrequired.dialog.tip=Vous pouvez utiliser des variables ici.
 
-console.exception=[Ligne %d] Une erreur est survenue : %s. Veuillez cocher la case debug si vous voulez plus d'informations.
+console.exception=[Ligne %d] Une erreur est survenue : "%s". Veuillez cocher la case debug si vous voulez plus d'informations.
 
 
 editor.title=%s%s par %s - %s v%s
@@ -71,6 +71,7 @@ editor.menu.file.close=Fermer
 
 editor.menu.edit=Édition
 editor.menu.edit.options=Options de l'algorithme...
+editor.menu.edit.undo=Annuler
 editor.menu.edit.cut=Couper
 editor.menu.edit.copy=Copier
 editor.menu.edit.paste=Coller
