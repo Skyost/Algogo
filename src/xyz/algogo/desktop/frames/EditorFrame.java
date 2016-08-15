@@ -192,7 +192,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		btnTest.addActionListener(new ButtonTestListener(this));
 		this.setJMenuBar(editorMenu);
 		setupHighlighter();
-		if(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain) {
+		if(!AlgogoDesktop.getSettings().updaterDoNotAutoCheckAgain) {
 			new GithubUpdater(AlgogoDesktop.APP_VERSION, new DefaultGithubUpdater()).start();
 		}
 	}
@@ -792,17 +792,18 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 */
 
 	private final void saveToHistory(final String path) {
-		if(AlgogoDesktop.SETTINGS.recents.contains(path)) {
-			AlgogoDesktop.SETTINGS.recents.removeAll(Collections.singleton(path));
+		final AppSettings settings = AlgogoDesktop.getSettings();
+		if(settings.recents.contains(path)) {
+			settings.recents.removeAll(Collections.singleton(path));
 		}
-		else if(AlgogoDesktop.SETTINGS.recents.size() >= AppSettings.RECENTS_LIMIT) {
-			AlgogoDesktop.SETTINGS.recents.subList(AppSettings.RECENTS_LIMIT - 1, AlgogoDesktop.SETTINGS.recents.size()).clear();
+		else if(settings.recents.size() >= AppSettings.RECENTS_LIMIT) {
+			settings.recents.subList(AppSettings.RECENTS_LIMIT - 1, settings.recents.size()).clear();
 		}
 		if(new File(path).exists()) {
-			AlgogoDesktop.SETTINGS.recents.add(0, path);
+			settings.recents.add(0, path);
 		}
 		try {
-			AlgogoDesktop.SETTINGS.save();
+			settings.save();
 		}
 		catch(final Exception ex) {
 			ex.printStackTrace();
@@ -847,12 +848,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 */
 
 	private final void refreshPaths() {
+		final AppSettings settings = AlgogoDesktop.getSettings();
 		boolean needToSave = false;
 		recents.removeAll();
-		for(final String lastFile : new ArrayList<String>(AlgogoDesktop.SETTINGS.recents)) {
+		for(final String lastFile : new ArrayList<String>(settings.recents)) {
 			final File file = new File(lastFile);
 			if(!file.exists()) {
-				AlgogoDesktop.SETTINGS.recents.removeAll(Collections.singleton(lastFile));
+				settings.recents.removeAll(Collections.singleton(lastFile));
 				needToSave = true;
 				continue;
 			}
@@ -874,7 +876,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		}
 		if(needToSave) {
 			try {
-				AlgogoDesktop.SETTINGS.save();
+				settings.save();
 			}
 			catch(final Exception ex) {
 				ex.printStackTrace();
@@ -888,8 +890,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				@Override
 				public final void actionPerformed(final ActionEvent event) {
 					try {
-						AlgogoDesktop.SETTINGS.recents.clear();
-						AlgogoDesktop.SETTINGS.save();
+						settings.recents.clear();
+						settings.save();
 						refreshPaths();
 					}
 					catch(final Exception ex) {
@@ -982,13 +984,14 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		@Override
 		public void updaterUpdateAvailable(final String localVersion, final String remoteVersion) {
 			try {
+				final AppSettings settings = AlgogoDesktop.getSettings();
 				final JCheckBox doNotShowItAgain = new JCheckBox(LanguageManager.getString("joptionpane.updateavailable.objects.donotautocheckagain"));
-				doNotShowItAgain.setSelected(AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain);
+				doNotShowItAgain.setSelected(settings.updaterDoNotAutoCheckAgain);
 				JOptionPane.showMessageDialog(EditorFrame.this, new Object[]{new JLabelLink(LanguageManager.getString("joptionpane.updateavailable.message", remoteVersion, AlgogoDesktop.APP_WEBSITE), new URL(AlgogoDesktop.APP_WEBSITE)), doNotShowItAgain}, LanguageManager.getString("joptionpane.updateavailable.title"), JOptionPane.INFORMATION_MESSAGE);
 				final boolean value = doNotShowItAgain.isSelected();
-				if(AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain != value) {
-					AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain = value;
-					AlgogoDesktop.SETTINGS.save();
+				if(settings.updaterDoNotAutoCheckAgain != value) {
+					settings.updaterDoNotAutoCheckAgain = value;
+					settings.save();
 				}
 			}
 			catch(final Exception ex) {

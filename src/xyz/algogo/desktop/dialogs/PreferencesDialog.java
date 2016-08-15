@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import xyz.algogo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.AppSettings;
 import xyz.algogo.desktop.utils.LanguageManager;
 
 import javax.swing.JCheckBox;
@@ -33,9 +34,12 @@ public class PreferencesDialog extends JDialog {
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setModal(true);
+		
+		final AppSettings settings = AlgogoDesktop.getSettings();
+		
 		final Map<String, String> languages = LanguageManager.getAvailableLanguages();
 		final JCheckBox chckbxCheckForUpdates = new JCheckBox(LanguageManager.getString("preferences.checkforupdates"));
-		chckbxCheckForUpdates.setSelected(!AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain);
+		chckbxCheckForUpdates.setSelected(!settings.updaterDoNotAutoCheckAgain);
 		final JLabel lblLanguage = new JLabel(LanguageManager.getString("preferences.language"));
 		final JComboBox<String> cboxLanguages = new JComboBox<String>();
 		for(final String language : languages.values()) {
@@ -50,17 +54,17 @@ public class PreferencesDialog extends JDialog {
 				boolean hasSettingsChanged = false;
 				final boolean checkForUpdates = chckbxCheckForUpdates.isSelected();
 				final String language = getLanguageFromName(languages, cboxLanguages.getSelectedItem().toString());
-				if(checkForUpdates == AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain) {
-					AlgogoDesktop.SETTINGS.updaterDoNotAutoCheckAgain = !checkForUpdates;
+				if(checkForUpdates == settings.updaterDoNotAutoCheckAgain) {
+					settings.updaterDoNotAutoCheckAgain = !checkForUpdates;
 					hasSettingsChanged = true;
 				}
-				if(!language.equals(AlgogoDesktop.SETTINGS.customLanguage)) {
-					AlgogoDesktop.SETTINGS.customLanguage = language;
+				if(!language.equals(settings.customLanguage)) {
+					settings.customLanguage = language;
 					hasSettingsChanged = true;
 				}
 				if(hasSettingsChanged) {
 					try {
-						AlgogoDesktop.SETTINGS.save();
+						settings.save();
 						JOptionPane.showMessageDialog(PreferencesDialog.this, LanguageManager.getString("joptionpane.settingssaved"), AlgogoDesktop.APP_NAME, JOptionPane.INFORMATION_MESSAGE);
 					}
 					catch(final Exception ex) {

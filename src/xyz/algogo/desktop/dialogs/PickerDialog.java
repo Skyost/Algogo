@@ -72,7 +72,7 @@ public class PickerDialog extends JDialog {
 		}
 	}
 	
-	private class PickerModel extends DefaultListModel<Function> {
+	private static class PickerModel extends DefaultListModel<Function> {
 
 		private static final long serialVersionUID = 1L;
 		

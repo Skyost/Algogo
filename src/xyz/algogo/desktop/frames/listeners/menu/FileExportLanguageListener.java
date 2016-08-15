@@ -47,7 +47,6 @@ public class FileExportLanguageListener extends AlgorithmEditorActionListener {
 				final File file = new File(path);
 				if(file.exists()) {
 					file.delete();
-					file.createNewFile();
 				}
 				Files.write(Paths.get(path), algorithm.toLanguage(language).getBytes(StandardCharsets.UTF_8));
 			}

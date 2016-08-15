@@ -48,7 +48,7 @@ public class LanguageManager {
 	 * The available languages.
 	 */
 	
-	public static final HashMap<String, String> AVAILABLE_LANGUAGES = new HashMap<String, String>();
+	private static final HashMap<String, String> AVAILABLE_LANGUAGES = new HashMap<String, String>();
 	
 	private static String currentLanguageCode;
 	
@@ -57,8 +57,9 @@ public class LanguageManager {
 		try {
 			AVAILABLE_LANGUAGES.put("fr", "Français");
 			AVAILABLE_LANGUAGES.put("en", "English");
-			currentLanguageCode = AVAILABLE_LANGUAGES.get(AlgogoDesktop.SETTINGS.customLanguage) == null ? "en" : AlgogoDesktop.SETTINGS.customLanguage;
-			if(AVAILABLE_LANGUAGES != null && AVAILABLE_LANGUAGES.size() > 0) {
+			final String customLanguage = AlgogoDesktop.getSettings().customLanguage;
+			currentLanguageCode = AVAILABLE_LANGUAGES.get(customLanguage) == null ? "en" : customLanguage;
+			if(AVAILABLE_LANGUAGES.size() > 0) {
 				final Properties properties = new Properties();
 				properties.load(new InputStreamReader(AlgogoDesktop.class.getResourceAsStream(PACKAGE + currentLanguageCode + ".lang"), StandardCharsets.UTF_8));
 				for(final Entry<Object, Object> entry : properties.entrySet()) {

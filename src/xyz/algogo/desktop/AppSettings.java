@@ -120,7 +120,7 @@ public class AppSettings {
 		if(file.exists()) {
 			file.delete();
 		}
-		Files.write(Paths.get(file.getPath()), object.toString().getBytes());
+		Files.write(Paths.get(file.getPath()), object.toString().getBytes(StandardCharsets.UTF_8));
 	}
 	
 	private final SerializationOptions getAnnotation(final Field field) {

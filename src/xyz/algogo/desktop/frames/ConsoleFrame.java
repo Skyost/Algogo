@@ -94,7 +94,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
 		});
 		final Container content = this.getContentPane();
-		output.setFont(AlgogoDesktop.CONSOLE_FONT);
+		output.setFont(AlgogoDesktop.getConsoleFont());
 		output.setLineWrap(true);
 		output.setWrapStyleWord(true);
 		output.setBackground(Color.BLACK);
@@ -150,7 +150,6 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 						final File file = new File(path);
 						if(file.exists()) {
 							file.delete();
-							file.createNewFile();
 						}
 						Files.write(Paths.get(path), builder.toString().getBytes(StandardCharsets.UTF_8));
 					}

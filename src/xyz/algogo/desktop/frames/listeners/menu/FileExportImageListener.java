@@ -60,7 +60,6 @@ public class FileExportImageListener extends AlgorithmEditorActionListener {
 				if(file.exists()) {
 					file.delete();
 				}
-				file.createNewFile();
 				final JTree tree = editor.getCurrentTreeComponent();
 				final BufferedImage image = new BufferedImage(tree.getWidth(), tree.getHeight(), BufferedImage.TYPE_INT_RGB);
 				final Graphics graphics = image.getGraphics();
