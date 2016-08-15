@@ -59,6 +59,7 @@ import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
 import xyz.algogo.core.AlgorithmListener.AlgorithmOptionsListener;
 import xyz.algogo.core.formats.AlgorithmFileFormat;
+import xyz.algogo.core.formats.AlgorithmFileFormat.InvalidAlgorithmVersionException;
 import xyz.algogo.core.language.AlgorithmLanguage;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.AppSettings;
@@ -729,12 +730,8 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			EditorFrame.this.setTitle(buildTitle());
 			addAlgorithmToStack(algorithm);
 		}
-		catch(final IllegalStateException ex) {
-			if(ex.getMessage().contains("higher version")) {
-				JOptionPane.showMessageDialog(this, LanguageManager.getString("editor.higherversion", AlgogoDesktop.APP_NAME), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			throw ex;
+		catch(final InvalidAlgorithmVersionException ex) {
+			JOptionPane.showMessageDialog(this, LanguageManager.getString("editor.higherversion", AlgogoDesktop.APP_NAME), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 		}
 		catch(final Exception ex) {
 			throw ex;
