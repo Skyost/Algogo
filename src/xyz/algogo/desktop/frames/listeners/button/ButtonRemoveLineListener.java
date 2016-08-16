@@ -17,6 +17,7 @@ public class ButtonRemoveLineListener extends AlgorithmEditorActionListener {
 
 	@Override
 	public final void actionPerformed(final ActionEvent event, final EditorFrame editor) {
+		editor.addAlgorithmToStack();
 		for(final TreePath path : editor.getCurrentTreeComponent().getSelectionPaths()) {
 			final DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
 			if(!AlgorithmTree.getAttachedAlgoLine(node).isKeyword()) {

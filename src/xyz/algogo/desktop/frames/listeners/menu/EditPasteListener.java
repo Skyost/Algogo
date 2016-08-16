@@ -20,6 +20,7 @@ public class EditPasteListener extends AlgorithmEditorActionListener {
 		if(paths == null) {
 			return;
 		}
+		editor.addAlgorithmToStack();
 		for(final DefaultMutableTreeNode node : editor.getClipboard()) {
 			editor.addNode(AlgorithmTree.getAttachedAlgoLine(node).clone());
 		}

@@ -28,6 +28,8 @@ public class AppSettings {
 	public String customLanguage = Locale.getDefault().getLanguage().toLowerCase();
 	@SerializationOptions(name = "recents")
 	public List<String> recents = new ArrayList<String>();
+	@SerializationOptions(name = "undo-history")
+	public int undoHistory = 10;
 	
 	private transient File file;
 	public static final transient short RECENTS_LIMIT = 10;

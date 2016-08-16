@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.ImageIcon;
@@ -74,6 +73,7 @@ import xyz.algogo.desktop.utils.AlgorithmTree.AlgorithmUserObject;
 import xyz.algogo.desktop.utils.GithubUpdater;
 import xyz.algogo.desktop.utils.JLabelLink;
 import xyz.algogo.desktop.utils.LanguageManager;
+import xyz.algogo.desktop.utils.SizedStack;
 import xyz.algogo.desktop.utils.TextLanguage;
 import xyz.algogo.desktop.utils.Utils;
 import xyz.algogo.desktop.utils.GithubUpdater.GithubUpdaterResultListener;
@@ -85,7 +85,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private final Stack<Algorithm> algorithms = new Stack<Algorithm>();
+	private final SizedStack<Algorithm> algorithms = new SizedStack<Algorithm>(AlgogoDesktop.getSettings().undoHistory);
 	private Algorithm algorithm;
 
 	protected String algoPath;
@@ -117,7 +117,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 		this.setSize(800, 600);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setLocationRelativeTo(null);
-		algorithms.setSize(10);
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(false);
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -135,6 +134,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 				final boolean enabled = !selected.equals(tree.variables) && !selected.equals(tree.beginning) && !selected.equals(tree.end);
 				for(final JButton button : new JButton[]{btnRemoveLine, btnEditLine, btnUp, btnDown}) {
 					button.setEnabled(enabled);
+				}
+				if(tree.getSelectionCount() > 1) {
+					for(final JButton button : new JButton[]{btnEditLine, btnUp, btnDown}) {
+						button.setEnabled(false);
+					}
 				}
 			}
 
@@ -200,6 +204,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 
 	@Override
 	public final void lineAdded(final Instruction instruction, final String... args) {
+		addAlgorithmToStack();
 		addNode(new AlgoLine(instruction, args));
 	}
 
@@ -210,6 +215,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 		if(currentArgs == args) {
 			return;
 		}
+		addAlgorithmToStack();
 		if(line.getInstruction() == Instruction.IF) {
 			if(Boolean.valueOf(currentArgs[1]) && !Boolean.valueOf(args[1])) {
 				final DefaultMutableTreeNode elsee = ((DefaultMutableTreeNode)((DefaultMutableTreeNode)node.getParent()).getChildAfter(node));
@@ -223,7 +229,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 			}
 		}
 		line.setArgs(args);
-		algorithmChanged(true, true, true, true, (DefaultMutableTreeNode)node.getParent(), new TreePath(node.getPath()));
+		algorithmChanged(true, true, true, (DefaultMutableTreeNode)node.getParent(), new TreePath(node.getPath()));
 	}
 
 	/**
@@ -555,13 +561,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 		final Instruction instruction = line.getInstruction();
 		if(instruction == Instruction.CREATE_VARIABLE) {
 			tree.variables.add(node);
-			algorithmChanged(true, true, true, true, tree.variables, new TreePath(node.getPath()));
+			algorithmChanged(true, true, true, tree.variables, new TreePath(node.getPath()));
 			return;
 		}
 		final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		if(selected == null || selected.equals(tree.variables) || selected.equals(tree.beginning) || selected.equals(tree.end)) {
 			tree.beginning.add(node);
-			algorithmChanged(true, true, true, true, tree.beginning, new TreePath(node.getPath()));
+			algorithmChanged(true, true, true, tree.beginning, new TreePath(node.getPath()));
 			return;
 		}
 		final DefaultMutableTreeNode changed;
@@ -577,7 +583,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 			parent.insert(node, parent.getIndex(selected) + 1);
 			changed = parent;
 		}
-		algorithmChanged(true, true, true, true, changed, new TreePath(node.getPath()));
+		algorithmChanged(true, true, true, changed, new TreePath(node.getPath()));
 	}
 
 	/**
@@ -600,7 +606,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 			}
 		}
 		node.removeFromParent();
-		algorithmChanged(true, true, true, true, (DefaultMutableTreeNode)node.getParent());
+		algorithmChanged(true, true, true, (DefaultMutableTreeNode)node.getParent());
 	}
 
 	/**
@@ -618,6 +624,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 		tree.reload();
 		textArea.setText(null);
 		scrollPane.setViewportView(tree);
+		undo.setEnabled(false);
 		btnAddLine.setEnabled(true);
 	}
 	
@@ -792,7 +799,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 		algorithm = algorithms.pop();
 		tree.fromAlgorithm(algorithm);
 		tree.reload();
-		algorithmChanged(true, false);
+		algorithmChanged(true);
 		if(algorithms.size() == 0) {
 			undo.setEnabled(false);
 		}
@@ -814,9 +821,17 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	
 	public final void addAlgorithmToStack(final Algorithm algorithm) {
 		algorithms.push(algorithm);
-		if(algorithms.size() > 1) {
+		if(algorithms.size() > 0) {
 			undo.setEnabled(true);
 		}
+	}
+	
+	/**
+	 * Pops the algorithm on top of the stack.
+	 */
+	
+	public final void popFromStack() {
+		algorithms.pop();
 	}
 	
 	/**
@@ -890,20 +905,16 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	 * 
 	 * @param setTitle <b>true</b> If you want to change the editor's title.
 	 * <br><b>false</b> Otherwise.
-	 * @param addAlgorithmToStack <b>true</b> If you want to add the current algorithm to the stack.
-	 * <br><b>false</b> Otherwise.
 	 */
 
-	public final void algorithmChanged(final boolean setTitle, final boolean addAlgorithmToStack) {
-		algorithmChanged(setTitle, addAlgorithmToStack, false, false, null);
+	public final void algorithmChanged(final boolean setTitle) {
+		algorithmChanged(setTitle, false, false, null);
 	}
 	
 	/**
 	 * Must be called when the algorithm is changed.
 	 * 
 	 * @param setTitle <b>true</b> If you want to change the editor's title.
-	 * <br><b>false</b> Otherwise.
-	 * @param addAlgorithmToStack <b>true</b> If you want to add the current algorithm to the stack.
 	 * <br><b>false</b> Otherwise.
 	 * @param reloadTree <b>true</b> If you want to reload the tree.
 	 * <br><b>false</b> Otherwise.
@@ -912,16 +923,14 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	 * @param node The node that will be reloaded. If null, the whole tree will be reloaded.
 	 */
 
-	public final void algorithmChanged(final boolean setTitle, final boolean addAlgorithmToStack, final boolean reloadTree, final boolean refreshAlgorithm, final DefaultMutableTreeNode node) {
-		algorithmChanged(setTitle, addAlgorithmToStack, reloadTree, refreshAlgorithm, node, (TreePath[])null);
+	public final void algorithmChanged(final boolean setTitle, final boolean reloadTree, final boolean refreshAlgorithm, final DefaultMutableTreeNode node) {
+		algorithmChanged(setTitle, reloadTree, refreshAlgorithm, node, (TreePath[])null);
 	}
 
 	/**
 	 * Must be called when the algorithm is changed.
 	 * 
 	 * @param setTitle <b>true</b> If you want to change the editor's title.
-	 * <br><b>false</b> Otherwise.
-	 * @param addAlgorithmToStack <b>true</b> If you want to add the current algorithm to the stack.
 	 * <br><b>false</b> Otherwise.
 	 * @param reloadTree <b>true</b> If you want to reload the tree.
 	 * <br><b>false</b> Otherwise.
@@ -931,16 +940,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	 * @param selection Apply a selection after the tree getting reloaded. Can be null.
 	 */
 
-	public final void algorithmChanged(final boolean setTitle, final boolean addAlgorithmToStack, final boolean reloadTree, final boolean refreshAlgorithm, final DefaultMutableTreeNode node, final TreePath... selection) {
+	public final void algorithmChanged(final boolean setTitle, final boolean reloadTree, final boolean refreshAlgorithm, final DefaultMutableTreeNode node, final TreePath... selection) {
 		algoChanged = true;
 		if(reloadTree) {
 			tree.reload(node);
 		}
 		if(selection != null) {
 			tree.setSelectionPaths(selection);
-		}
-		if(addAlgorithmToStack) {
-			addAlgorithmToStack();
 		}
 		if(refreshAlgorithm) {
 			algorithm = tree.toAlgorithm(algorithm.getTitle(), algorithm.getAuthor());

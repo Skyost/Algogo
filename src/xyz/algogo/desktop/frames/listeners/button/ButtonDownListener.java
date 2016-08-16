@@ -19,8 +19,12 @@ public class ButtonDownListener extends AlgorithmEditorActionListener {
 	public final void actionPerformed(final ActionEvent event, final EditorFrame editor) {
 		final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)editor.getCurrentTreeComponent().getSelectionPaths()[0].getLastPathComponent();
 		final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)selected.getParent();
+		editor.addAlgorithmToStack();
 		if(AlgorithmTree.down(parent, parent.getIndex(selected))) {
-			editor.algorithmChanged(true, true, true, true, parent, new TreePath(selected.getPath()));
+			editor.algorithmChanged(true, true, true, parent, new TreePath(selected.getPath()));
+		}
+		else {
+			editor.popFromStack();
 		}
 	}
 

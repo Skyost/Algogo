@@ -165,26 +165,10 @@ public class AlgoLineUtils {
 	 */
 	
 	public static final LinkedHashMap<String, Boolean> getVariables(final AlgoLine variables) {
-		return getVariables(variables, false);
-	}
-	
-	/**
-	 * Gets variables as map.
-	 * 
-	 * @param variables The variables.
-	 * @param normalize If you want the variables' name to be normalized (lower case).
-	 * 
-	 * @return A map :
-	 * <br><b>Key :</b> The variable's name.
-	 * <br><b>Value : true</b> If the variable is a String.
-	 * <br><b>false</b> If the variable is a Number.
-	 */
-	
-	public static final LinkedHashMap<String, Boolean> getVariables(final AlgoLine variables, final boolean normalize) {
 		final LinkedHashMap<String, Boolean> variablesMap = new LinkedHashMap<String, Boolean>();
 		for(final AlgoLine variable : variables.getChildren()) {
 			final String[] args = variable.getArgs();
-			variablesMap.put(args[0].toLowerCase(), args[1].equals("0"));
+			variablesMap.put(args[0], args[1].equals("0"));
 		}
 		return variablesMap;
 	}

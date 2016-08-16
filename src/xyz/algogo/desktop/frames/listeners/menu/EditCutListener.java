@@ -33,6 +33,7 @@ public class EditCutListener extends AlgorithmEditorActionListener {
 		}
 		final List<DefaultMutableTreeNode> clipboard = editor.getClipboard();
 		clipboard.clear();
+		editor.addAlgorithmToStack();
 		for(final TreePath path : paths) {
 			final DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
 			clipboard.add((DefaultMutableTreeNode)node.clone());

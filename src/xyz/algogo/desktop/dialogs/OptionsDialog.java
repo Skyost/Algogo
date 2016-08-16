@@ -66,7 +66,7 @@ public class OptionsDialog extends JDialog {
 				}
 				if(changed) {
 					editor.addAlgorithmToStack(clone);
-					editor.algorithmChanged(true, false);
+					editor.algorithmChanged(true);
 				}
 				OptionsDialog.this.dispose();
 			}
