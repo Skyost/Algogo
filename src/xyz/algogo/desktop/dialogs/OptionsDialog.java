@@ -7,11 +7,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.SwingConstants;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import xyz.algogo.core.Algorithm;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.frames.EditorFrame;
 import xyz.algogo.desktop.utils.LanguageManager;
@@ -46,13 +48,25 @@ public class OptionsDialog extends JDialog {
 
 			@Override
 			public final void actionPerformed(final ActionEvent event) {
+				boolean changed = false;
 				final String title = txtfldTitle.getText();
+				final String author = txtfldAuthor.getText();
+				if(title.length() == 0 || author.length() == 0) {
+					JOptionPane.showMessageDialog(OptionsDialog.this, LanguageManager.getString("joptionpane.fillfields"), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				final Algorithm clone = editor.getAlgorithm().clone();
 				if(!algoTitle.equals(title)) {
 					editor.getAlgorithm().setTitle(title);
+					changed = true;
 				}
-				final String author = txtfldAuthor.getText();
 				if(!algoAuthor.equals(author)) {
 					editor.getAlgorithm().setAuthor(author);
+					changed = true;
+				}
+				if(changed) {
+					editor.addAlgorithmToStack(clone);
+					editor.algorithmChanged(true, false);
 				}
 				OptionsDialog.this.dispose();
 			}

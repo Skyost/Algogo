@@ -13,7 +13,7 @@ import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.AlgoRunnable;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.AlgoRunnable.AlgorithmExecutionException;
-import xyz.algogo.core.AlgorithmListener.AlgorithmThreadListener;
+import xyz.algogo.core.AlgorithmThreadListener;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.dialogs.AddLineDialog;
 import xyz.algogo.desktop.dialogs.ErrorDialog;

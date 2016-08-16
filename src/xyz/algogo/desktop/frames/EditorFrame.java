@@ -57,7 +57,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
-import xyz.algogo.core.AlgorithmListener.AlgorithmOptionsListener;
 import xyz.algogo.core.formats.AlgorithmFileFormat;
 import xyz.algogo.core.formats.AlgorithmFileFormat.InvalidAlgorithmVersionException;
 import xyz.algogo.core.language.AlgorithmLanguage;
@@ -82,11 +81,12 @@ import xyz.algogo.desktop.utils.HtmlLanguage;
 
 import javax.swing.JMenuBar;
 
-public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOptionsListener {
+public class EditorFrame extends JFrame implements AlgoLineListener {
 
 	private static final long serialVersionUID = 1L;
 
 	private final Stack<Algorithm> algorithms = new Stack<Algorithm>();
+	private Algorithm algorithm;
 
 	protected String algoPath;
 	private boolean algoChanged;
@@ -102,6 +102,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	private final JMenu recents = new JMenu(LanguageManager.getString("editor.menu.file.recents"));
 	private final JMenuItem undo = new JMenuItem(LanguageManager.getString("editor.menu.edit.undo"));
 	
+	private final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
 	private final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
 	private final JButton btnEditLine = new JButton(LanguageManager.getString("editor.button.editline"));
 	private final JButton btnUp = new JButton(LanguageManager.getString("editor.button.up"));
@@ -161,7 +162,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		renderer.setBorderSelectionColor(Color.decode("#95A5A6"));
 		renderer.setBackgroundSelectionColor(Color.decode("#BDC3C7"));
 		resetEditor();
-		final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
 		btnAddLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_add.png")));
 		btnRemoveLine.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/btn_remove.png")));
 		btnRemoveLine.setEnabled(false);
@@ -226,28 +226,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		algorithmChanged(true, true, true, true, (DefaultMutableTreeNode)node.getParent(), new TreePath(node.getPath()));
 	}
 
-	@Override
-	public final boolean titleChanged(final Algorithm algorithm, final String title, final String newTitle) {
-		if(newTitle != null && !newTitle.isEmpty()) {
-			algorithmChanged(false, false);
-			this.setTitle(buildTitle(newTitle, algorithm.getAuthor()));
-			return true;
-		}
-		JOptionPane.showMessageDialog(this, LanguageManager.getString("joptionpane.invalidtitle", newTitle), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
-		return false;
-	}
-
-	@Override
-	public final boolean authorChanged(final Algorithm algorithm, final String author, final String newAuthor) {
-		if(newAuthor != null && !newAuthor.isEmpty()) {
-			algorithmChanged(false, false);
-			this.setTitle(buildTitle(algorithm.getTitle(), newAuthor));
-			return true;
-		}
-		JOptionPane.showMessageDialog(this, LanguageManager.getString("joptionpane.invalidauthor", newAuthor), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
-		return false;
-	}
-	
 	/**
 	 * Setups the syntax highlighter.
 	 */
@@ -451,7 +429,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 */
 	
 	public final Algorithm getAlgorithm() {
-		return algorithms.peek();
+		return algorithm;
 	}
 	
 	/**
@@ -502,6 +480,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			scrollPane.setRowHeaderView(new TextLineNumber(textArea));
 			textArea.requestFocus();
 			textArea.setCaretPosition(0);
+			btnAddLine.setEnabled(false);
 		}
 		else {
 			new Thread() {
@@ -520,21 +499,18 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 					try {
 						final Algorithm current = getAlgorithm();
 						final Algorithm parsed = new AlgorithmParser().parse(current.getTitle(), current.getAuthor(), textArea.getText());
-						if(parsed.equals(current)) {
-							algoChanged = true;
-							EditorFrame.this.setTitle(buildTitle());
-						}
-						else {
-							current.removeOptionsListener(EditorFrame.this);
-							parsed.addOptionsListener(EditorFrame.this);
-							addAlgorithmToStack(parsed);
+						if(!parsed.equals(current)) {
+							addAlgorithmToStack();
 							tree.fromAlgorithm(parsed);
 							tree.reload();
+							algoChanged = true;
+							EditorFrame.this.setTitle(buildTitle());
 						}
 						textArea.setText(null);
 						EditorFrame.this.setJMenuBar(editorMenu);
 						scrollPane.setViewportView(tree);
 						scrollPane.setRowHeaderView(null);
+						btnAddLine.setEnabled(true);
 					}
 					catch(final ParseException ex) {
 						waitDialog.dispose();
@@ -636,14 +612,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		algoChanged = false;
 		freeEditMode = false;
 		algorithms.clear();
-		final Algorithm algorithm = new Algorithm(LanguageManager.getString("editor.defaultalgorithm.untitled"), LanguageManager.getString("editor.defaultalgorithm.anonymous"));
-		algorithm.addOptionsListener(this);
-		addAlgorithmToStack(algorithm);
+		algorithm = new Algorithm(LanguageManager.getString("editor.defaultalgorithm.untitled"), LanguageManager.getString("editor.defaultalgorithm.anonymous"));
 		this.setTitle(buildTitle());
 		tree.fromAlgorithm(algorithm);
 		tree.reload();
 		textArea.setText(null);
 		scrollPane.setViewportView(tree);
+		btnAddLine.setEnabled(true);
 	}
 	
 	/**
@@ -688,7 +663,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @return The current title.
 	 */
 
-	private final String buildTitle() {
+	public final String buildTitle() {
 		final Algorithm algorithm = getAlgorithm();
 		return buildTitle(algorithm.getTitle(), algorithm.getAuthor());
 	}
@@ -702,7 +677,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @return A title.
 	 */
 
-	private final String buildTitle(final String title, final String author) {
+	public final String buildTitle(final String title, final String author) {
 		return LanguageManager.getString("editor.title", algoChanged ? "* " : "", title, author, AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION);
 	}
 
@@ -720,15 +695,13 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 				throw new Exception("File can't be null.");
 			}
 			algorithms.clear();
-			final Algorithm algorithm = Algorithm.loadFromFile(file);
-			algorithm.addOptionsListener(EditorFrame.this);
+			algorithm = Algorithm.loadFromFile(file);
 			tree.fromAlgorithm(algorithm);
 			algoPath = file.getPath();
 			saveToHistory(algoPath);
 			algoChanged = false;
 			tree.reload();
 			EditorFrame.this.setTitle(buildTitle());
-			addAlgorithmToStack(algorithm);
 		}
 		catch(final InvalidAlgorithmVersionException ex) {
 			JOptionPane.showMessageDialog(this, LanguageManager.getString("editor.higherversion", AlgogoDesktop.APP_NAME), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
@@ -813,18 +786,24 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 */
 	
 	public final void undo() {
-		if(algorithms.size() == 1) {
+		if(algorithms.size() == 0) {
 			return;
 		}
-		algorithms.pop();
-		final Algorithm algorithm = getAlgorithm();
-		algorithm.addOptionsListener(EditorFrame.this);
+		algorithm = algorithms.pop();
 		tree.fromAlgorithm(algorithm);
 		tree.reload();
-		this.setTitle(buildTitle());
-		if(algorithms.size() == 1) {
+		algorithmChanged(true, false);
+		if(algorithms.size() == 0) {
 			undo.setEnabled(false);
 		}
+	}
+	
+	/**
+	 * Adds an algorithm to the Stack (allows to undo your action).
+	 */
+	
+	public final void addAlgorithmToStack() {
+		addAlgorithmToStack(this.algorithm.clone());
 	}
 	
 	/**
@@ -839,7 +818,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 			undo.setEnabled(true);
 		}
 	}
-
+	
 	/**
 	 * Refresh the "recent files" menu.
 	 */
@@ -911,18 +890,20 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * 
 	 * @param setTitle <b>true</b> If you want to change the editor's title.
 	 * <br><b>false</b> Otherwise.
-	 * @param setTitle <b>true</b> If you want to save the old algorithm to the stack.
+	 * @param addAlgorithmToStack <b>true</b> If you want to add the current algorithm to the stack.
 	 * <br><b>false</b> Otherwise.
 	 */
 
-	public final void algorithmChanged(final boolean setTitle, final boolean cancelable) {
-		algorithmChanged(setTitle, cancelable, false, false, null);
+	public final void algorithmChanged(final boolean setTitle, final boolean addAlgorithmToStack) {
+		algorithmChanged(setTitle, addAlgorithmToStack, false, false, null);
 	}
 	
 	/**
 	 * Must be called when the algorithm is changed.
 	 * 
 	 * @param setTitle <b>true</b> If you want to change the editor's title.
+	 * <br><b>false</b> Otherwise.
+	 * @param addAlgorithmToStack <b>true</b> If you want to add the current algorithm to the stack.
 	 * <br><b>false</b> Otherwise.
 	 * @param reloadTree <b>true</b> If you want to reload the tree.
 	 * <br><b>false</b> Otherwise.
@@ -931,14 +912,16 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @param node The node that will be reloaded. If null, the whole tree will be reloaded.
 	 */
 
-	public final void algorithmChanged(final boolean setTitle, final boolean cancelable, final boolean reloadTree, final boolean refreshAlgorithm, final DefaultMutableTreeNode node) {
-		algorithmChanged(setTitle, cancelable, reloadTree, refreshAlgorithm, node, (TreePath[])null);
+	public final void algorithmChanged(final boolean setTitle, final boolean addAlgorithmToStack, final boolean reloadTree, final boolean refreshAlgorithm, final DefaultMutableTreeNode node) {
+		algorithmChanged(setTitle, addAlgorithmToStack, reloadTree, refreshAlgorithm, node, (TreePath[])null);
 	}
 
 	/**
 	 * Must be called when the algorithm is changed.
 	 * 
 	 * @param setTitle <b>true</b> If you want to change the editor's title.
+	 * <br><b>false</b> Otherwise.
+	 * @param addAlgorithmToStack <b>true</b> If you want to add the current algorithm to the stack.
 	 * <br><b>false</b> Otherwise.
 	 * @param reloadTree <b>true</b> If you want to reload the tree.
 	 * <br><b>false</b> Otherwise.
@@ -948,7 +931,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 	 * @param selection Apply a selection after the tree getting reloaded. Can be null.
 	 */
 
-	public final void algorithmChanged(final boolean setTitle, final boolean cancelable, final boolean reloadTree, final boolean refreshAlgorithm, final DefaultMutableTreeNode node, final TreePath... selection) {
+	public final void algorithmChanged(final boolean setTitle, final boolean addAlgorithmToStack, final boolean reloadTree, final boolean refreshAlgorithm, final DefaultMutableTreeNode node, final TreePath... selection) {
 		algoChanged = true;
 		if(reloadTree) {
 			tree.reload(node);
@@ -956,9 +939,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener, AlgorithmOp
 		if(selection != null) {
 			tree.setSelectionPaths(selection);
 		}
+		if(addAlgorithmToStack) {
+			addAlgorithmToStack();
+		}
 		if(refreshAlgorithm) {
-			final Algorithm algorithm = cancelable ? algorithms.peek() : algorithms.pop();
-			addAlgorithmToStack(tree.toAlgorithm(algorithm.getTitle(), algorithm.getAuthor()));
+			algorithm = tree.toAlgorithm(algorithm.getTitle(), algorithm.getAuthor());
 		}
 		if(setTitle) {
 			this.setTitle(buildTitle());
