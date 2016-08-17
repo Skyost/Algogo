@@ -73,6 +73,12 @@ public class TextLanguage extends AlgorithmIndentedLanguage {
 			builder.append(args[0] + " → " + args[1]);
 			break;
 		case READ_VARIABLE:
+			builder.append(Utils.escapeHTML(args[0]));
+			final String customMessage = AlgoLineUtils.getCustomMessage(new AlgoLine(instruction, args));
+			if(customMessage != null) {
+				builder.append(" " + LanguageManager.getString("editor.line.instruction.readvariable.message") + " " + customMessage);
+			}
+			break;
 		case IF:
 		case WHILE:
 			builder.append(args[0]);

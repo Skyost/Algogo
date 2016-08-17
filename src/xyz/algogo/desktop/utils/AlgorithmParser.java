@@ -42,7 +42,7 @@ public class AlgorithmParser {
 				data.put(withoutAccents.toUpperCase(), key);
 			}
 		}
-		for(final String misc : new String[]{"editor.line.instruction.createvariable.type", "editor.line.instruction.createvariable.type.string", "editor.line.instruction.createvariable.type.number", "editor.line.instruction.createvariable.type.string", "editor.line.instruction.createvariable.type.number", "editor.line.instruction.for.from", "editor.line.instruction.for.to"}) {
+		for(final String misc : new String[]{"editor.line.instruction.createvariable.type", "editor.line.instruction.readvariable.message", "editor.line.instruction.createvariable.type.string", "editor.line.instruction.createvariable.type.number", "editor.line.instruction.createvariable.type.string", "editor.line.instruction.createvariable.type.number", "editor.line.instruction.for.from", "editor.line.instruction.for.to"}) {
 			final String value = LanguageManager.getString(misc);
 			final String withoutAccents = Utils.stripAccents(value);
 			data.put(value.toUpperCase(), misc);
@@ -177,12 +177,16 @@ public class AlgorithmParser {
 			break;
 		case "editor.line.instruction.readvariable":
 			if(parts.length < 2) {
-				throw new ParseException(currentLine, "This instruction needs 1 argument (READ_VARIABLE <variable>).");
+				throw new ParseException(currentLine, "This instruction needs 1 argument (READ_VARIABLE <variable> [MESSAGE message]).");
 			}
 			if(globalVariables.get(parts[1].toUpperCase()) == null) {
 				throw new ParseException(currentLine, "Variable not set : \"" + parts[1] + "\".");
 			}
-			algoLine = new AlgoLine(Instruction.READ_VARIABLE, parts[1]);
+			String customMessage = "";
+			if(parts.length > 3 && data.get(parts[2]).equals("editor.line.instruction.readvariable.message")) {
+				customMessage = Utils.join(" ", Arrays.copyOfRange(parts, 3, parts.length));
+			}
+			algoLine = new AlgoLine(Instruction.READ_VARIABLE, parts[1], customMessage);
 			break;
 		case "editor.line.instruction.showmessage":
 			if(parts.length < 2) {

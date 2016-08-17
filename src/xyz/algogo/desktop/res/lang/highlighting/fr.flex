@@ -1,5 +1,5 @@
 /*
- * Generated on 7/1/16 7:28 PM
+ * Generated on 8/16/16 10:47 PM
  */
 package xyz.algogo.desktop.res.lang.highlighting;
 
@@ -244,6 +244,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 "Chaine" |
 "Chaîne" |
 "LIRE_VARIABLE" |
+"MESSAGE" |
 "Nombre" |
 "TYPE"		{ addToken(Token.RESERVED_WORD_2); }
 

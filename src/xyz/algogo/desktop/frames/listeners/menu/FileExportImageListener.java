@@ -50,7 +50,7 @@ public class FileExportImageListener extends AlgorithmEditorActionListener {
 			chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 			chooser.setMultiSelectionEnabled(false);
 			chooser.setCurrentDirectory(currentDir);
-			chooser.setSelectedFile(algoPath == null ? new File(currentDir, editor.getAlgorithm().getTitle()) : new File(algoPath));
+			chooser.setSelectedFile(algoPath == null ? new File(currentDir, editor.getAlgorithm().getTitle()) : new File(algoPath.contains(".") ? algoPath.substring(0, algoPath.lastIndexOf(".")) : algoPath));
 			if(chooser.showSaveDialog(editor) == JFileChooser.APPROVE_OPTION) {
 				final String extension = ((FileNameExtensionFilter)chooser.getFileFilter()).getExtensions()[0];
 				File file = chooser.getSelectedFile();

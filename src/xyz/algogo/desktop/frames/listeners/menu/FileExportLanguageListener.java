@@ -38,7 +38,7 @@ public class FileExportLanguageListener extends AlgorithmEditorActionListener {
 			chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 			chooser.setMultiSelectionEnabled(false);
 			chooser.setCurrentDirectory(currentDir);
-			chooser.setSelectedFile(algoPath == null ? new File(currentDir, algorithm.getTitle()) : new File(algoPath));
+			chooser.setSelectedFile(algoPath == null ? new File(currentDir, algorithm.getTitle()) : new File(algoPath.contains(".") ? algoPath.substring(0, algoPath.lastIndexOf(".")) : algoPath));
 			if(chooser.showSaveDialog(editor) == JFileChooser.APPROVE_OPTION) {
 				String path = chooser.getSelectedFile().getPath();
 				if(!path.endsWith("." + extension)) {

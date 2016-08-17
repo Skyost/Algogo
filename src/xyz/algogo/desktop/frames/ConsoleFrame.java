@@ -187,7 +187,7 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 	}
 
 	@Override
-	public final String actionRequired(final AlgoRunnable runnable, final AlgoLine line, final VariableValue variable) {
+	public final String readVariable(final AlgoRunnable runnable, final AlgoLine line, final VariableValue variable) {
 		if(runnable != currentThread) {
 			return null;
 		}
@@ -196,7 +196,13 @@ public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 		if(variable != null) {
 			value.setText(variable.getType() == VariableType.STRING ? variable.getValue().toString() : ((BigDecimal)variable.getValue()).toPlainString());
 		}
-		if(Utils.createDialog(this, LanguageManager.getString("console.actionrequired.dialog.title"), LanguageManager.getString("console.actionrequired.dialog.message", line.getArgs()[0], LanguageManager.getString(variable.getType() == VariableType.STRING ? "editor.line.instruction.createvariable.type.string" : "editor.line.instruction.createvariable.type.number")), LanguageManager.getString("console.actionrequired.dialog.tip"), value)) {
+		final String[] args = line.getArgs();
+		String message = LanguageManager.getString("console.actionrequired.dialog.message", args[0], LanguageManager.getString(variable.getType() == VariableType.STRING ? "editor.line.instruction.createvariable.type.string" : "editor.line.instruction.createvariable.type.number"));
+		final String customMessage = AlgoLineUtils.getCustomMessage(line);
+		if(customMessage != null) {
+			message = customMessage;
+		}
+		if(Utils.createDialog(this, LanguageManager.getString("console.actionrequired.dialog.title"), message, LanguageManager.getString("console.actionrequired.dialog.tip"), value)) {
 			return value.getText();
 		}
 		return null;

@@ -95,7 +95,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	private final AlgorithmTree tree = new AlgorithmTree();
 	private final RSyntaxTextArea textArea = new RSyntaxTextArea();
 
-	private final List<DefaultMutableTreeNode> clipboard = new ArrayList<DefaultMutableTreeNode>();
+	private final List<AlgoLine> clipboard = new ArrayList<AlgoLine>();
 
 	private final JScrollPane scrollPane = new JScrollPane();
 	
@@ -322,14 +322,14 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 		paste.setEnabled(false);
 		
 		final JMenuItem cut = new JMenuItem(LanguageManager.getString("editor.menu.edit.cut"));
-		final ActionListener cutActionListener = new EditCutListener(this, paste);
+		final ActionListener cutActionListener = new EditCopyListener(this, paste, true);
 		cut.addActionListener(cutActionListener);
 		cut.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_cut.png")));
 		cut.setAccelerator(KeyStroke.getKeyStroke('X', ctrl));
 		listeners.put(KeyStroke.getKeyStroke('X', ctrl), cutActionListener);
 		
 		final JMenuItem copy = new JMenuItem(LanguageManager.getString("editor.menu.edit.copy"));
-		final ActionListener copyActionListener = new EditCopyListener(this, paste);
+		final ActionListener copyActionListener = new EditCopyListener(this, paste, false);
 		copy.addActionListener(copyActionListener);
 		copy.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_copy.png")));
 		copy.setAccelerator(KeyStroke.getKeyStroke('C', ctrl));
@@ -464,7 +464,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	 * @return The user's clipboard.
 	 */
 	
-	public final List<DefaultMutableTreeNode> getClipboard() {
+	public final List<AlgoLine> getClipboard() {
 		return clipboard;
 	}
 	
@@ -553,22 +553,45 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	/**
 	 * Adds a node to the editor.
 	 * 
-	 * @param node The editor.
+	 * @param line The line from within the node will be created.
+	 * 
+	 * @return The node that has changed.
 	 */
 
-	public final void addNode(final AlgoLine line) {
+	public final DefaultMutableTreeNode addNode(final AlgoLine line) {
+		return addNode(line, true);
+	}
+	
+	/**
+	 * Adds a node to the editor.
+	 * 
+	 * @param line The line from within the node will be created.
+	 * @param update If the editor should be updated.
+	 * 
+	 * @return The node that has changed.
+	 */
+	
+	public final DefaultMutableTreeNode addNode(final AlgoLine line, final boolean update) {
 		final DefaultMutableTreeNode node = new DefaultMutableTreeNode(new AlgorithmUserObject(line));
 		final Instruction instruction = line.getInstruction();
 		if(instruction == Instruction.CREATE_VARIABLE) {
 			tree.variables.add(node);
 			algorithmChanged(true, true, true, tree.variables, new TreePath(node.getPath()));
-			return;
+			return tree.variables;
+		}
+		final List<AlgoLine> children = line.getChildren();
+		if(children != null && children.size() > 0) {
+			for(final AlgoLine child : children) {
+				node.add(AlgorithmTree.asMutableTreeNode(child));
+			}
 		}
 		final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		if(selected == null || selected.equals(tree.variables) || selected.equals(tree.beginning) || selected.equals(tree.end)) {
 			tree.beginning.add(node);
-			algorithmChanged(true, true, true, tree.beginning, new TreePath(node.getPath()));
-			return;
+			if(update) {
+				algorithmChanged(true, true, true, tree.beginning, new TreePath(node.getPath()));
+			}
+			return tree.beginning;
 		}
 		final DefaultMutableTreeNode changed;
 		if(AlgorithmTree.getAttachedAlgoLine(selected).getAllowsChildren() && instruction != Instruction.ELSE) {
@@ -583,16 +606,30 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 			parent.insert(node, parent.getIndex(selected) + 1);
 			changed = parent;
 		}
-		algorithmChanged(true, true, true, changed, new TreePath(node.getPath()));
+		if(update) {
+			algorithmChanged(true, true, true, changed, new TreePath(node.getPath()));
+		}
+		return changed;
 	}
-
+	
 	/**
 	 * Removes a node from the editor.
 	 * 
-	 * @param node The editor.
+	 * @param node The node.
 	 */
 
 	public final void removeNode(final DefaultMutableTreeNode node) {
+		removeNode(node, true);
+	}
+	
+	/**
+	 * Removes a node from the editor.
+	 * 
+	 * @param node The node.
+	 * @param update If the editor should be updated.
+	 */
+	
+	public final void removeNode(final DefaultMutableTreeNode node, final boolean update) {
 		final AlgoLine line = AlgorithmTree.getAttachedAlgoLine(node);
 		if(line.getInstruction() == Instruction.IF && Boolean.valueOf(line.getArgs()[1])) {
 			final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
@@ -606,7 +643,9 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 			}
 		}
 		node.removeFromParent();
-		algorithmChanged(true, true, true, (DefaultMutableTreeNode)node.getParent());
+		if(update) {
+			algorithmChanged(true, true, true, (DefaultMutableTreeNode)node.getParent());
+		}
 	}
 
 	/**
@@ -752,7 +791,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 			chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
 			chooser.setMultiSelectionEnabled(false);
 			chooser.setCurrentDirectory(currentDir);
-			chooser.setSelectedFile(algoPath == null ? new File(currentDir, getAlgorithm().getTitle()) : new File(algoPath));
+			chooser.setSelectedFile(algoPath == null ? new File(currentDir, getAlgorithm().getTitle()) : new File(algoPath.contains(".") ? algoPath.substring(0, algoPath.lastIndexOf(".")) : algoPath));
 			if(chooser.showSaveDialog(EditorFrame.this) == JFileChooser.APPROVE_OPTION) {
 				save(chooser.getSelectedFile(), "." + ((FileNameExtensionFilter)chooser.getFileFilter()).getExtensions()[0]);
 			}
@@ -796,7 +835,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 		if(algorithms.size() == 0) {
 			return;
 		}
-		algorithm = algorithms.pop();
+		algorithm = popFromStack();
 		tree.fromAlgorithm(algorithm);
 		tree.reload();
 		algorithmChanged(true);
@@ -810,7 +849,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	 */
 	
 	public final void addAlgorithmToStack() {
-		addAlgorithmToStack(this.algorithm.clone());
+		addAlgorithmToStack(this.algorithm.copy());
 	}
 	
 	/**
@@ -828,10 +867,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	
 	/**
 	 * Pops the algorithm on top of the stack.
+	 * 
+	 * @return The algorithm on top of the stack.
 	 */
 	
-	public final void popFromStack() {
-		algorithms.pop();
+	public final Algorithm popFromStack() {
+		return algorithms.pop();
 	}
 	
 	/**
@@ -855,7 +896,9 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 				@Override
 				public final void actionPerformed(final ActionEvent event) {
 					try {
-						open(file);
+						if(askToSaveIfNeeded()) {
+							open(file);
+						}
 					}
 					catch(final Exception ex) {
 						ErrorDialog.errorMessage(EditorFrame.this, ex);

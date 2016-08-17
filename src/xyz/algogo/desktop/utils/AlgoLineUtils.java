@@ -57,8 +57,14 @@ public class AlgoLineUtils {
 		case ASSIGN_VALUE_TO_VARIABLE:
 			builder.append(Utils.escapeHTML(args[0] + " → " + args[1]));
 			break;
-		case SHOW_VARIABLE:
 		case READ_VARIABLE:
+			builder.append(Utils.escapeHTML(args[0]));
+			final String customMessage = AlgoLineUtils.getCustomMessage(new AlgoLine(instruction, args));
+			if(customMessage != null) {
+				builder.append(" <b>" + LanguageManager.getString("editor.line.instruction.readvariable.message") + "</b> " + customMessage);
+			}
+			break;
+		case SHOW_VARIABLE:
 		case SHOW_MESSAGE:
 		case IF:
 		case WHILE:
@@ -171,6 +177,22 @@ public class AlgoLineUtils {
 			variablesMap.put(args[0], args[1].equals("0"));
 		}
 		return variablesMap;
+	}
+	
+	/**
+	 * Checks if the READ_VARIABLE line has a custom prompt message.
+	 * 
+	 * @param readVariable The READ_VARIABLE line
+	 * 
+	 * @return The custom prompt message.
+	 */
+	
+	public static final String getCustomMessage(final AlgoLine readVariable) {
+		if(readVariable.isKeyword() || readVariable.getInstruction() != Instruction.READ_VARIABLE) {
+			return null;
+		}
+		final String[] args = readVariable.getArgs();
+		return args.length > 1 && args[1] != null && !args[1].equals("") ? args[1] : null;
 	}
 
 }

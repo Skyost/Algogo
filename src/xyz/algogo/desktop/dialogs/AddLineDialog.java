@@ -257,13 +257,15 @@ public class AddLineDialog extends JDialog {
 				@Override
 				public final void actionPerformed(final ActionEvent event) {
 					final JComboBox<String> cmboxVariables = new JComboBox<String>(variables);
+					final JTextField message = new JTextField();
 					if(editMode) {
 						if(Arrays.asList(variables).contains(args[0])) {
 							cmboxVariables.setSelectedItem(args[0]);
 						}
+						message.setText(args[1] == null ? "" : args[1]); // TODO
 					}
-					if(Utils.createDialog(component, LanguageManager.getString("addline.readvariable.dialog.title"), LanguageManager.getString("addline.readvariable.dialog.message"), LanguageManager.getString("addline.readvariable.dialog.tip"), cmboxVariables)) {
-						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString()};
+					if(Utils.createDialog(component, LanguageManager.getString("addline.readvariable.dialog.title"), LanguageManager.getString("addline.readvariable.dialog.message"), LanguageManager.getString("addline.readvariable.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.readvariable.dialog.object")), message)) {
+						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString(), message.getText()};
 						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
 						if(error != null) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);

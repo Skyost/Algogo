@@ -1,5 +1,5 @@
 /*
- * Generated on 7/1/16 7:24 PM
+ * Generated on 8/16/16 10:46 PM
  */
 package xyz.algogo.desktop.res.lang.highlighting;
 
@@ -237,6 +237,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Keywords 2 (just an optional set of keywords colored differently) */
 	"ASSIGN_VALUE_TO_VARIABLE" |
 "CREATE_VARIABLE" |
+"MESSAGE" |
 "Number" |
 "READ_VARIABLE" |
 "SHOW_MESSAGE" |

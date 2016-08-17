@@ -82,6 +82,12 @@ public class HtmlLanguage extends AlgorithmIndentedLanguage {
 			builder.append(Utils.escapeHTML(args[0]) + " → " + Utils.escapeHTML(args[1]));
 			break;
 		case READ_VARIABLE:
+			builder.append(Utils.escapeHTML(args[0]));
+			final String customMessage = AlgoLineUtils.getCustomMessage(new AlgoLine(instruction, args));
+			if(customMessage != null) {
+				builder.append(" <strong>" + LanguageManager.getString("editor.line.instruction.readvariable.message") + "</strong> " + customMessage);
+			}
+			break;
 		case IF:
 		case WHILE:
 			builder.append(Utils.escapeHTML(args[0]));

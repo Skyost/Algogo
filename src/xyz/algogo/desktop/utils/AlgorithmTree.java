@@ -141,11 +141,12 @@ public class AlgorithmTree extends JTree {
 	 */
 	
 	public static final AlgoLine asAlgoLine(final DefaultMutableTreeNode node) {
-		AlgoLine representation = getAttachedAlgoLine(node);
-		representation = representation.isKeyword() ? new AlgoLine(representation.getKeyword()) : new AlgoLine(representation.getInstruction(), representation.getArgs());
+		AlgoLine representation = getAttachedAlgoLine(node).copy();
+		representation = representation.isKeyword() ? new AlgoLine(representation.getKeyword()) : new AlgoLine(representation.getInstruction(), representation.getArgs().clone());
 		for(int i = 0; i != node.getChildCount(); i++) {
 			representation.addChild(asAlgoLine((DefaultMutableTreeNode)node.getChildAt(i)));
 		}
+		node.setUserObject(new AlgorithmUserObject(representation));
 		return representation;
 	}
 	
@@ -321,7 +322,7 @@ public class AlgorithmTree extends JTree {
 		
 		@Override
 		public final AlgorithmUserObject clone() {
-			return new AlgorithmUserObject(line.clone());
+			return new AlgorithmUserObject(line.copy());
 		}
 		
 	}
