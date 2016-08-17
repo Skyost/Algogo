@@ -1,7 +1,5 @@
 package xyz.algogo.desktop.dialogs;
 
-import javax.swing.JDialog;
-
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -12,6 +10,9 @@ import java.util.Map.Entry;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -19,9 +20,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.AppSettings;
 import xyz.algogo.desktop.utils.LanguageManager;
-
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 
 public class PreferencesDialog extends JDialog {
 

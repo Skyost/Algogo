@@ -4,11 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.net.URL;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.frames.EditorFrame;
 import xyz.algogo.desktop.frames.listeners.AlgorithmEditorActionListener;

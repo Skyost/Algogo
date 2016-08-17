@@ -1,9 +1,16 @@
 package xyz.algogo.desktop.dialogs;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import fr.skyost.heartbeat.Heartbeat;
@@ -11,14 +18,6 @@ import fr.skyost.heartbeat.Heartbeat.Function;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.utils.LanguageManager;
 import xyz.algogo.desktop.utils.Utils;
-
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class PickerDialog extends JDialog {
 

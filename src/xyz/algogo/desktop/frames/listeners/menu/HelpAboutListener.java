@@ -1,6 +1,7 @@
 package xyz.algogo.desktop.frames.listeners.menu;
 
 import java.awt.event.ActionEvent;
+
 import xyz.algogo.desktop.dialogs.AboutDialog;
 import xyz.algogo.desktop.frames.EditorFrame;
 import xyz.algogo.desktop.frames.listeners.AlgorithmEditorActionListener;

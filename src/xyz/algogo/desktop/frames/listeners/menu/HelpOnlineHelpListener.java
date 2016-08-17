@@ -2,6 +2,7 @@ package xyz.algogo.desktop.frames.listeners.menu;
 
 import java.awt.event.ActionEvent;
 import java.net.URL;
+
 import xyz.algogo.desktop.dialogs.ErrorDialog;
 import xyz.algogo.desktop.frames.EditorFrame;
 import xyz.algogo.desktop.frames.listeners.AlgorithmEditorActionListener;

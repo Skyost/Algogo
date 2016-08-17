@@ -1,12 +1,29 @@
 package xyz.algogo.desktop.dialogs;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.tree.DefaultMutableTreeNode;
+
+import com.wordpress.tips4java.ComponentBorder;
 
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Instruction;
@@ -15,25 +32,6 @@ import xyz.algogo.desktop.utils.AlgoLineUtils;
 import xyz.algogo.desktop.utils.AlgorithmTree;
 import xyz.algogo.desktop.utils.LanguageManager;
 import xyz.algogo.desktop.utils.Utils;
-
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import com.wordpress.tips4java.ComponentBorder;
 
 public class AddLineDialog extends JDialog {
 

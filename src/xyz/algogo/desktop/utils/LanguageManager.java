@@ -6,11 +6,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.dialogs.ErrorDialog;
-
-import java.util.Properties;
 
 /**
  * A language manager, used to translate Algogo.

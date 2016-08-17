@@ -22,7 +22,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
@@ -30,12 +33,12 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.KeyStroke;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -51,8 +54,6 @@ import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 
 import com.wordpress.tips4java.TextLineNumber;
 
-import javax.swing.JButton;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import xyz.algogo.core.AlgoLine;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.Instruction;
@@ -61,25 +62,44 @@ import xyz.algogo.core.formats.AlgorithmFileFormat.InvalidAlgorithmVersionExcept
 import xyz.algogo.core.language.AlgorithmLanguage;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.AppSettings;
-import xyz.algogo.desktop.dialogs.ErrorDialog;
-import xyz.algogo.desktop.frames.listeners.button.*;
-import xyz.algogo.desktop.frames.listeners.menu.*;
 import xyz.algogo.desktop.dialogs.AddLineDialog.AlgoLineListener;
+import xyz.algogo.desktop.dialogs.ErrorDialog;
+import xyz.algogo.desktop.frames.listeners.button.ButtonAddLineListener;
+import xyz.algogo.desktop.frames.listeners.button.ButtonDownListener;
+import xyz.algogo.desktop.frames.listeners.button.ButtonEditLineListener;
+import xyz.algogo.desktop.frames.listeners.button.ButtonRemoveLineListener;
+import xyz.algogo.desktop.frames.listeners.button.ButtonTestListener;
+import xyz.algogo.desktop.frames.listeners.button.ButtonUpListener;
+import xyz.algogo.desktop.frames.listeners.menu.EditCopyListener;
+import xyz.algogo.desktop.frames.listeners.menu.EditFreeEditModeListener;
+import xyz.algogo.desktop.frames.listeners.menu.EditPasteListener;
+import xyz.algogo.desktop.frames.listeners.menu.EditPreferencesListener;
+import xyz.algogo.desktop.frames.listeners.menu.EditUndoListener;
+import xyz.algogo.desktop.frames.listeners.menu.FileCloseListener;
+import xyz.algogo.desktop.frames.listeners.menu.FileExportImageListener;
+import xyz.algogo.desktop.frames.listeners.menu.FileExportLanguageListener;
+import xyz.algogo.desktop.frames.listeners.menu.FileNewListener;
+import xyz.algogo.desktop.frames.listeners.menu.FileOpenListener;
+import xyz.algogo.desktop.frames.listeners.menu.FileOptionsListener;
+import xyz.algogo.desktop.frames.listeners.menu.FilePrintListener;
+import xyz.algogo.desktop.frames.listeners.menu.FileSaveAsListener;
+import xyz.algogo.desktop.frames.listeners.menu.FileSaveListener;
+import xyz.algogo.desktop.frames.listeners.menu.HelpAboutListener;
+import xyz.algogo.desktop.frames.listeners.menu.HelpCheckForUpdatesListener;
+import xyz.algogo.desktop.frames.listeners.menu.HelpOnlineHelpListener;
 import xyz.algogo.desktop.utils.AlgoLineUtils;
 import xyz.algogo.desktop.utils.AlgorithmParser;
 import xyz.algogo.desktop.utils.AlgorithmParser.ParseException;
 import xyz.algogo.desktop.utils.AlgorithmTree;
 import xyz.algogo.desktop.utils.AlgorithmTree.AlgorithmUserObject;
 import xyz.algogo.desktop.utils.GithubUpdater;
+import xyz.algogo.desktop.utils.GithubUpdater.GithubUpdaterResultListener;
+import xyz.algogo.desktop.utils.HtmlLanguage;
 import xyz.algogo.desktop.utils.JLabelLink;
 import xyz.algogo.desktop.utils.LanguageManager;
 import xyz.algogo.desktop.utils.SizedStack;
 import xyz.algogo.desktop.utils.TextLanguage;
 import xyz.algogo.desktop.utils.Utils;
-import xyz.algogo.desktop.utils.GithubUpdater.GithubUpdaterResultListener;
-import xyz.algogo.desktop.utils.HtmlLanguage;
-
-import javax.swing.JMenuBar;
 
 public class EditorFrame extends JFrame implements AlgoLineListener {
 
@@ -572,18 +592,12 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	 */
 	
 	public final DefaultMutableTreeNode addNode(final AlgoLine line, final boolean update) {
-		final DefaultMutableTreeNode node = new DefaultMutableTreeNode(new AlgorithmUserObject(line));
+		final DefaultMutableTreeNode node = AlgorithmTree.asMutableTreeNode(line);
 		final Instruction instruction = line.getInstruction();
 		if(instruction == Instruction.CREATE_VARIABLE) {
 			tree.variables.add(node);
 			algorithmChanged(true, true, true, tree.variables, new TreePath(node.getPath()));
 			return tree.variables;
-		}
-		final List<AlgoLine> children = line.getChildren();
-		if(children != null && children.size() > 0) {
-			for(final AlgoLine child : children) {
-				node.add(AlgorithmTree.asMutableTreeNode(child));
-			}
 		}
 		final DefaultMutableTreeNode selected = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		if(selected == null || selected.equals(tree.variables) || selected.equals(tree.beginning) || selected.equals(tree.end)) {

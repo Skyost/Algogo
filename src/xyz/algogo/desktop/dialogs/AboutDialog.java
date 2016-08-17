@@ -1,13 +1,5 @@
 package xyz.algogo.desktop.dialogs;
 
-import xyz.algogo.core.AlgogoCore;
-import xyz.algogo.desktop.AlgogoDesktop;
-import xyz.algogo.desktop.utils.JLabelLink;
-import xyz.algogo.desktop.utils.LanguageManager;
-import xyz.algogo.desktop.utils.Utils;
-
-import javax.swing.JLabel;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -18,17 +10,22 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 
 import javax.swing.BorderFactory;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 
 import fr.skyost.heartbeat.Heartbeat;
-
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JButton;
+import xyz.algogo.core.AlgogoCore;
+import xyz.algogo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.utils.JLabelLink;
+import xyz.algogo.desktop.utils.LanguageManager;
+import xyz.algogo.desktop.utils.Utils;
 
 public class AboutDialog extends JDialog {
 

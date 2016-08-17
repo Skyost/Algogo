@@ -1,26 +1,8 @@
 package xyz.algogo.desktop.frames;
 
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-
-import javax.swing.JTextField;
-
-import xyz.algogo.core.AlgoLine;
-import xyz.algogo.core.AlgoRunnable;
-import xyz.algogo.core.Algorithm;
-import xyz.algogo.core.AlgoRunnable.AlgorithmExecutionException;
-import xyz.algogo.core.AlgorithmThreadListener;
-import xyz.algogo.desktop.AlgogoDesktop;
-import xyz.algogo.desktop.dialogs.AddLineDialog;
-import xyz.algogo.desktop.dialogs.ErrorDialog;
-import xyz.algogo.desktop.utils.AlgoLineUtils;
-import xyz.algogo.desktop.utils.LanguageManager;
-import xyz.algogo.desktop.utils.Utils;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -35,17 +17,31 @@ import java.util.regex.Pattern;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultCaret;
 
 import fr.skyost.heartbeat.Heartbeat.VariableType;
 import fr.skyost.heartbeat.Heartbeat.VariableValue;
+import xyz.algogo.core.AlgoLine;
+import xyz.algogo.core.AlgoRunnable;
+import xyz.algogo.core.AlgoRunnable.AlgorithmExecutionException;
+import xyz.algogo.core.Algorithm;
+import xyz.algogo.core.AlgorithmThreadListener;
+import xyz.algogo.desktop.AlgogoDesktop;
+import xyz.algogo.desktop.dialogs.AddLineDialog;
+import xyz.algogo.desktop.dialogs.ErrorDialog;
+import xyz.algogo.desktop.utils.AlgoLineUtils;
+import xyz.algogo.desktop.utils.LanguageManager;
+import xyz.algogo.desktop.utils.Utils;
 
 public class ConsoleFrame extends JFrame implements AlgorithmThreadListener {
 
