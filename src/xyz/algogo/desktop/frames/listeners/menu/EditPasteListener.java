@@ -1,15 +1,18 @@
 package xyz.algogo.desktop.frames.listeners.menu;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
-import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import xyz.algogo.core.AlgoLine;
+import xyz.algogo.desktop.dialogs.ErrorDialog;
 import xyz.algogo.desktop.frames.EditorFrame;
 import xyz.algogo.desktop.frames.listeners.AlgorithmEditorActionListener;
 import xyz.algogo.desktop.utils.AlgorithmTree;
+import xyz.algogo.desktop.utils.AlgoLineListSelection;
 
 public class EditPasteListener extends AlgorithmEditorActionListener {
 	
@@ -19,21 +22,33 @@ public class EditPasteListener extends AlgorithmEditorActionListener {
 
 	@Override
 	public final void actionPerformed(final ActionEvent event, final EditorFrame editor) {
-		final List<AlgoLine> clipboard = editor.getClipboard();
-		if(clipboard.size() == 0) {
+		final Transferable contents = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+		if(!contents.isDataFlavorSupported(AlgoLineListSelection.getAlgoLineListSelectionFlavor())) {
 			return;
 		}
-		editor.addAlgorithmToStack();
-		DefaultMutableTreeNode changed = null;
-		for(final AlgoLine line : clipboard) {
-			if(changed == null) {
-				changed = editor.addNode(line.copy(), false);
+		try {
+			final AlgoLineListSelection clipboard = (AlgoLineListSelection)contents.getTransferData(AlgoLineListSelection.getAlgoLineListSelectionFlavor());
+			if(clipboard.size() == 0) {
+				return;
 			}
-			else {
-				changed.add(AlgorithmTree.asMutableTreeNode(line));
+			editor.addAlgorithmToStack();
+			DefaultMutableTreeNode changed = null;
+			DefaultMutableTreeNode last = null;
+			for(final AlgoLine line : clipboard) {
+				final DefaultMutableTreeNode node = AlgorithmTree.asMutableTreeNode(line.copy());
+				last = node;
+				if(changed == null) {
+					changed = editor.addNode(node, false);
+				}
+				else {
+					changed.add(node);
+				}
 			}
+			editor.algorithmChanged(true, true, true, changed, new TreePath(last.getPath()));
 		}
-		editor.algorithmChanged(true, true, true, changed, new TreePath(((DefaultMutableTreeNode)changed.getChildAt(changed.getChildCount() - clipboard.size())).getPath()));
+		catch(final Exception ex) {
+			ErrorDialog.errorMessage(editor, ex);
+		}
 	}
 
 }

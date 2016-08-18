@@ -3,6 +3,9 @@ package xyz.algogo.desktop.frames;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -66,6 +69,7 @@ import xyz.algogo.desktop.dialogs.AddLineDialog.AlgoLineListener;
 import xyz.algogo.desktop.dialogs.ErrorDialog;
 import xyz.algogo.desktop.frames.listeners.button.*;
 import xyz.algogo.desktop.frames.listeners.menu.*;
+import xyz.algogo.desktop.utils.AlgoLineListSelection;
 import xyz.algogo.desktop.utils.AlgoLineUtils;
 import xyz.algogo.desktop.utils.AlgorithmParser;
 import xyz.algogo.desktop.utils.AlgorithmParser.ParseException;
@@ -80,7 +84,7 @@ import xyz.algogo.desktop.utils.SizedStack;
 import xyz.algogo.desktop.utils.TextLanguage;
 import xyz.algogo.desktop.utils.Utils;
 
-public class EditorFrame extends JFrame implements AlgoLineListener {
+public class EditorFrame extends JFrame implements AlgoLineListener, ClipboardOwner {
 
 	private static final long serialVersionUID = 1L;
 
@@ -94,12 +98,11 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	private final AlgorithmTree tree = new AlgorithmTree();
 	private final RSyntaxTextArea textArea = new RSyntaxTextArea();
 
-	private final List<AlgoLine> clipboard = new ArrayList<AlgoLine>();
-
 	private final JScrollPane scrollPane = new JScrollPane();
 	
 	private final JMenu recents = new JMenu(LanguageManager.getString("editor.menu.file.recents"));
 	private final JMenuItem undo = new JMenuItem(LanguageManager.getString("editor.menu.edit.undo"));
+	private final JMenuItem paste = new JMenuItem(LanguageManager.getString("editor.menu.edit.paste"));
 	
 	private final JButton btnAddLine = new JButton(LanguageManager.getString("editor.button.addline"));
 	private final JButton btnRemoveLine = new JButton(LanguageManager.getString("editor.button.removelines"));
@@ -312,7 +315,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 		undo.setAccelerator(KeyStroke.getKeyStroke('Z', ctrl));
 		listeners.put(KeyStroke.getKeyStroke('Z', ctrl), undoActionListener);
 		
-		final JMenuItem paste = new JMenuItem(LanguageManager.getString("editor.menu.edit.paste"));
 		final ActionListener pasteActionListener = new EditPasteListener(this);
 		paste.addActionListener(pasteActionListener);
 		paste.setIcon(new ImageIcon(AlgogoDesktop.class.getResource("/xyz/algogo/desktop/res/icons/menu_paste.png")));
@@ -458,16 +460,6 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	}
 	
 	/**
-	 * Gets the user's clipboard.
-	 * 
-	 * @return The user's clipboard.
-	 */
-	
-	public final List<AlgoLine> getClipboard() {
-		return clipboard;
-	}
-	
-	/**
 	 * Allows you to enable or disable the free edit mode.
 	 * 
 	 * @param freeEditMode <b>true</b> Will enable the free edit mode.
@@ -571,7 +563,20 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 	 */
 	
 	public final DefaultMutableTreeNode addNode(final AlgoLine line, final boolean update) {
-		final DefaultMutableTreeNode node = AlgorithmTree.asMutableTreeNode(line);
+		return addNode(AlgorithmTree.asMutableTreeNode(line), update);
+	}
+	
+	/**
+	 * Adds a node to the editor.
+	 * 
+	 * @param node The node.
+	 * @param update If the editor should be updated.
+	 * 
+	 * @return The node that has changed.
+	 */
+	
+	public final DefaultMutableTreeNode addNode(final DefaultMutableTreeNode node, final boolean update) {
+		final AlgoLine line = AlgorithmTree.getAttachedAlgoLine(node);
 		final Instruction instruction = line.getInstruction();
 		if(instruction == Instruction.CREATE_VARIABLE) {
 			tree.variables.add(node);
@@ -1026,6 +1031,14 @@ public class EditorFrame extends JFrame implements AlgoLineListener {
 		@Override
 		public void updaterNoUpdate(final String localVersion, final String remoteVersion) {}
 		
+	}
+
+	@Override
+	public final void lostOwnership(final Clipboard clipboard, final Transferable transferable) {
+		if(transferable.isDataFlavorSupported(AlgoLineListSelection.getAlgoLineListSelectionFlavor())) {
+			return;
+		}
+		paste.setEnabled(false);
 	}
 
 }

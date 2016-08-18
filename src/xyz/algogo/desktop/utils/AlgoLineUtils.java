@@ -74,8 +74,7 @@ public class AlgoLineUtils {
 			builder.append(Utils.escapeHTML(args[0]) + " <b>" + LanguageManager.getString("editor.line.instruction.for.from") + "</b> " + args[1] + " <b>" + LanguageManager.getString("editor.line.instruction.for.to") + "</b> " + args[2]);
 			break;
 		case ELSE:
-		default:
-			builder.delete(builder.length() - 1, builder.length());
+			builder.setLength(builder.length() - 1);
 			break;
 		}
 		return builder.append("</span></html>").toString();

@@ -94,6 +94,7 @@ public class TextLanguage extends AlgorithmIndentedLanguage {
 			builder.append(args[0] + " " + LanguageManager.getString("editor.line.instruction.for.from") + " " + args[1] + " " + LanguageManager.getString("editor.line.instruction.for.to") + " " + args[2]);
 			break;
 		case ELSE:
+			builder.setLength(builder.length() - 1);
 			break;
 		}
 		builder.append(SEPARATOR);

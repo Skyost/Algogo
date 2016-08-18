@@ -103,6 +103,7 @@ public class HtmlLanguage extends AlgorithmIndentedLanguage {
 			builder.append(Utils.escapeHTML(args[0]) + " <strong>" + LanguageManager.getString("editor.line.instruction.for.from") + "</strong> " + args[1] + " <strong>" + LanguageManager.getString("editor.line.instruction.for.to") + "</strong> " + args[2]);
 			break;
 		case ELSE:
+			builder.setLength(builder.length() - 1);
 			break;
 		}
 		builder.append("</span><br>" + SEPARATOR);

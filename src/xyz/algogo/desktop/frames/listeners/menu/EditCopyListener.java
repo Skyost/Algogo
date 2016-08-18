@@ -1,5 +1,6 @@
 package xyz.algogo.desktop.frames.listeners.menu;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import xyz.algogo.desktop.frames.EditorFrame;
 import xyz.algogo.desktop.frames.listeners.AlgorithmEditorActionListener;
 import xyz.algogo.desktop.utils.AlgoLineUtils;
 import xyz.algogo.desktop.utils.AlgorithmTree;
+import xyz.algogo.desktop.utils.AlgoLineListSelection;
 
 public class EditCopyListener extends AlgorithmEditorActionListener {
 	
@@ -32,17 +34,18 @@ public class EditCopyListener extends AlgorithmEditorActionListener {
 		if(cut) {
 			editor.addAlgorithmToStack();
 		}
-		final List<AlgoLine> clipboard = editor.getClipboard();
-		clipboard.clear();
+		final AlgoLineListSelection clipboard = new AlgoLineListSelection();
 		
 		final List<TreePath> paths = Arrays.asList(editor.getCurrentTreeComponent().getSelectionPaths());
 		final HashSet<DefaultMutableTreeNode> toRemove = new HashSet<DefaultMutableTreeNode>();
 		for(final TreePath path : paths) {
 			final DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-			final AlgoLine line = AlgorithmTree.getAttachedAlgoLine(node);
-			if(paths.contains(path.getParentPath())) { // Then, its already added to the clipboard.
+			final DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode)node.getParent();
+			final AlgoLine parentLine = AlgorithmTree.getAttachedAlgoLine(parentNode);
+			if(paths.contains(path.getParentPath()) && (parentLine != null && !parentLine.isKeyword())) { // Then, its already added to the clipboard.
 				continue;
 			}
+			final AlgoLine line = AlgorithmTree.getAttachedAlgoLine(node);
 			if(line.isKeyword()) {
 				continue;
 			}
@@ -51,8 +54,7 @@ public class EditCopyListener extends AlgorithmEditorActionListener {
 				toRemove.add(node);
 			}
 			if(AlgoLineUtils.ifFollowedByElse(line)) {
-				final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
-				final DefaultMutableTreeNode elsee = (DefaultMutableTreeNode)parent.getChildAt(parent.getIndex(node) + 1);
+				final DefaultMutableTreeNode elsee = (DefaultMutableTreeNode)parentNode.getChildAt(parentNode.getIndex(node) + 1);
 				if(paths.contains(new TreePath(elsee.getPath()))) {
 					continue;
 				}
@@ -62,8 +64,7 @@ public class EditCopyListener extends AlgorithmEditorActionListener {
 				}
 			}
 			else if(line.getInstruction() == Instruction.ELSE) {
-				final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
-				final DefaultMutableTreeNode iff = (DefaultMutableTreeNode)parent.getChildAt(parent.getIndex(node) - 1);
+				final DefaultMutableTreeNode iff = (DefaultMutableTreeNode)parentNode.getChildAt(parentNode.getIndex(node) - 1);
 				if(paths.contains(new TreePath(iff.getPath()))) {
 					continue;
 				}
@@ -85,6 +86,10 @@ public class EditCopyListener extends AlgorithmEditorActionListener {
 			}
 		}
 		paste.setEnabled(true);
+		
+		if(clipboard.size() > 0) {
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(clipboard, editor);
+		}
 	}
 
 }
