@@ -61,7 +61,7 @@ public class AlgoLineUtils {
 			builder.append(Utils.escapeHTML(args[0]));
 			final String customMessage = AlgoLineUtils.getCustomMessage(new AlgoLine(instruction, args));
 			if(customMessage != null) {
-				builder.append(" <b>" + LanguageManager.getString("editor.line.instruction.readvariable.message") + "</b> " + customMessage);
+				builder.append(" <b>" + LanguageManager.getString("editor.line.instruction.readvariable.message") + "</b> " + Utils.escapeHTML(customMessage));
 			}
 			break;
 		case SHOW_VARIABLE:
