@@ -53,7 +53,6 @@ public class AlgogoDesktop {
 			final Icon empty = new ImageIcon();
 			UIManager.put("Tree.collapsedIcon", empty);
 			UIManager.put("Tree.expandedIcon", empty);
-			
 			consoleFont = Font.createFont(Font.TRUETYPE_FONT, AlgogoDesktop.class.getResourceAsStream("/xyz/algogo/desktop/res/fonts/DejaVuSansMono.ttf")).deriveFont(12.0f);
 			SwingUtilities.invokeLater(new Runnable() {
 	
