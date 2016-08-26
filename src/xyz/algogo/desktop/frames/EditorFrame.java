@@ -738,6 +738,9 @@ public class EditorFrame extends JFrame implements AlgoLineListener, ClipboardOw
 			if(file == null) {
 				throw new Exception("File can't be null.");
 			}
+			if(!askToSaveIfNeeded()) {
+				return;
+			}
 			algorithms.clear();
 			algorithm = Algorithm.loadFromFile(file);
 			tree.fromAlgorithm(algorithm);
