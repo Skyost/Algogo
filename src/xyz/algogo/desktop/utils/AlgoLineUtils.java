@@ -116,6 +116,7 @@ public class AlgoLineUtils {
 	/**
 	 * Validates a line with its arguments.
 	 * 
+	 * @param editMode If "Edit line" is selected (not "Add line").
 	 * @param variables The algorithm current variables.
 	 * @param instruction The instruction.
 	 * @param args The arguments.
@@ -123,13 +124,13 @@ public class AlgoLineUtils {
 	 * @return An error message or null if the line can be created.
 	 */
 	
-	public static final String validate(final List<String> variables, final Instruction instruction, final String... args) {
+	public static final String validate(final boolean editMode, final List<String> variables, final Instruction instruction, final String... args) {
 		switch(instruction) {
 		case CREATE_VARIABLE:
-			if(new Heartbeat().hasConstant(args[0]) || !Utils.isAlpha(args[0]) || args[0].isEmpty()) {
+			if(!Utils.isAlpha(args[0]) || args[0].isEmpty()) {
 				return "addline.createvariable.error.notalpha";
 			}
-			if(variables != null && variables.contains(args[0])) {
+			if(!editMode && (new Heartbeat().hasConstant(args[0]) || (variables != null && variables.contains(args[0])))) {
 				return "addline.createvariable.error.alreadyexists";
 			}
 			break;

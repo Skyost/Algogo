@@ -164,7 +164,7 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.createvariable.dialog.title"), LanguageManager.getString("addline.createvariable.dialog.message"), LanguageManager.getString("addline.createvariable.dialog.tip"), varName, varTypes)) {
 						final String[] args = new String[]{varName.getText(), String.valueOf(varTypes.getSelectedIndex())};
-						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						final String error = AlgoLineUtils.validate(editMode, Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
 						if(error != null) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
@@ -198,7 +198,7 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.assignvaluetovariable.dialog.title"), LanguageManager.getString("addline.assignvaluetovariable.dialog.message"), LanguageManager.getString("addline.assignvaluetovariable.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.assignvaluetovariable.dialog.object.value")), value)) {
 						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString(), value.getText()};
-						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						final String error = AlgoLineUtils.validate(editMode, Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
 						if(error != null) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
@@ -231,7 +231,7 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.showvariable.dialog.title"), LanguageManager.getString("addline.showvariable.dialog.message"), LanguageManager.getString("addline.showvariable.dialog.tip"), cmboxVariables, lineBreak)) {
 						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString(), String.valueOf(lineBreak.isSelected())};
-						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						final String error = AlgoLineUtils.validate(editMode, Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
 						if(error != null) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
@@ -264,7 +264,7 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.readvariable.dialog.title"), LanguageManager.getString("addline.readvariable.dialog.message"), LanguageManager.getString("addline.readvariable.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.readvariable.dialog.object")), message)) {
 						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString(), message.getText()};
-						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						final String error = AlgoLineUtils.validate(editMode, Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
 						if(error != null) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
@@ -295,7 +295,7 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.showmessage.dialog.title"), LanguageManager.getString("addline.showmessage.dialog.message"), LanguageManager.getString("addline.showmessage.dialog.tip"), value, lineBreak)) {
 						final String[] args = new String[]{value.getText(), String.valueOf(lineBreak.isSelected())};
-						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						final String error = AlgoLineUtils.validate(editMode, Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
 						if(error != null) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
@@ -327,7 +327,7 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.ifelse.dialog.title"), LanguageManager.getString("addline.ifelse.dialog.message"), LanguageManager.getString("addline.ifelse.dialog.tip"), condition, addElse)) {
 						final String[] args = new String[]{condition.getText(), String.valueOf(addElse.isSelected())};
-						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						final String error = AlgoLineUtils.validate(editMode, Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
 						if(error != null) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
@@ -360,7 +360,7 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.while.dialog.title"), LanguageManager.getString("addline.while.dialog.message"), LanguageManager.getString("addline.while.dialog.tip"), condition)) {
 						final String[] args = new String[]{condition.getText()};
-						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						final String error = AlgoLineUtils.validate(editMode, Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
 						if(error != null) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;
@@ -397,7 +397,7 @@ public class AddLineDialog extends JDialog {
 					}
 					if(Utils.createDialog(component, LanguageManager.getString("addline.for.dialog.title"), LanguageManager.getString("addline.for.dialog.message"), LanguageManager.getString("addline.for.dialog.tip"), cmboxVariables, new JLabel(LanguageManager.getString("addline.for.dialog.object.from")), from, new JLabel(LanguageManager.getString("addline.for.dialog.object.to")), to)) {
 						final String[] args = new String[]{cmboxVariables.getSelectedItem().toString(), from.getText(), to.getText()};
-						final String error = AlgoLineUtils.validate(Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
+						final String error = AlgoLineUtils.validate(editMode, Arrays.asList(variables), editMode ? line.getInstruction() : instruction, args);
 						if(error != null) {
 							JOptionPane.showMessageDialog(component, LanguageManager.getString(error), LanguageManager.getString("joptionpane.error"), JOptionPane.ERROR_MESSAGE);
 							return;

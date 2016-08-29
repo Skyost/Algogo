@@ -244,7 +244,7 @@ public class AlgorithmParser {
 		if(algoLine == null) {
 			throw new ParseException(currentLine, "Unknown instruction \"" + parts[0] + "\". Please refer to the online help.");
 		}
-		final String error = AlgoLineUtils.validate(null, algoLine.getInstruction(), algoLine.getArgs());
+		final String error = AlgoLineUtils.validate(false, null, algoLine.getInstruction(), algoLine.getArgs());
 		if(error != null) {
 			throw new ParseException(currentLine, LanguageManager.getString(error) + " Please refer to the online help.");
 		}

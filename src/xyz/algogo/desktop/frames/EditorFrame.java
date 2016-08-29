@@ -897,9 +897,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, ClipboardOw
 				@Override
 				public final void actionPerformed(final ActionEvent event) {
 					try {
-						if(askToSaveIfNeeded()) {
-							open(file);
-						}
+						open(file);
 					}
 					catch(final Exception ex) {
 						ErrorDialog.errorMessage(EditorFrame.this, ex);
