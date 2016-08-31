@@ -772,7 +772,7 @@ public class EditorFrame extends JFrame implements AlgoLineListener, ClipboardOw
 			algoPath = reference.get().getPath();
 			saveToHistory(algoPath);
 			algoChanged = false;
-			EditorFrame.this.setTitle(buildTitle());
+			this.setTitle(buildTitle());
 		}
 		catch(final Exception ex) {
 			ErrorDialog.errorMessage(this, ex);
