@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popupmenu_statement_edit"
+        android:title="@string/popupmenu_statement_edit"/>
+
+    <item
+        android:id="@+id/popupmenu_statement_remove"
+        android:title="@string/popupmenu_statement_remove"/>
+
+    <item
+        android:id="@+id/popupmenu_statement_up"
+        android:title="@string/popupmenu_statement_up"/>
+
+    <item
+        android:id="@+id/popupmenu_statement_down"
+        android:title="@string/popupmenu_statement_down"/>
+
+</menu>

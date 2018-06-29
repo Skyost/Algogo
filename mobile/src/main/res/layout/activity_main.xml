@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/AppTheme"
+    tools:activity=".activity.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/main_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include
+        layout="@layout/activity_main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/main_toolbar_layout"/>
+
+    <com.dekoservidoni.omfm.OneMoreFabMenu
+        android:id="@+id/main_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        app:close_on_click="true"
+        app:color_main_button="@color/fabColorPrimary"
+        app:color_secondary_buttons="@color/fabColorSecondary"
+        app:content_options="@menu/menu_main_fab"
+        app:enable_main_as_action="true"
+        app:expanded_background_color="@color/omfm_expanded_background_sample"
+        app:label_text_color="@color/colorPrimary"
+        app:main_action_drawable="@drawable/menu_main_fab"
+        app:rotate_main_button="false"
+        app:size_main_button="@integer/omfm_fab_size_normal"
+        app:size_secondary_buttons="@integer/omfm_fab_size_mini"/>
+
+</RelativeLayout>

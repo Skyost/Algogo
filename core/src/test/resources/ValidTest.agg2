@@ -1,0 +1,36 @@
+// ValidTest by Skyost
+// Variables declaration :
+VARIABLES
+	// A simple variable :
+	x : NUMBER
+// Main block :
+BEGINNING
+	x <- (2 + 2) * 2
+	IF x == 8 THEN
+		PRINT_VARIABLE x "Value of x :"
+	ELSE
+		PRINT_VARIABLE x "Oops, something gone wrong !"
+	IF x == 8 THEN
+		PRINT "An IF without an ELSE works fine !"
+	WHILE x < 18 DO
+		PRINT_VARIABLE x
+		x <- x + 1
+	FOR x FROM 18 TO 8 DO
+		PRINT_VARIABLE x
+	x <- x^2
+	PRINT_VARIABLE x "This should be 64 !"
+	PROMPT x "Now, we are going to enter 32 :"
+	IF x == 32 THEN
+		PRINT "Good !"
+	ELSE
+		PRINT_VARIABLE x "Bad !"
+	x <- 10
+	x <- LOG(x)
+	PRINT_VARIABLE x "Value of log(10) :"
+	// Wow, a comment ?
+	/*
+	* An even bigger one !
+	* With two lines !
+	*/
+END
+// End of the algorithm.

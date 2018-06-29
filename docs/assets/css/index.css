@@ -1,0 +1,245 @@
+/* GENERAL STYLES */
+
+html, body {
+	background-color: rgba(0, 0, 0, 0.01);
+}
+
+a {
+	text-decoration: none !important;
+}
+
+.btn {
+	font-weight: 600;
+}
+
+.button-group .btn {
+	margin-right: 10px;
+}
+
+.button-group .btn:last-of-type {
+	margin-right: 0;
+}
+
+.btn-primary {
+	background-color: #3498db;
+}
+
+.logo {
+	display: inline-block;
+	height: 1em;
+	width: 1em;
+	background-image: url('../img/icon.png');
+	background-size: 1em;
+	vertical-align: -0.12em;
+}
+
+/* Links */
+
+a:link:not(a.btn), a:visited:not(a.btn) {
+	color: #3498db;
+}
+
+a:hover, a:active, a:focus {
+	color: #2980b9;
+}
+
+/* HEADER */
+
+#header {
+	background-color: #494d55;
+	color: white;
+	border-top: 5px solid #3498db;
+	min-height: 300px;
+	
+	display: flex;
+	align-items: center;
+	text-align: center;
+}
+
+#header > * {
+	width: 100%;
+}
+
+#title {
+	text-transform: uppercase;
+}
+
+#header .subtitle {
+	font-size: 1.4em;
+	color: rgba(255, 255, 255, 0.85);
+	margin-bottom: 0.1px;
+}
+
+#header .btn {
+	margin-top: 30px;
+	min-width: 280px;
+}
+
+#header .btn .fa {
+	font-weight: normal;
+}
+
+/* PAGE STYLE */
+
+.section-core {
+	margin: 50px auto 0 auto;
+	max-width: 860px;
+}
+
+.section {
+	padding: 60px 0;
+	text-align: center;
+	color: #494d55;
+}
+
+.section h2 {
+	font-size: 1.8em;
+}
+
+.section > p {
+	color: #616670;
+}
+
+/* FEATURES */
+
+.feature {
+	padding: 15px;
+}
+
+.feature figure, .screenshot figure {
+	border-top: 3px solid black;
+	border-right: 1px solid #f0f0f0;
+	border-bottom: 1px solid #f0f0f0;
+	border-left: 1px solid #f0f0f0;
+	border-radius: 5px;
+	background-color: white;
+	padding: 50px 15px;
+	margin: 0;
+}
+
+.feature figure:hover, .screenshot figure:hover {
+	background-color: rgba(0, 0, 0, 0.025);
+}
+
+.feature .fa, .screenshot img {
+	font-size: 2em;
+	margin-bottom: 15px;
+}
+
+.feature .title {
+	font-size: 1.2em;
+	margin-bottom: 10px;
+}
+
+.feature .caption, .screenshot .caption {
+	margin-bottom: 0;
+}
+
+/* Green */
+
+.feature.green figure {
+	border-top: 3px solid #75c181;
+}
+
+.feature.green .fa, .feature.green:hover .title {
+	color: #75c181;
+}
+
+/* Pink */
+
+.feature.pink figure {
+	border-top: 3px solid #ea5395;
+}
+
+.feature.pink .fa, .feature.pink:hover .title {
+	color: #ea5395;
+}
+
+/* Blue */
+
+.feature.blue figure {
+	border-top: 3px solid #58bbee;
+}
+
+.feature.blue .fa, .feature.blue:hover .title {
+	color: #58bbee;
+}
+
+/* Purple */
+
+.feature.purple figure {
+	border-top: 3px solid #8a40a7;
+}
+
+.feature.purple .fa, .feature.purple:hover .title {
+	color: #8a40a7;
+}
+
+/* Dark */
+
+.feature.dark figure {
+	border-top: 3px solid #2c3e50;
+}
+
+.feature.dark .fa, .feature.dark:hover .title {
+	color: #2c3e50;
+}
+
+/* Orange */
+
+.feature.orange figure {
+	border-top: 3px solid #f88c30;
+}
+
+.feature.orange .fa, .feature.orange:hover .title {
+	color: #f88c30;
+}
+
+/* SCREENSHOTS */
+
+.screenshot img {
+	cursor: pointer;
+	max-width: 95%;
+	max-height: 95%;
+}
+
+.screenshot .caption {
+	font-style: italic;
+}
+
+/* Sapphire */
+
+.screenshot.sapphire figure {
+	border-top: 3px solid #0c2461;
+}
+
+/* Yellow */
+
+.screenshot.yellow figure {
+	border-top: 3px solid #f1c40f;
+}
+
+/* Red */
+
+.screenshot.red figure {
+	border-top: 3px solid #c0392b;
+}
+
+/* MOBILE */
+
+#play-button img {
+	width: 200px;
+}
+
+/* FOOTER */
+
+#footer {
+	background-color: #26282c;
+	text-align: center;
+	font-size: 0.8em;
+	padding: 15px 0;
+}
+
+#footer .fa {
+	color: #3498db;
+}

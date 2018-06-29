@@ -1,0 +1,22 @@
+subprojects {
+    group 'xyz.algogo'
+
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven {
+            url  "https://jitpack.io"
+        }
+    }
+
+    configurations {
+        extraLibs {
+            exclude module: 'antlr4'
+        }
+    }
+
+    tasks.withType(Jar) {
+        destinationDir = file("$rootDir/build/release")
+    }
+}

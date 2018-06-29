@@ -1,0 +1,5 @@
+VARIABLES
+	x <- 2 + 2
+BEGINNING
+	x : INTEGER
+END

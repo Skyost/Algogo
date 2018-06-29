@@ -1,0 +1,63 @@
+{
+	"title": "Algogo - Interpréteur d'algorithmes gratuit, léger et open-source.",
+	"header": {
+		"subtitle": {
+			"1": "Algogo est un éditeur et interpréteur d'algorithmes.",
+			"2": "Léger et facile à utiliser, il est gratuit et open-source."
+		},
+		"buttons": {
+			"desktop": "Télégarger Algogo Desktop",
+			"mobile": "Intéressé par la version mobile ?"
+		}
+	},
+	"features": {
+		"title": "Fonctionnalités",
+		"subtitle": "Algogo a beaucoup de fonctionnalités ! Découvrez-les maintenant en faisant défiler la page.",
+		"1": {
+			"title": "Léger",
+			"caption": "Algogo Desktop est très léger (environ 5 Mo)."
+		},
+		"2": {
+			"title": "Intuitif",
+			"caption": "Le logiciel est très facile à utiliser. Pas besoin de savoir programmer !"
+		},
+		"3": {
+			"title": "Multi-plateforme",
+			"caption": "Vous souhaitez l'utiliser sur Windows, Linux ou Mac ? C'est possible."
+		},
+		"4": {
+			"title": "Open-source",
+			"caption": "Vous êtes libres de <a href=\"https://github.com/Skyost/Algogo/#contributions\">contribuer</a> au développement du logiciel."
+		},
+		"5": {
+			"title": "Enseignez",
+			"caption": "Le logiciel peut être utilisé en classe à des fins pédagogiques."
+		},
+		"6": {
+			"title": "Et plus",
+			"caption": "Il y a beaucoup d'autres fonctionnalités : export vert d'autres langages, support de l'impression, …"
+		}
+	},
+	"screenshots": {
+		"title": "Captures d'écran",
+		"subtitle": "Vous voulez voir à quoi ressemble Algogo Desktop ? Voici quelques captures d'écran pour vous.",
+		"1": {
+			"src": "assets/img/screenshots/fr/desktop-1.png",
+			"caption": "L'arbre d'un algorithme."
+		},
+		"2": {
+			"src": "assets/img/screenshots/fr/desktop-2.png",
+			"caption": "Édition libre."
+		},
+		"3": {
+			"src": "assets/img/screenshots/fr/desktop-3.png",
+			"caption": "La console."
+		}
+	},
+	"mobile": {
+		"title": "Mobile",
+		"subtitle": "Il est possible d'utiliser Algogo sur votre mobile. Toutes les fonctionnalités sont encore disponibles donc ne vous inquiétez pas !",
+		"badge": "https://play.google.com/intl/en_us/badges/images/generic/fr_badge_web_generic.png"
+	},
+	"footer": "Thème et logiciel créés par <a href=\"https://www.skyost.eu\">Skyost</a>. Thème inspiré par <a href=\"https://themes.3rdwavemedia.com/bootstrap-templates/startup/prettydocs-free-bootstrap-theme-developers-and-startups/\">PrettyDocs</a>."
+}

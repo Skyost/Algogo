@@ -1,0 +1,116 @@
+<resources>
+    <string name="app_name">Algogo Mobile</string>
+
+    <string name="menu_main_run">Run</string>
+    <string name="menu_main_more">More</string>
+    <string name="menu_main_new">New</string>
+    <string name="menu_main_open">Open…</string>
+    <string name="menu_main_save">Save</string>
+    <string name="menu_main_saveas">Save as…</string>
+    <string name="menu_main_help">Online help…</string>
+    <string name="menu_main_about">About…</string>
+
+    <string name="menu_main_fab_variables">Variables</string>
+    <string name="menu_main_fab_io">I/O</string>
+    <string name="menu_main_fab_blocks">Blocks</string>
+    <string name="menu_main_fab_comments">Comments</string>
+
+    <string name="popupmenu_statement_edit">Edit line…</string>
+    <string name="popupmenu_statement_remove">Remove line</string>
+    <string name="popupmenu_statement_up">Up</string>
+    <string name="popupmenu_statement_down">Down</string>
+
+    <string name="statement_content">&lt;span style="color: %s;"&gt;%s&lt;/span&gt;</string>
+
+    <string name="statement_root_variables">&lt;strong&gt;VARIABLES&lt;/strong&gt;</string>
+    <string name="statement_root_beginning">&lt;strong&gt;BEGINNING&lt;/strong&gt;</string>
+    <string name="statement_root_end">&lt;strong&gt;END&lt;/strong&gt;</string>
+
+    <string name="statement_simple_noLineBreak">&lt;em&gt;(No line break)&lt;/em&gt;</string>
+    <string name="statement_simple_optionalString">&lt;em&gt;%s&lt;/em&gt;"</string>
+    <string name="statement_simple_createVariableStatement">&lt;strong&gt;%s&lt;/strong&gt; : &lt;em&gt;%s&lt;/em&gt;</string>
+    <string name="statement_simple_createVariableStatement_number">NUMBER</string>
+    <string name="statement_simple_createVariableStatement_string">STRING</string>
+    <string name="statement_simple_assignStatement">&lt;strong&gt;%s&lt;/strong&gt; ← &lt;strong&gt;%s&lt;/strong&gt;</string>
+    <string name="statement_simple_promptStatement">&lt;strong&gt;PROMPT&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt;</string>
+    <string name="statement_simple_printStatement">&lt;strong&gt;PRINT&lt;/strong&gt; "&lt;em&gt;%s&lt;/em&gt;"</string>
+    <string name="statement_simple_printVariableStatement">&lt;strong&gt;PRINT VARIABLE&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt;</string>
+
+    <string name="statement_block_ifBlock">&lt;strong&gt;IF&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;THEN&lt;/strong&gt;</string>
+    <string name="statement_block_elseBlock">&lt;strong&gt;ELSE&lt;/strong&gt;</string>
+
+    <string name="statement_loop_whileLoop">&lt;strong&gt;WHILE&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;DO&lt;/strong&gt;</string>
+    <string name="statement_loop_forLoop">&lt;strong&gt;FOR&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;FROM&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;TO&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;DO&lt;/strong&gt;</string>
+
+    <string name="statement_comment_lineComment">&lt;em&gt;// %s&lt;/em&gt;</string>
+    <string name="statement_comment_blockComment">&lt;em&gt;/* %s */&lt;/em&gt;</string>
+
+    <string name="lineEditor_global_variableIdentifier">Variable identifier :</string>
+    <string name="lineEditor_global_lineBreak">Add line break</string>
+    <string name="lineEditor_global_condition">Condition (must be a valid expression) :</string>
+    <string name="lineEditor_global_content">Content :</string>
+    <string name="lineEditor_createVariableStatement_title">Create variable</string>
+    <string name="lineEditor_createVariableStatement_number">Number</string>
+    <string name="lineEditor_createVariableStatement_string">String</string>
+    <string name="lineEditor_createVariableStatement_type">Type :</string>
+    <string name="lineEditor_assignValueToVariable_title">Assign value to variable</string>
+    <string name="lineEditor_assignValueToVariable_value">Value (must be a valid expression) :</string>
+    <string name="lineEditor_prompt_title">Input variable value</string>
+    <string name="lineEditor_prompt_message">Prompt message :</string>
+    <string name="lineEditor_printVariable_title">Print variable</string>
+    <string name="lineEditor_printVariable_message">Print message (optional) :</string>
+    <string name="lineEditor_print_title">Print</string>
+    <string name="lineEditor_print_message">Message :</string>
+    <string name="lineEditor_ifElse_title">IF/ELSE block</string>
+    <string name="lineEditor_ifElse_addElse">Add an ELSE block</string>
+    <string name="lineEditor_for_title">FOR loop</string>
+    <string name="lineEditor_for_startValue">Start value (must be a valid expression) :</string>
+    <string name="lineEditor_for_endValue">End value (must be a valid expression) :</string>
+    <string name="lineEditor_while_title">WHILE loop</string>
+    <string name="lineEditor_lineComment_title">Line comment</string>
+    <string name="lineEditor_blockComment_title">Block comment</string>
+    <string name="lineEditor_validationError_title">Validation error</string>
+    <string name="lineEditor_validationError_identifierAlreadyExists">A variable with the same name already exists !</string>
+    <string name="lineEditor_validationError_message">Invalid data entered.</string>
+    <string name="lineEditor_expressionError_title">Invalid expression entered</string>
+    <string name="lineEditor_expressionError_message">The expression you entered is invalid.</string>
+
+    <string name="addLineDialog_createVariable">Create variable…</string>
+    <string name="addLineDialog_assignValueToVariable">Assign value to variable…</string>
+    <string name="addLineDialog_prompt">Input variable…</string>
+    <string name="addLineDialog_printVariable">Print variable…</string>
+    <string name="addLineDialog_print">Print message…</string>
+    <string name="addLineDialog_ifElse">If… Else…</string>
+    <string name="addLineDialog_for">For…</string>
+    <string name="addLineDialog_while">While…</string>
+    <string name="addLineDialog_singleLineComment">Single-line comment…</string>
+    <string name="addLineDialog_multiLineComment">Multi-line comment…</string>
+
+    <string name="generic_dialog_no">No</string>
+
+    <string name="main_title">&lt;strong&gt;%s&lt;/strong&gt; by &lt;strong&gt;%s&lt;/strong&gt;</string>
+
+    <string name="main_dialog_save">The current algorithm has been changed. Would you like to save it ?</string>
+    <string name="main_dialog_about">Algogo is an algorithm editor and interpreter.\nLightweight and easy to use, it is free and open-source.\n\nThis software has been created by Skyost and is licensed under the terms of the GNU GPL v3 license.</string>
+    <string name="main_dialog_about_skyost">Skyost Website</string>
+    <string name="main_dialog_about_project">Project Website</string>
+    <string name="main_dialog_credits_title_hint">Title</string>
+    <string name="main_dialog_credits_author_hint">Author</string>
+    <string name="main_dialog_permissions_title">Permissions required</string>
+    <string name="main_dialog_permissions_message">We have to request some permissions because we need to have an access to your storage.</string>
+
+    <string name="snackbar_message_saved">Saved algorithm with success at the following location : \"%s\".</string>
+    <string name="snackbar_error_parse">Parse error line %d : %s.</string>
+    <string name="snackbar_error_generic">Cannot perform operation : \"%s\".</string>
+    <string name="snackbar_error_wrongLocation">Cannot add this line here !</string>
+    <string name="snackbar_error_noVariable">You must add a variable first !</string>
+    <string name="snackbar_error_noNumberVariable">You must add a number variable first !</string>
+    <string name="snackbar_error_notEditable">This statement is not editable.</string>
+
+    <string name="console_title">Console</string>
+    <string name="console_error">Error occurred while running your algorithm :</string>
+
+    <string name="console_dialog_title">Input</string>
+    <string name="console_dialog_message">Please enter a value of &lt;em&gt;%s&lt;/em&gt;. If this value is a &lt;em&gt;String&lt;/em&gt;, please do not forget the quotes (eg. &lt;em&gt;"A String"&lt;/em&gt;).</string>
+    <string name="console_dialog_hint">Put the variable value here</string>
+</resources>

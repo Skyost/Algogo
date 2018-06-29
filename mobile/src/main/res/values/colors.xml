@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#34495e</color>
+    <color name="colorPrimaryDark">#2c3e50</color>
+    <color name="colorAccent">#e74c3c</color>
+
+    <color name="rootBlockStatementColor">#d35400</color>
+    <color name="blockStatementColor">#3498db</color>
+    <color name="simpleStatementColor">#22313f</color>
+    <color name="commentColor">#27ae60</color>
+
+    <color name="fabColorPrimary">#e74c3c</color>
+    <color name="fabColorSecondary">#c0392b</color>
+    <color name="fabColorRipple">#f4a299</color>
+</resources>

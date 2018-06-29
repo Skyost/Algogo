@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:activity="xyz.algogo.mobile.activity.MainActivity">
+
+    <item
+        android:id="@+id/menu_main_fab"
+        android:icon="@drawable/menu_main_fab"
+        android:title=""/>
+
+    <item
+        android:id="@+id/menu_main_fab_variables"
+        android:icon="@drawable/menu_main_fab_variables"
+        android:title="@string/menu_main_fab_variables"/>
+
+    <item
+        android:id="@+id/menu_main_fab_io"
+        android:icon="@drawable/menu_main_fab_io"
+        android:title="@string/menu_main_fab_io"/>
+
+    <item
+        android:id="@+id/menu_main_fab_blocks"
+        android:icon="@drawable/menu_main_fab_blocks"
+        android:title="@string/menu_main_fab_blocks"/>
+
+    <item
+        android:id="@+id/menu_main_fab_comments"
+        android:icon="@drawable/menu_main_fab_comments"
+        android:title="@string/menu_main_fab_comments"/>
+
+</menu>
