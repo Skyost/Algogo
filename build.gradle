@@ -1,12 +1,12 @@
 subprojects {
-    group 'xyz.algogo'
+    group = 'xyz.algogo'
 
     repositories {
         google()
         mavenCentral()
         jcenter()
         maven {
-            url  "https://jitpack.io"
+            url = "https://jitpack.io"
         }
     }
 

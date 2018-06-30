@@ -1,9 +1,13 @@
-version '1.0'
+plugins {
+    id 'com.jfrog.bintray' version '1.8.3'
+    id 'java'
+    id 'antlr'
+    id 'maven'
+}
 
-apply plugin: 'java'
+version = '1.0'
+
 sourceCompatibility = 1.8
-
-apply plugin: 'antlr'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
