@@ -11,12 +11,8 @@ subprojects {
     }
 
     configurations {
-        extraLibs {
+        compile {
             exclude module: 'antlr4'
         }
-    }
-
-    tasks.withType(Jar) {
-        destinationDir = file("$rootDir/build/release")
     }
 }

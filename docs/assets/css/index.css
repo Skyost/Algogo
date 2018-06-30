@@ -57,6 +57,7 @@ a:hover, a:active, a:focus {
 }
 
 #header > * {
+	padding: 40px 10px;
 	width: 100%;
 }
 
@@ -87,7 +88,8 @@ a:hover, a:active, a:focus {
 }
 
 .section {
-	padding: 60px 0;
+	padding-top: 60px;
+	padding-bottom: 60px;
 	text-align: center;
 	color: #494d55;
 }
@@ -102,7 +104,7 @@ a:hover, a:active, a:focus {
 
 /* FEATURES */
 
-.feature {
+.feature, .screenshot {
 	padding: 15px;
 }
 
@@ -242,4 +244,12 @@ a:hover, a:active, a:focus {
 
 #footer .fa {
 	color: #3498db;
+}
+
+/* MOBILE */
+
+@media(max-width: 767px) {
+	.button-group .btn {
+		margin-right: 0;
+	}
 }

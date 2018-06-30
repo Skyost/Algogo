@@ -26,7 +26,8 @@ public class AboutDialog extends JDialog {
 		super(editor);
 		final AppLanguage appLanguage = editor.getAppLanguage();
 
-		final JPanel panel = new JPanel(new GridLayout(0, 1));
+		final JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
 
 		final JPanel app = new JPanel(new FlowLayout());
@@ -42,13 +43,18 @@ public class AboutDialog extends JDialog {
 		app.add(title);
 
 		panel.add(app);
+		panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
 		final JLabel message = new JLabel(appLanguage.getString("aboutDialog.message"), SwingConstants.CENTER);
+		message.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel.add(message);
+		panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
 		final JLabel credits = new JLabel(appLanguage.getString("aboutDialog.credits"));
+		credits.setAlignmentX(Component.CENTER_ALIGNMENT);
 		credits.setFont(credits.getFont().deriveFont(11f).deriveFont(Font.ITALIC));
 		panel.add(credits);
+		panel.add(Box.createRigidArea(new Dimension(0, 20)));
 
 		final JPanel buttons = new JPanel(new GridLayout());
 		buttons.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
@@ -58,15 +64,11 @@ public class AboutDialog extends JDialog {
 		projectWebsite.addActionListener(actionEvent -> Utils.visitIfPossible("https://www.algogo.xyz"));
 		buttons.add(projectWebsite);
 
-		buttons.add(Box.createRigidArea(new Dimension(1, 0)));
-
 		final JButton skyostWebsite = new JButton(appLanguage.getString("aboutDialog.button.skyostWebsite"));
 		skyostWebsite.setIcon(FontIcon.of(MaterialDesign.MDI_HOME));
 		skyostWebsite.addActionListener(actionEvent -> Utils.visitIfPossible("https://www.skyost.eu"));
 		buttons.add(skyostWebsite);
-
-		buttons.add(Box.createRigidArea(new Dimension(1, 0)));
-
+		
 		final JButton license = new JButton(appLanguage.getString("aboutDialog.button.license"));
 		license.setIcon(FontIcon.of(MaterialDesign.MDI_FILE_DOCUMENT));
 		license.addActionListener(actionEvent -> Utils.visitIfPossible("https://choosealicense.com/licenses/gpl-3.0/"));

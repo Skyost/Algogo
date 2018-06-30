@@ -35,10 +35,6 @@ Algogo has a lot of features ! Let's see the main ones :
 * Can be for learning purposes.
 * More : language export, print support, ...
 
-![The tree of an algorithm](https://www.algogo.xyz/assets/img/screenshots/en/desktop-1.png)
-![Free-edition mode](https://www.algogo.xyz/assets/img/screenshots/en/desktop-2.png)
-![The console](https://www.algogo.xyz/assets/img/screenshots/en/desktop-3.png)
-
 ## Documentation
 
 A wiki is available [here](wiki/), on Github. If you want to get a list of supported constants, operators and functions, [here is it](wiki#expression-evaluation) !
