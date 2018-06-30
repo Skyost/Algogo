@@ -1,6 +1,6 @@
 package xyz.algogo.desktop.dialog;
 
-import xyz.algogo.core.evaluator.VariableType;
+import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.conditional.IfBlock;
 import xyz.algogo.core.statement.block.loop.ForLoop;

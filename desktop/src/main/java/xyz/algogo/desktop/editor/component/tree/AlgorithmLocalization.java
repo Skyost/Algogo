@@ -1,6 +1,6 @@
 package xyz.algogo.desktop.editor.component.tree;
 
-import xyz.algogo.core.evaluator.VariableType;
+import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.language.AlgogoLanguage;
 import xyz.algogo.core.language.DefaultLanguageImplementation;
 import xyz.algogo.core.statement.block.conditional.ElseBlock;

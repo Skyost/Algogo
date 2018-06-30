@@ -1,12 +1,12 @@
 package xyz.algogo.core.statement.block.loop;
 
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
-import xyz.algogo.core.evaluator.Variable;
-import xyz.algogo.core.evaluator.VariableType;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
+import xyz.algogo.core.evaluator.variable.Variable;
+import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.exception.InvalidIdentifierException;
 import xyz.algogo.core.exception.ParseException;
 import xyz.algogo.core.language.Language;

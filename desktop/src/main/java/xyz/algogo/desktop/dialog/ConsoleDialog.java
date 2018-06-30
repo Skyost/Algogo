@@ -3,9 +3,9 @@ package xyz.algogo.desktop.dialog;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.kordamp.ikonli.swing.FontIcon;
 import xyz.algogo.core.Algorithm;
-import xyz.algogo.core.evaluator.EvaluationContext;
-import xyz.algogo.core.evaluator.InputListener;
-import xyz.algogo.core.evaluator.OutputListener;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
+import xyz.algogo.core.evaluator.context.InputListener;
+import xyz.algogo.core.evaluator.context.OutputListener;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.AlgorithmDesktopLineEditor;
@@ -133,12 +133,12 @@ public class ConsoleDialog extends JDialog implements ActionListener, InputListe
 				return;
 			}
 
-			currentContext = new EvaluationContext();
+			currentContext = new EvaluationContext(this, this);
 			textArea.setText("");
 			run.setText(editor.getAppLanguage().getString("consoleDialog.button.stop"));
 			run.setIcon(FontIcon.of(MaterialDesign.MDI_STOP));
 			new Thread(() -> {
-				final Exception ex = algorithm.evaluate(ConsoleDialog.this, ConsoleDialog.this, currentContext);
+				final Exception ex = algorithm.evaluate(currentContext);
 				if(ex != null) {
 					output(null, LINE_SEPARATOR);
 					output(null, editor.getAppLanguage().getString("consoleDialog.message.error") + LINE_SEPARATOR);

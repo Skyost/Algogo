@@ -3,8 +3,8 @@ package xyz.algogo.desktop.dialog;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.kordamp.ikonli.swing.FontIcon;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
-import xyz.algogo.core.evaluator.Variable;
 import xyz.algogo.core.evaluator.function.Function;
+import xyz.algogo.core.evaluator.variable.Variable;
 import xyz.algogo.desktop.AlgogoDesktop;
 import xyz.algogo.desktop.AppLanguage;
 import xyz.algogo.desktop.editor.EditorFrame;
@@ -40,7 +40,7 @@ public class PickerDialog extends JDialog {
 		this.editor = editor;
 		final AppLanguage appLanguage = editor.getAppLanguage();
 
-		final ExpressionEvaluator defaultEvaluator = new ExpressionEvaluator(null, null);
+		final ExpressionEvaluator defaultEvaluator = new ExpressionEvaluator();
 		final DefaultListModel<PickerListObject> model = new DefaultListModel<>();
 
 		model.addElement(new PickerListObject(appLanguage.getString("pickerDialog.variables"), true));

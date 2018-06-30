@@ -9,9 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import xyz.algogo.core.Algorithm;
-import xyz.algogo.core.evaluator.EvaluationContext;
-import xyz.algogo.core.evaluator.InputListener;
-import xyz.algogo.core.evaluator.OutputListener;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
+import xyz.algogo.core.evaluator.context.InputListener;
+import xyz.algogo.core.evaluator.context.OutputListener;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.mobile.R;
 import xyz.algogo.mobile.utils.Utils;
@@ -45,11 +45,11 @@ public class ConsoleActivity extends AppCompatActivity implements InputListener,
 					return;
 				}
 
-				currentContext = new EvaluationContext();
+				currentContext = new EvaluationContext(this, this);
 				((EditText)this.findViewById(R.id.console_content)).setText(null);
 				fab.setImageResource(R.drawable.menu_console_fab_stop);
 				new Thread(() -> {
-					final Exception ex = algorithm.evaluate(this, this, currentContext);
+					final Exception ex = algorithm.evaluate(currentContext);
 					if(ex != null) {
 						output(null, System.getProperty("line.separator"));
 						output(null, this.getString(R.string.console_error) + System.getProperty("line.separator"));

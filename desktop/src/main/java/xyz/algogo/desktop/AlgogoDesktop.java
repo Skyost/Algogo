@@ -27,7 +27,7 @@ public class AlgogoDesktop {
 	 * App version constant.
 	 */
 
-	public static final String APP_VERSION = "v1.0";
+	public static final String APP_VERSION = "v1.0.1";
 
 	/**
 	 * App icons list.

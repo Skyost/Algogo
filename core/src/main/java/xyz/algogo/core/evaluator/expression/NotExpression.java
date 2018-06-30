@@ -1,9 +1,9 @@
 package xyz.algogo.core.evaluator.expression;
 
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.BooleanAtom;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.language.Language;
 
 import java.math.BigDecimal;

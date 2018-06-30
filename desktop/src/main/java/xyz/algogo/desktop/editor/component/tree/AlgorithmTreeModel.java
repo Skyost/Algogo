@@ -1,7 +1,7 @@
 package xyz.algogo.desktop.editor.component.tree;
 
 import xyz.algogo.core.Algorithm;
-import xyz.algogo.core.evaluator.VariableType;
+import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.root.AlgorithmRootBlock;
 import xyz.algogo.core.statement.block.root.BeginningBlock;

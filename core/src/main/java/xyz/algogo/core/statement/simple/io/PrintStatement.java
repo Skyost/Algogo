@@ -1,7 +1,7 @@
 package xyz.algogo.core.statement.simple.io;
 
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.language.Language;
 import xyz.algogo.core.statement.simple.SimpleStatement;
 
@@ -91,7 +91,7 @@ public class PrintStatement extends SimpleStatement {
 			message += System.getProperty("line.separator");
 		}
 
-		evaluator.getOutputListener().output(this, message);
+		context.getOutputListener().output(this, message);
 		return null;
 	}
 

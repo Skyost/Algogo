@@ -1,9 +1,9 @@
 package xyz.algogo.core.statement.simple.variable;
 
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
-import xyz.algogo.core.evaluator.Variable;
-import xyz.algogo.core.evaluator.VariableType;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
+import xyz.algogo.core.evaluator.variable.Variable;
+import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.exception.InvalidIdentifierException;
 import xyz.algogo.core.language.Language;
 

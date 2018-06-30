@@ -1,7 +1,7 @@
 package xyz.algogo.core.statement.block.root;
 
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.language.Language;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.BlockStatement;

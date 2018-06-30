@@ -1,7 +1,7 @@
 package xyz.algogo.core.statement;
 
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.language.Translatable;
 import xyz.algogo.core.statement.block.conditional.ElseBlock;
 import xyz.algogo.core.statement.block.conditional.IfBlock;

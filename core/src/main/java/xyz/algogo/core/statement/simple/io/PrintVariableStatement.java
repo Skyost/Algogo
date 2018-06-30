@@ -1,6 +1,10 @@
 package xyz.algogo.core.statement.simple.io;
 
-import xyz.algogo.core.evaluator.*;
+import xyz.algogo.core.evaluator.ExpressionEvaluator;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
+import xyz.algogo.core.evaluator.context.OutputListener;
+import xyz.algogo.core.evaluator.variable.Variable;
+import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.exception.InvalidIdentifierException;
 import xyz.algogo.core.language.Language;
 
@@ -65,7 +69,7 @@ public class PrintVariableStatement extends PrintStatement {
 			return new InvalidIdentifierException(this.getIdentifier());
 		}
 
-		final OutputListener listener = evaluator.getOutputListener();
+		final OutputListener listener = context.getOutputListener();
 		if(this.getMessage() != null) {
 			final Exception ex = super.evaluate(evaluator, context);
 			if(ex != null) {

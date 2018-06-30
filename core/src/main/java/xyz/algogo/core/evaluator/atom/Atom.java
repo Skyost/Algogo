@@ -1,7 +1,7 @@
 package xyz.algogo.core.evaluator.atom;
 
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.language.Translatable;
 
 import java.io.Serializable;

@@ -4,10 +4,10 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import xyz.algogo.core.antlr.AlgogoLexer;
 import xyz.algogo.core.antlr.AlgogoParser;
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
-import xyz.algogo.core.evaluator.InputListener;
-import xyz.algogo.core.evaluator.OutputListener;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
+import xyz.algogo.core.evaluator.context.InputListener;
+import xyz.algogo.core.evaluator.context.OutputListener;
 import xyz.algogo.core.exception.ParseException;
 import xyz.algogo.core.language.Language;
 import xyz.algogo.core.language.Translatable;
@@ -162,21 +162,19 @@ public class Algorithm implements Serializable, Translatable {
 	 */
 
 	public final Exception evaluate(final InputListener inputListener, final OutputListener outputListener) {
-		return evaluate(new ExpressionEvaluator(inputListener, outputListener), new EvaluationContext());
+		return evaluate(new EvaluationContext(inputListener, outputListener));
 	}
 
 	/**
 	 * Evaluates the current algorithm.
 	 *
-	 * @param inputListener The input listener.
-	 * @param outputListener The output listener.
 	 * @param context The evaluation context.
 	 *
 	 * @return Nothing if the execution is a success.
 	 */
 
-	public final Exception evaluate(final InputListener inputListener, final OutputListener outputListener, final EvaluationContext context) {
-		return evaluate(new ExpressionEvaluator(inputListener, outputListener), context);
+	public final Exception evaluate(final EvaluationContext context) {
+		return evaluate(new ExpressionEvaluator(), context);
 	}
 
 	/**

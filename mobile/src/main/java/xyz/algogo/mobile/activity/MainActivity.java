@@ -18,7 +18,7 @@ import com.rustamg.filedialogs.OpenFileDialog;
 import com.rustamg.filedialogs.SaveFileDialog;
 import de.mateware.snacky.Snacky;
 import xyz.algogo.core.Algorithm;
-import xyz.algogo.core.evaluator.VariableType;
+import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.exception.ParseException;
 import xyz.algogo.core.language.AlgogoLanguage;
 import xyz.algogo.core.statement.Statement;

@@ -6,9 +6,9 @@ import xyz.algogo.core.AlgorithmParserErrorListener;
 import xyz.algogo.core.AlgorithmParserVisitor;
 import xyz.algogo.core.antlr.AlgogoLexer;
 import xyz.algogo.core.antlr.AlgogoParser;
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.exception.ParseException;
 import xyz.algogo.core.language.Translatable;
 

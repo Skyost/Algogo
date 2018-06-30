@@ -4,7 +4,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.widget.TextView;
 import xyz.algogo.core.Algorithm;
-import xyz.algogo.core.evaluator.VariableType;
+import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.language.AlgogoLanguage;
 import xyz.algogo.core.language.DefaultLanguageImplementation;
 import xyz.algogo.core.statement.block.conditional.ElseBlock;

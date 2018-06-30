@@ -1,8 +1,8 @@
 package xyz.algogo.core.statement.block.conditional;
 
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.exception.InvalidExpressionException;
 import xyz.algogo.core.language.Language;

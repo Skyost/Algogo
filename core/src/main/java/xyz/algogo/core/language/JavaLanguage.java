@@ -1,6 +1,6 @@
 package xyz.algogo.core.language;
 
-import xyz.algogo.core.evaluator.VariableType;
+import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.statement.block.BlockStatement;
 import xyz.algogo.core.statement.block.conditional.ElseBlock;
 import xyz.algogo.core.statement.block.conditional.IfBlock;

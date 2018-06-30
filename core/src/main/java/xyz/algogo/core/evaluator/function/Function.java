@@ -1,7 +1,7 @@
 package xyz.algogo.core.evaluator.function;
 
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.atom.Atom;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 
 /**
  * Represents an abstract function.

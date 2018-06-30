@@ -1,4 +1,4 @@
-package xyz.algogo.core.evaluator;
+package xyz.algogo.core.evaluator.variable;
 
 /**
  * Represents all available variable types.

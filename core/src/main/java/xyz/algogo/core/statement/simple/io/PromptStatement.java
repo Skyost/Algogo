@@ -1,8 +1,8 @@
 package xyz.algogo.core.statement.simple.io;
 
-import xyz.algogo.core.evaluator.EvaluationContext;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.exception.InvalidIdentifierException;
 import xyz.algogo.core.exception.ParseException;
@@ -36,7 +36,7 @@ public class PromptStatement extends VariableStatement {
 				return new InvalidIdentifierException(this.getIdentifier());
 			}
 
-			final Object input = evaluator.getInputListener().input(this, this.getIdentifier(), message);
+			final Object input = context.getInputListener().input(this, this.getIdentifier(), message);
 			if(input == null) {
 				return null;
 			}

@@ -4,7 +4,10 @@ import ch.obermuhlner.math.big.BigDecimalMath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
+import xyz.algogo.core.evaluator.variable.Variable;
+import xyz.algogo.core.evaluator.variable.VariableType;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

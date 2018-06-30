@@ -1,7 +1,7 @@
 package xyz.algogo.desktop;
 
-import xyz.algogo.core.evaluator.VariableType;
 import xyz.algogo.core.evaluator.expression.Expression;
+import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.exception.ParseException;
 import xyz.algogo.core.language.AlgogoLanguage;
 import xyz.algogo.core.statement.block.conditional.ElseBlock;

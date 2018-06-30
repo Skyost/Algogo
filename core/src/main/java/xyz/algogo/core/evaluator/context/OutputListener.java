@@ -1,4 +1,4 @@
-package xyz.algogo.core.evaluator;
+package xyz.algogo.core.evaluator.context;
 
 import xyz.algogo.core.statement.Statement;
 

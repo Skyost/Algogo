@@ -3,6 +3,7 @@ package xyz.algogo.core.evaluator;
 import ch.obermuhlner.math.big.BigDecimalMath;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.InterruptionAtom;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.evaluator.function.Function;
 import xyz.algogo.core.evaluator.function.neper.ExpFunction;
@@ -12,6 +13,8 @@ import xyz.algogo.core.evaluator.function.other.RandomFunction;
 import xyz.algogo.core.evaluator.function.root.RootFunction;
 import xyz.algogo.core.evaluator.function.root.SqrtFunction;
 import xyz.algogo.core.evaluator.function.trigonometric.*;
+import xyz.algogo.core.evaluator.variable.Variable;
+import xyz.algogo.core.evaluator.variable.VariableType;
 
 import java.math.MathContext;
 import java.util.HashMap;
@@ -23,73 +26,24 @@ import java.util.HashMap;
 public class ExpressionEvaluator {
 
 	/**
-	 * The current input listener.
+	 * Evaluator variables.
 	 */
-
-	private InputListener inputListener;
-
-	/**
-	 * The current output listener.
-	 */
-
-	private OutputListener outputListener;
 
 	private final HashMap<String, Variable> variables = new HashMap<>();
+
+	/**
+	 * Evaluator functions.
+	 */
+
 	private final HashMap<String, Function> functions = new HashMap<>();
 
 	/**
 	 * Creates a new expression evaluator.
-	 *
-	 * @param inputListener The input listener.
-	 * @param outputListener The output listener.
 	 */
 
-	public ExpressionEvaluator(final InputListener inputListener, final OutputListener outputListener) {
-		this.inputListener = inputListener;
-		this.outputListener = outputListener;
-		
+	public ExpressionEvaluator() {
 		addDefaultVariables();
 		addDefaultFunctions();
-	}
-
-	/**
-	 * Returns the current input listener.
-	 *
-	 * @return The current input listener.
-	 */
-
-	public final InputListener getInputListener() {
-		return inputListener;
-	}
-
-	/**
-	 * Sets the input listener.
-	 *
-	 * @param inputListener The input listener.
-	 */
-
-	public final void setInputListener(final InputListener inputListener) {
-		this.inputListener = inputListener;
-	}
-
-	/**
-	 * Returns the current output listener.
-	 *
-	 * @return The current output listener.
-	 */
-
-	public final OutputListener getOutputListener() {
-		return outputListener;
-	}
-
-	/**
-	 * Sets the output listener.
-	 *
-	 * @param outputListener The output listener.
-	 */
-
-	public final void setOutputListener(final OutputListener outputListener) {
-		this.outputListener = outputListener;
 	}
 
 	/**
