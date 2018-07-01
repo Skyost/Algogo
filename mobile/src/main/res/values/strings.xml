@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Algogo Mobile</string>
+    <string name="app_name" translatable="false">Algogo Mobile</string>
 
     <string name="menu_main_run">Run</string>
     <string name="menu_main_more">More</string>
@@ -20,14 +20,17 @@
     <string name="popupmenu_statement_up">Up</string>
     <string name="popupmenu_statement_down">Down</string>
 
-    <string name="statement_content">&lt;span style="color: %s;"&gt;%s&lt;/span&gt;</string>
+    <string name="algorithm_default_title">Untitled</string>
+    <string name="algorithm_default_author">Anonymous</string>
+
+    <string name="statement_content" translatable="false">&lt;span style="color: %s;"&gt;%s&lt;/span&gt;</string>
 
     <string name="statement_root_variables">&lt;strong&gt;VARIABLES&lt;/strong&gt;</string>
     <string name="statement_root_beginning">&lt;strong&gt;BEGINNING&lt;/strong&gt;</string>
     <string name="statement_root_end">&lt;strong&gt;END&lt;/strong&gt;</string>
 
     <string name="statement_simple_noLineBreak">&lt;em&gt;(No line break)&lt;/em&gt;</string>
-    <string name="statement_simple_optionalString">&lt;em&gt;%s&lt;/em&gt;"</string>
+    <string name="statement_simple_optionalString">"&lt;em&gt;%s&lt;/em&gt;"</string>
     <string name="statement_simple_createVariableStatement">&lt;strong&gt;%s&lt;/strong&gt; : &lt;em&gt;%s&lt;/em&gt;</string>
     <string name="statement_simple_createVariableStatement_number">NUMBER</string>
     <string name="statement_simple_createVariableStatement_string">STRING</string>
@@ -69,7 +72,6 @@
     <string name="lineEditor_while_title">WHILE loop</string>
     <string name="lineEditor_lineComment_title">Line comment</string>
     <string name="lineEditor_blockComment_title">Block comment</string>
-    <string name="lineEditor_validationError_title">Validation error</string>
     <string name="lineEditor_validationError_identifierAlreadyExists">A variable with the same name already exists !</string>
     <string name="lineEditor_validationError_message">Invalid data entered.</string>
     <string name="lineEditor_expressionError_title">Invalid expression entered</string>
@@ -90,7 +92,7 @@
 
     <string name="main_title">&lt;strong&gt;%s&lt;/strong&gt; by &lt;strong&gt;%s&lt;/strong&gt;</string>
 
-    <string name="main_dialog_save">The current algorithm has been changed. Would you like to save it ?</string>
+    <string name="main_dialog_save">Your algorithm has unsaved changes that will be lost if you close the editor. Do you want to save them ?</string>
     <string name="main_dialog_about">Algogo is an algorithm editor and interpreter.\nLightweight and easy to use, it is free and open-source.\n\nThis software has been created by Skyost and is licensed under the terms of the GNU GPL v3 license.</string>
     <string name="main_dialog_about_skyost">Skyost Website</string>
     <string name="main_dialog_about_project">Project Website</string>
@@ -98,14 +100,19 @@
     <string name="main_dialog_credits_author_hint">Author</string>
     <string name="main_dialog_permissions_title">Permissions required</string>
     <string name="main_dialog_permissions_message">We have to request some permissions because we need to have an access to your storage.</string>
+    <string name="main_dialog_fileName">Enter filename here</string>
 
-    <string name="snackbar_message_saved">Saved algorithm with success at the following location : \"%s\".</string>
+    <string name="snackbar_message_saved">Saved algorithm with success at the following location : %s</string>
     <string name="snackbar_error_parse">Parse error line %d : %s.</string>
     <string name="snackbar_error_generic">Cannot perform operation : \"%s\".</string>
     <string name="snackbar_error_wrongLocation">Cannot add this line here !</string>
     <string name="snackbar_error_noVariable">You must add a variable first !</string>
     <string name="snackbar_error_noNumberVariable">You must add a number variable first !</string>
     <string name="snackbar_error_notEditable">This statement is not editable.</string>
+    <string name="snackbar_error_storage">Unable to access to your storage.</string>
+
+    <string name="main_toast_open">Please select an algorithm file (*.agg2).</string>
+    <string name="main_toast_save">Please select the destination directory.</string>
 
     <string name="console_title">Console</string>
     <string name="console_error">Error occurred while running your algorithm :</string>

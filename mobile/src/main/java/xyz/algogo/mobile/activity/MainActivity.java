@@ -7,15 +7,20 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+
 import com.dekoservidoni.omfm.OneMoreFabMenu;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 import com.rustamg.filedialogs.FileDialog;
 import com.rustamg.filedialogs.OpenFileDialog;
 import com.rustamg.filedialogs.SaveFileDialog;
+
+import java.io.File;
+
 import de.mateware.snacky.Snacky;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.evaluator.variable.VariableType;
@@ -37,8 +42,6 @@ import xyz.algogo.mobile.R;
 import xyz.algogo.mobile.adapter.AlgorithmAdapter;
 import xyz.algogo.mobile.utils.Utils;
 import xyz.algogo.mobile.view.AlgorithmRecyclerView;
-
-import java.io.File;
 
 /**
  * Represents the launcher activity.
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements AlgorithmMobileLi
 	protected final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 		this.setContentView(R.layout.activity_main);
 		this.setSupportActionBar(findViewById(R.id.main_toolbar));
 
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements AlgorithmMobileLi
 			algorithm = (Algorithm)savedInstanceState.getSerializable(INTENT_CURRENT_ALGORITHM);
 		}
 		else {
-			algorithm = new Algorithm();
+			algorithm = new Algorithm(this.getString(R.string.algorithm_default_title), this.getString(R.string.algorithm_default_author));
 		}
 
 		final AlgorithmRecyclerView items = getAlgorithmRecyclerView();
@@ -440,14 +444,14 @@ public class MainActivity extends AppCompatActivity implements AlgorithmMobileLi
 				new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				R.string.main_dialog_permissions_message,
 				new Permissions.Options()
-					.setRationaleDialogTitle(this.getString(R.string.main_dialog_permissions_title)),
+						.setRationaleDialogTitle(this.getString(R.string.main_dialog_permissions_title)),
 				new PermissionHandler() {
 
 					@Override
 					public final void onGranted() {
-						final Bundle saveDialogArgs = new Bundle();
-						saveDialogArgs.putString(FileDialog.EXTENSION, ".agg2");
-						dialog.setArguments(saveDialogArgs);
+						final Bundle dialogArgs = new Bundle();
+						dialogArgs.putString(FileDialog.EXTENSION, ".agg2");
+						dialog.setArguments(dialogArgs);
 						dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
 						dialog.show(MainActivity.this.getSupportFragmentManager(), dialog.getClass().getName());
 					}

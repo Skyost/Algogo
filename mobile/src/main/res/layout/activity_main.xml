@@ -42,7 +42,6 @@
         app:enable_main_as_action="true"
         app:expanded_background_color="@color/omfm_expanded_background_sample"
         app:label_text_color="@color/colorPrimary"
-        app:main_action_drawable="@drawable/menu_main_fab"
         app:rotate_main_button="false"
         app:size_main_button="@integer/omfm_fab_size_normal"
         app:size_secondary_buttons="@integer/omfm_fab_size_mini"/>

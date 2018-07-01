@@ -57,7 +57,7 @@
 	"mobile": {
 		"title": "Mobile",
 		"subtitle": "Il est possible d'utiliser Algogo sur votre mobile. Toutes les fonctionnalités sont encore disponibles donc ne vous inquiétez pas !",
-		"badge": "https://play.google.com/intl/en_us/badges/images/generic/fr_badge_web_generic.png"
+		"button": "Disponible sur Google Play"
 	},
 	"footer": "Thème et logiciel créés par <a href=\"https://www.skyost.eu\">Skyost</a>. Thème inspiré par <a href=\"https://themes.3rdwavemedia.com/bootstrap-templates/startup/prettydocs-free-bootstrap-theme-developers-and-startups/\">PrettyDocs</a>."
 }

@@ -5,7 +5,16 @@ import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import de.mateware.snacky.Snacky;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.evaluator.variable.VariableType;
@@ -29,9 +38,7 @@ import xyz.algogo.core.statement.simple.io.PromptStatement;
 import xyz.algogo.core.statement.simple.variable.AssignStatement;
 import xyz.algogo.core.statement.simple.variable.CreateVariableStatement;
 import xyz.algogo.mobile.activity.MainActivity;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import xyz.algogo.mobile.utils.Utils;
 
 /**
  * This class contains a set of methods that allow to visually edit statements.
@@ -98,10 +105,10 @@ public class AlgorithmMobileLineEditor implements Statement.StatementTypeInterfa
 		final EditText identifierEditText = new EditText(activity);
 		identifierEditText.setText(statement.getIdentifier());
 
-		final Spinner typeSpinner = new Spinner(activity, Spinner.MODE_DIALOG);
+		final Spinner typeSpinner = new Spinner(activity, Spinner.MODE_DROPDOWN);
 
 		final String[] items = new String[]{activity.getString(R.string.lineEditor_createVariableStatement_number), activity.getString(R.string.lineEditor_createVariableStatement_string)};
-		typeSpinner.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, items));
+		typeSpinner.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item, items));
 
 		if(statement.getType() == VariableType.STRING) {
 			typeSpinner.setSelection(1);
@@ -133,13 +140,7 @@ public class AlgorithmMobileLineEditor implements Statement.StatementTypeInterfa
 			}
 
 			if(variables.contains(copy.getIdentifier())) {
-				dialog.dismiss();
-				new AlertDialog.Builder(activity)
-						.setTitle(R.string.lineEditor_validationError_title)
-						.setMessage(R.string.lineEditor_validationError_identifierAlreadyExists)
-						.setPositiveButton(android.R.string.ok, null)
-						.create()
-						.show();
+				Snacky.builder().setActivity(activity).setText(R.string.lineEditor_validationError_identifierAlreadyExists).error().show();
 				isCreateVariableStatement(statement, identifierException, identifierEditText, typeSpinner);
 				return;
 			}
@@ -627,12 +628,7 @@ public class AlgorithmMobileLineEditor implements Statement.StatementTypeInterfa
 			return Expression.parse(expression);
 		}
 		catch(final ParseException ex) {
-			new AlertDialog.Builder(activity)
-					.setTitle(R.string.lineEditor_expressionError_title)
-					.setMessage(R.string.lineEditor_expressionError_message)
-					.setPositiveButton(android.R.string.ok, null)
-					.create()
-					.show();
+			Snacky.builder().setActivity(activity).setText(R.string.lineEditor_expressionError_message).error().show();
 		}
 
 		return null;
@@ -652,11 +648,7 @@ public class AlgorithmMobileLineEditor implements Statement.StatementTypeInterfa
 			return true;
 		}
 
-		new AlertDialog.Builder(activity)
-				.setTitle(R.string.lineEditor_validationError_title)
-				.setMessage(R.string.lineEditor_validationError_message)
-				.setPositiveButton(android.R.string.ok, null)
-				.create().show();
+		Snacky.builder().setActivity(activity).setText(R.string.lineEditor_validationError_message).error().show();
 		return false;
 	}
 
@@ -669,8 +661,8 @@ public class AlgorithmMobileLineEditor implements Statement.StatementTypeInterfa
 	 */
 
 	private void createDialog(final int title, final DialogInterface.OnClickListener positiveButtonListener, final Object... message) {
-		final int top = pixelsToDp(10);
-		final int left = pixelsToDp(25);
+		final int top = Utils.pixelsToDp(activity, 10);
+		final int left = Utils.pixelsToDp(activity, 25);
 		final LinearLayout layout = new LinearLayout(activity);
 		layout.setOrientation(LinearLayout.VERTICAL);
 		layout.setPadding(left, top, left, top);
@@ -690,7 +682,11 @@ public class AlgorithmMobileLineEditor implements Statement.StatementTypeInterfa
 
 		new AlertDialog.Builder(activity)
 				.setTitle(title)
-				.setPositiveButton(android.R.string.ok, positiveButtonListener)
+				.setPositiveButton(android.R.string.ok, (dialog, selected) -> {
+					layout.removeAllViews();
+					dialog.dismiss();
+					positiveButtonListener.onClick(dialog, selected);
+				})
 				.setNegativeButton(android.R.string.cancel, null)
 				.setView(layout)
 				.create().show();
@@ -703,8 +699,8 @@ public class AlgorithmMobileLineEditor implements Statement.StatementTypeInterfa
 	 */
 	
 	private Spinner createVariablesSpinner() {
-		final Spinner spinner = new Spinner(activity, Spinner.MODE_DIALOG);
-		spinner.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, activity.getAlgorithmAdapter().buildVariablesList()));
+		final Spinner spinner = new Spinner(activity, Spinner.MODE_DROPDOWN);
+		spinner.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item, activity.getAlgorithmAdapter().buildVariablesList()));
 		
 		return spinner;
 	}
@@ -719,19 +715,6 @@ public class AlgorithmMobileLineEditor implements Statement.StatementTypeInterfa
 	private void selectElement(final Spinner spinner, final Object item) {
 		final ArrayAdapter adapter = (ArrayAdapter)spinner.getAdapter();
 		spinner.setSelection(adapter.getPosition(item));
-	}
-
-	/**
-	 * Converts some pixels to DP.
-	 *
-	 * @param pixels The pixels.
-	 *
-	 * @return Submitted pixels converted to DP.
-	 */
-
-	private int pixelsToDp(final int pixels) {
-		final float scale = activity.getResources().getDisplayMetrics().density;
-		return (int)(pixels * scale + 0.5f);
 	}
 
 	/**

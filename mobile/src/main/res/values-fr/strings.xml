@@ -1,0 +1,109 @@
+<resources>
+    <string name="menu_main_run">Lancer</string>
+    <string name="menu_main_more">Plus</string>
+    <string name="menu_main_new">Nouveau</string>
+    <string name="menu_main_open">Ouvrir…</string>
+    <string name="menu_main_save">Enregistrer</string>
+    <string name="menu_main_saveas">Enregistrer sous…</string>
+    <string name="menu_main_help">Aide en ligne…</string>
+    <string name="menu_main_about">À propos…</string>
+
+    <string name="menu_main_fab_blocks">Blocs</string>
+    <string name="menu_main_fab_comments">Commentaires</string>
+
+    <string name="popupmenu_statement_edit">Éditer ligne…</string>
+    <string name="popupmenu_statement_remove">Supprimer ligne</string>
+    <string name="popupmenu_statement_up">Haut</string>
+    <string name="popupmenu_statement_down">Bas</string>
+
+    <string name="algorithm_default_title">Sans Titre</string>
+    <string name="algorithm_default_author">Anonyme</string>
+
+    <string name="statement_content">&lt;span style="color: %s;"&gt;%s&lt;/span&gt;</string>
+
+    <string name="statement_root_beginning">&lt;strong&gt;DÉBUT&lt;/strong&gt;</string>
+    <string name="statement_root_end">&lt;strong&gt;FIN&lt;/strong&gt;</string>
+
+    <string name="statement_simple_noLineBreak">&lt;em&gt;(Pas de saut de ligne)&lt;/em&gt;</string>
+    <string name="statement_simple_createVariableStatement">&lt;strong&gt;%s&lt;/strong&gt; : &lt;em&gt;%s&lt;/em&gt;</string>
+    <string name="statement_simple_createVariableStatement_number">NOMBRE</string>
+    <string name="statement_simple_createVariableStatement_string">CHAÎNE</string>
+    <string name="statement_simple_promptStatement">&lt;strong&gt;LIRE&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt;</string>
+    <string name="statement_simple_printStatement">&lt;strong&gt;AFFICHER&lt;/strong&gt; "&lt;em&gt;%s&lt;/em&gt;"</string>
+    <string name="statement_simple_printVariableStatement">&lt;strong&gt;AFFICHER VARIABLE&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt;</string>
+
+    <string name="statement_block_ifBlock">&lt;strong&gt;SI&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;ALORS&lt;/strong&gt;</string>
+    <string name="statement_block_elseBlock">&lt;strong&gt;SINON&lt;/strong&gt;</string>
+
+    <string name="statement_loop_whileLoop">&lt;strong&gt;TANT QUE&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;FAIRE&lt;/strong&gt;</string>
+    <string name="statement_loop_forLoop">&lt;strong&gt;POUR&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;ALLANT DE&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;À&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;DO&lt;/strong&gt;</string>
+
+    <string name="lineEditor_global_variableIdentifier">Nom de la variable :</string>
+    <string name="lineEditor_global_lineBreak">Ajouter un saut de ligne</string>
+    <string name="lineEditor_global_condition">Condition (doit être une expression valide) :</string>
+    <string name="lineEditor_global_content">Contenu :</string>
+    <string name="lineEditor_createVariableStatement_title">Créer une variable</string>
+    <string name="lineEditor_createVariableStatement_number">Nombre</string>
+    <string name="lineEditor_createVariableStatement_string">Chaîne de caractères</string>
+    <string name="lineEditor_assignValueToVariable_title">Assigner une valeur à une variable</string>
+    <string name="lineEditor_assignValueToVariable_value">Valeur (doit être une expression valide) :</string>
+    <string name="lineEditor_prompt_title">Lire la valeur d\'une variable</string>
+    <string name="lineEditor_prompt_message">Message (facultatif) :</string>
+    <string name="lineEditor_printVariable_title">Afficher une variable</string>
+    <string name="lineEditor_printVariable_message">Message (facultatif) :</string>
+    <string name="lineEditor_print_title">Afficher un message</string>
+    <string name="lineEditor_ifElse_title">IF/ELSE block</string>
+    <string name="lineEditor_ifElse_addElse">Bloc SI/SINON</string>
+    <string name="lineEditor_for_title">Boucle POUR</string>
+    <string name="lineEditor_for_startValue">Valeur de départ (doit être une expression valide) :</string>
+    <string name="lineEditor_for_endValue">Valeur de fin (doit être une expression valide) :</string>
+    <string name="lineEditor_while_title">Boucle TANT QUE</string>
+    <string name="lineEditor_lineComment_title">Commentaire en une ligne</string>
+    <string name="lineEditor_blockComment_title">Commentaire en bloc</string>
+    <string name="lineEditor_validationError_identifierAlreadyExists">Une variable avec le même nom existe déjà !</string>
+    <string name="lineEditor_validationError_message">Données invalides entrées.</string>
+    <string name="lineEditor_expressionError_title">Expression invalide entrée</string>
+    <string name="lineEditor_expressionError_message">L\'expression entrée est invalide.</string>
+
+    <string name="addLineDialog_createVariable">Créer une variable…</string>
+    <string name="addLineDialog_assignValueToVariable">Assigner une valeur à une variable…</string>
+    <string name="addLineDialog_prompt">Lire une variable…</string>
+    <string name="addLineDialog_printVariable">Afficher une variable…</string>
+    <string name="addLineDialog_print">Afficher un message…</string>
+    <string name="addLineDialog_ifElse">Si… Sinon…</string>
+    <string name="addLineDialog_for">Pour…</string>
+    <string name="addLineDialog_while">Tant que…</string>
+    <string name="addLineDialog_singleLineComment">Commentaire en une ligne…</string>
+    <string name="addLineDialog_multiLineComment">Commentaire en plusieurs lignes…</string>
+
+    <string name="generic_dialog_no">Non</string>
+
+    <string name="main_title">&lt;strong&gt;%s&lt;/strong&gt; par &lt;strong&gt;%s&lt;/strong&gt;</string>
+
+    <string name="main_dialog_save">Votre algorithme a des changements non-enregistrés qui seront perdu si vous fermez l\'éditeur. Voulez-vous les sauvegarder ?</string>
+    <string name="main_dialog_about">Algogo est un éditeur et interpréteur d\'algorithmes.\n\nLéger et facile à utiliser, il est gratuit et open-source.</string>
+    <string name="main_dialog_about_skyost">Site WEB de Skyost</string>
+    <string name="main_dialog_about_project">Site WEB du projet</string>
+    <string name="main_dialog_credits_title_hint">Titre</string>
+    <string name="main_dialog_credits_author_hint">Auteur</string>
+    <string name="main_dialog_permissions_title">Permissions requises</string>
+    <string name="main_dialog_permissions_message">Nous aurions besoin de quelques permissions pour pouvoir accéder au stockage.</string>
+    <string name="main_dialog_fileName">Entrez le nom du fichier ici</string>
+
+    <string name="snackbar_message_saved">Algorithme enregistré à la location suivante : %s</string>
+    <string name="snackbar_error_parse">Erreur d\'analyse à la ligne %d : %s.</string>
+    <string name="snackbar_error_generic">Impossible d\'exécuter l\'opération : \"%s\".</string>
+    <string name="snackbar_error_wrongLocation">Impossible d\'ajouter cette ligne ici !</string>
+    <string name="snackbar_error_noVariable">Vous devez tout d\'abord ajouter une variable !</string>
+    <string name="snackbar_error_noNumberVariable">Vous devez tout d\'abord ajouter une variable de type nombre !</string>
+    <string name="snackbar_error_notEditable">Cette instruction n\'est pas éditable.</string>
+
+    <string name="main_toast_open">Veuillez sélectionner un fichier d\'algorithme (*.agg2).</string>
+    <string name="main_toast_save">Veuillez sélectionner un répertoire d\'enregistrement.</string>
+
+    <string name="console_error">Erreur rencontrée pendant l\'exécution de l'algorithme :</string>
+
+    <string name="console_dialog_title">Lire une variable</string>
+    <string name="console_dialog_message">Veuillez entrer la valeur de &lt;em&gt;%s&lt;/em&gt;. Si cette valeur est une &lt;em&gt;Chaîne&lt;/em&gt;, veuillez ne pas oublier les guillemets (eg. &lt;em&gt;"Une Chaîne"&lt;/em&gt;).</string>
+    <string name="console_dialog_hint">Entrez la valeur de la variable ici</string>
+</resources>

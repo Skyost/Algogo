@@ -1,24 +1,29 @@
 package xyz.algogo.mobile.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+
 import de.mateware.snacky.Snacky;
 import xyz.algogo.mobile.R;
-
-import java.io.*;
 
 /**
  * Utilities methods.
  */
 
 public class Utils {
-
-	/**
-	 * UTF-8 charsets.
-	 */
-
-	public static final String UTF_8 = "UTF-8";
 
 	/**
 	 * Reads a file.
@@ -55,15 +60,23 @@ public class Utils {
 	 * @throws IOException If any I/O exception occurs.
 	 */
 
+	@SuppressLint("NewApi")
 	public static void write(final File file, final String content) throws IOException {
 		if(file.exists()) {
 			file.delete();
 		}
 
 		final FileOutputStream output = new FileOutputStream(file);
-		output.write(content.getBytes(UTF_8));
+		output.write(content.getBytes(StandardCharsets.UTF_8));
 		output.close();
 	}
+
+	/**
+	 * Notifies the user that an error occurred.
+	 *
+	 * @param activity Parent activity.
+	 * @param throwable The error.
+	 */
 
 	public static void notifyError(final Activity activity, final Throwable throwable) {
 		Snacky.builder().setActivity(activity).setText(activity.getString(R.string.snackbar_error_generic, throwable.getClass().getName())).error().show();
@@ -119,6 +132,20 @@ public class Utils {
 	public static void openURL(final String url, final Activity activity) {
 		final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		activity.startActivity(intent);
+	}
+
+	/**
+	 * Converts some pixels to DP.
+	 *
+	 * @param context The context.
+	 * @param pixels The pixels.
+	 *
+	 * @return Submitted pixels converted to DP.
+	 */
+
+	public static int pixelsToDp(final Context context, final int pixels) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int)(pixels * scale + 0.5f);
 	}
 
 }

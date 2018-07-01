@@ -10,6 +10,7 @@ a {
 
 .btn {
 	font-weight: 600;
+	min-width: 280px;
 }
 
 .button-group .btn {
@@ -73,7 +74,6 @@ a:hover, a:active, a:focus {
 
 #header .btn {
 	margin-top: 30px;
-	min-width: 280px;
 }
 
 #header .btn .fa {

@@ -20,9 +20,7 @@ $(document).ready(function() {
 				image.attr('title', screenshotData.caption);
 				image.attr('alt', screenshotData.caption);
 			}
-			
-			$('#play-button img').attr('src', data.mobile.badge);
-			
+						
 			defaultCallback(data);
 		}
 	});
