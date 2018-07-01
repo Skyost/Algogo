@@ -1,6 +1,5 @@
 package xyz.algogo.mobile.utils;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 
 import de.mateware.snacky.Snacky;
 import xyz.algogo.mobile.R;
@@ -60,14 +58,13 @@ public class Utils {
 	 * @throws IOException If any I/O exception occurs.
 	 */
 
-	@SuppressLint("NewApi")
 	public static void write(final File file, final String content) throws IOException {
 		if(file.exists()) {
 			file.delete();
 		}
 
 		final FileOutputStream output = new FileOutputStream(file);
-		output.write(content.getBytes(StandardCharsets.UTF_8));
+		output.write(content.getBytes("UTF-8"));
 		output.close();
 	}
 

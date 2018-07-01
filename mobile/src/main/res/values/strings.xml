@@ -23,7 +23,7 @@
     <string name="algorithm_default_title">Untitled</string>
     <string name="algorithm_default_author">Anonymous</string>
 
-    <string name="statement_content" translatable="false">&lt;span style="color: %s;"&gt;%s&lt;/span&gt;</string>
+    <string name="statement_content" translatable="false">&lt;span style=\"color: %s;\"&gt;%s&lt;/span&gt;</string>
 
     <string name="statement_root_variables">&lt;strong&gt;VARIABLES&lt;/strong&gt;</string>
     <string name="statement_root_beginning">&lt;strong&gt;BEGINNING&lt;/strong&gt;</string>
@@ -109,7 +109,6 @@
     <string name="snackbar_error_noVariable">You must add a variable first !</string>
     <string name="snackbar_error_noNumberVariable">You must add a number variable first !</string>
     <string name="snackbar_error_notEditable">This statement is not editable.</string>
-    <string name="snackbar_error_storage">Unable to access to your storage.</string>
 
     <string name="main_toast_open">Please select an algorithm file (*.agg2).</string>
     <string name="main_toast_save">Please select the destination directory.</string>
