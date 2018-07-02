@@ -5,7 +5,9 @@
 </div>
 
 [![Downloads](https://img.shields.io/github/downloads/Skyost/Algogo/total.svg?style=flat-square)](https://github.com/Skyost/Algogo/releases)
+[![Travis](https://img.shields.io/travis/Skyost/Algogo.svg?style=flat-square)](https://travis-ci.org/Skyost/Algogo)
 [![License](https://img.shields.io/github/license/Skyost/Algogo.svg?style=flat-square)](https://github.com/Skyost/Algogo/blob/desktop/LICENSE.md)
+![GitHub code size](https://img.shields.io/github/languages/code-size/Skyost/Algogo.svg?style=flat-square)
 
 ## Table of contents
 1. [Introduction](#introduction)
