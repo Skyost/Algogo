@@ -5,6 +5,7 @@ version: 2
 jobs:
   build:
     docker:
+      - image: circleci/android:api-27-alpha
       - image: circleci/openjdk:8-jdk
 
       # Specify service dependencies here if necessary
@@ -29,8 +30,8 @@ jobs:
           # Fallback to using the latest cache if no exact match is found.
           - v1-dependencies-
 
-      - run: gradle :core:dependencies
-      - run: gradle :desktop:dependencies
+      - run: gradle dependencies
+      - run: gradle androidDependencies
 
       - save_cache:
           paths:
@@ -38,8 +39,7 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # Run tests !
-      - run: gradle :core:test
+      - run: gradle test
 
       # Let's build !
-      - run: gradle :core:shadowJar
-      - run: gradle :desktop:shadowJar
+      - run: gradle shadowJar
