@@ -29,7 +29,8 @@ jobs:
           # Fallback to using the latest cache if no exact match is found.
           - v1-dependencies-
 
-      - run: gradle dependencies
+      - run: gradle :core:dependencies
+      - run: gradle :desktop:dependencies
 
       - save_cache:
           paths:
@@ -37,7 +38,8 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # Run tests !
-      - run: gradle test
+      - run: gradle :core:test
 
       # Let's build !
-      - run: gradle shadowJar
+      - run: gradle :core:shadowJar
+      - run: gradle :desktop:shadowJar
