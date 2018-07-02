@@ -101,6 +101,11 @@ public abstract class DefaultLanguageImplementation extends Language {
 	}
 
 	@Override
+	public String translateAbsoluteValueExpression(final AbsoluteValueExpression expression) {
+		return "abs(" + expression.getExpression().toLanguage(this) + ")";
+	}
+
+	@Override
 	public String translateUnaryMinusExpression(final UnaryMinusExpression expression) {
 		return "-" + expression.getExpression().toLanguage(this);
 	}

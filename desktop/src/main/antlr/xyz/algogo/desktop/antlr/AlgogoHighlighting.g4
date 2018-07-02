@@ -33,6 +33,7 @@ COMMA: ',';
 ASSIGN: '<-';
 OPAR: '(';
 CPAR: ')';
+VERTICAL_BAR: '|';
 
 TRUE: 'true';
 FALSE: 'false';

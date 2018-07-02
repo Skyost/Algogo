@@ -8,8 +8,7 @@ import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.evaluator.function.Function;
 import xyz.algogo.core.evaluator.function.neper.ExpFunction;
 import xyz.algogo.core.evaluator.function.neper.LogFunction;
-import xyz.algogo.core.evaluator.function.other.FactorialFunction;
-import xyz.algogo.core.evaluator.function.other.RandomFunction;
+import xyz.algogo.core.evaluator.function.other.*;
 import xyz.algogo.core.evaluator.function.root.RootFunction;
 import xyz.algogo.core.evaluator.function.root.SqrtFunction;
 import xyz.algogo.core.evaluator.function.trigonometric.*;
@@ -231,7 +230,11 @@ public class ExpressionEvaluator {
 		putFunction(new SqrtFunction());
 		putFunction(new RootFunction());
 
+		putFunction(new AbsFunction());
+		putFunction(new BernoulliFunction());
 		putFunction(new FactorialFunction());
+		putFunction(new MaxFunction());
+		putFunction(new MinFunction());
 		putFunction(new RandomFunction());
 
 		putFunction(new CosFunction());

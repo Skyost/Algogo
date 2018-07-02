@@ -12,7 +12,7 @@ import xyz.algogo.core.language.Language;
 public class ParenthesisExpression extends Expression {
 
 	/**
-	 * The parenthesized expression.
+	 * The inner parenthesized expression.
 	 */
 
 	private Expression expression;
@@ -28,37 +28,37 @@ public class ParenthesisExpression extends Expression {
 	}
 
 	/**
-	 * Returns the parenthesized expression.
+	 * Returns the inner expression.
 	 *
-	 * @return The parenthesized expression.
+	 * @return The inner expression.
 	 */
 
-	public final Expression getExpression() {
+	public Expression getExpression() {
 		return expression;
 	}
 
 	/**
-	 * Sets the parenthesized expression.
+	 * Sets the inner expression.
 	 *
-	 * @param expression The parenthesized expression.
+	 * @param expression The inner expression.
 	 */
 
-	public final void setExpression(final Expression expression) {
+	public void setExpression(final Expression expression) {
 		this.expression = expression;
 	}
 
 	@Override
-	public final Atom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Atom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		return expression.evaluate(evaluator, context);
 	}
 
 	@Override
-	public final String toLanguage(final Language language) {
+	public String toLanguage(final Language language) {
 		return language.translateParenthesisExpression(this);
 	}
 
 	@Override
-	public final ParenthesisExpression copy() {
+	public ParenthesisExpression copy() {
 		return new ParenthesisExpression(expression.copy());
 	}
 

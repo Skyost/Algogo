@@ -1,5 +1,4 @@
 plugins {
-    id 'com.jfrog.bintray' version '1.8.3'
     id 'java'
     id 'antlr'
     id 'maven'
@@ -17,7 +16,7 @@ dependencies {
     antlr group: 'org.antlr', name: 'antlr4', version: '4.7.1'
     compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.1'
 
-    compile group: 'ch.obermuhlner', name: 'big-math', version: '2.0.0'
+    compile group: 'ch.obermuhlner', name: 'big-math', version: '2.0.1'
 }
 
 generateGrammarSource {

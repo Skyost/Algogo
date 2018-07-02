@@ -4,32 +4,38 @@ import ch.obermuhlner.math.big.BigDecimalMath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import xyz.algogo.core.evaluator.atom.Atom;
+import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
+import xyz.algogo.core.evaluator.function.Function;
 import xyz.algogo.core.evaluator.variable.Variable;
 import xyz.algogo.core.evaluator.variable.VariableType;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ExpressionEvaluatorTest {
+public class ExpressionEvaluatorTest {
 
 	private static final Logger logger = Logger.getLogger(ExpressionEvaluatorTest.class.getName());
 
-	private static ExpressionEvaluator evaluator;
+	private static ExpressionEvaluator evaluator = new ExpressionEvaluator();
+	private static EvaluationContext context;
 
 	@BeforeAll
 	static void initAll() {
-		evaluator = new ExpressionEvaluator((source, arguments) -> "", (source, content) -> logger.info(content));
+		context = new EvaluationContext((source, arguments) -> "", (source, content) -> logger.info(content));
 	}
 
 	@AfterEach
 	void clearVariables() {
 		evaluator.clearVariables();
+		evaluator.clearFunctions();
 		evaluator.addDefaultVariables();
+		evaluator.addDefaultFunctions();
 	}
 
 	@Test
@@ -49,7 +55,6 @@ class ExpressionEvaluatorTest {
 
 	@Test
 	void contextTest() {
-		final EvaluationContext context = new EvaluationContext(MathContext.DECIMAL32);
 		assertEquals(evaluator.evaluate(Expression.parse("pi"), context).getValue(), BigDecimalMath.pi(context.getMathContext()));
 	}
 
@@ -69,6 +74,15 @@ class ExpressionEvaluatorTest {
 	}
 
 	@Test
+	void parenthesisExpressionTest() {
+		assertEquals(new BigDecimal(20), evaluator.evaluate("5 * (2 + 2)").getValue());
+		assertNotEquals(new BigDecimal(20), evaluator.evaluate("5 * 2 + 2").getValue());
+
+		assertEquals(new BigDecimal(10), evaluator.evaluate("|-15 + 5|").getValue());
+		assertEquals(new BigDecimal(25), evaluator.evaluate("|5^2|").getValue());
+	}
+
+	@Test
 	void powerExpressionTest() {
 		assertEquals(evaluator.evaluate("EXP(1)").getValue(), evaluator.evaluate("e^1").getValue());
 		assertEquals(new BigDecimal(17), evaluator.evaluate("1 + 2^4").getValue());
@@ -76,10 +90,22 @@ class ExpressionEvaluatorTest {
 
 	@Test
 	void functionExpressionTest() {
+		evaluator.putFunction(new Function("FUNCTION") {
+
+			@Override
+			public final Atom evaluate(final EvaluationContext context, final Atom... arguments) {
+				final BigDecimal x = (BigDecimal)arguments[0].getValue();
+				return new NumberAtom(x.pow(2).subtract(x).subtract(BigDecimal.ONE));
+			}
+
+		});
+
+		assertEquals(BigDecimal.ZERO.setScale(10, RoundingMode.HALF_DOWN), ((BigDecimal)evaluator.evaluate("FUNCTION((1 + SQRT(5)) / 2)").getValue()).setScale(10, RoundingMode.HALF_DOWN));
 		assertEquals(evaluator.evaluate("SQRT(2)").getValue(), evaluator.evaluate("ROOT(2, 2)").getValue());
 		assertEquals(new BigDecimal(3628800), evaluator.evaluate("FACTORIAL(10)").getValue());
 		assertEquals(new BigDecimal("0.6931471805599453"), evaluator.evaluate("LOG(2)").getValue());
 		assertEquals(new BigDecimal("23.14069263277926"), evaluator.evaluate("EXP(pi)").getValue());
+		assertEquals(new BigDecimal(100), evaluator.evaluate("MAX(1 + 1, SQRT(2), 50 * 2)").getValue());
 	}
 
 	@Test

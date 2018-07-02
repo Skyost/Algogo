@@ -225,6 +225,11 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	}
 
 	@Override
+	public final AbsoluteValueExpression visitAbsoluteValueExpression(final AlgogoParser.AbsoluteValueExpressionContext context) {
+		return new AbsoluteValueExpression(visitExpression(context.expression()));
+	}
+
+	@Override
 	public final Atom visitAtom(final AlgogoParser.AtomContext context) {
 		return (Atom)super.visitAtom(context);
 	}

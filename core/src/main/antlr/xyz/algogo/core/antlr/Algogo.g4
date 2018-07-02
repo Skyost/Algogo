@@ -121,6 +121,7 @@ expression
     | expression OR expression                              #orExpression
     | ID OPEN_PARENTHESIS functionParams CLOSED_PARENTHESIS #functionExpression
     | OPEN_PARENTHESIS expression CLOSED_PARENTHESIS        #parenthesisExpression
+    | VERTICAL_BAR expression VERTICAL_BAR                  #absoluteValueExpression
     | atom                                                  #atomExpression
     ;
 
@@ -161,6 +162,7 @@ COMMA: ',';
 ASSIGN: '<-';
 OPEN_PARENTHESIS: '(';
 CLOSED_PARENTHESIS: ')';
+VERTICAL_BAR: '|';
 
 TRUE: 'true';
 FALSE: 'false';

@@ -379,6 +379,16 @@ public abstract class Language {
 	public abstract String translateParenthesisExpression(final ParenthesisExpression expression);
 
 	/**
+	 * Translates an absolute value expression.
+	 *
+	 * @param expression The absolute value expression.
+	 *
+	 * @return The translated expression.
+	 */
+
+	public abstract String translateAbsoluteValueExpression(final AbsoluteValueExpression expression);
+
+	/**
 	 * Translates an unary minus expression.
 	 *
 	 * @param expression The unary minus expression.

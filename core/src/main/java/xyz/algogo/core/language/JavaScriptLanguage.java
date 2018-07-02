@@ -1,5 +1,6 @@
 package xyz.algogo.core.language;
 
+import xyz.algogo.core.evaluator.expression.AbsoluteValueExpression;
 import xyz.algogo.core.statement.block.BlockStatement;
 import xyz.algogo.core.statement.block.conditional.ElseBlock;
 import xyz.algogo.core.statement.block.conditional.IfBlock;
@@ -122,6 +123,11 @@ public class JavaScriptLanguage extends DefaultLanguageImplementation {
 	@Override
 	public final String translateBlockComment(final BlockComment statement) {
 		return "/*" + statement.getContent().replace("\t", "") +  "*/" + LINE_SEPARATOR;
+	}
+
+	@Override
+	public final String translateAbsoluteValueExpression(final AbsoluteValueExpression expression) {
+		return "Math.abs(" + expression.getExpression().toLanguage(this) + ")";
 	}
 
 	/**

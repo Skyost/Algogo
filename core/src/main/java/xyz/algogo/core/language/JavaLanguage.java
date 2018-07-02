@@ -1,5 +1,6 @@
 package xyz.algogo.core.language;
 
+import xyz.algogo.core.evaluator.expression.AbsoluteValueExpression;
 import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.statement.block.BlockStatement;
 import xyz.algogo.core.statement.block.conditional.ElseBlock;
@@ -128,7 +129,7 @@ public class JavaLanguage extends DefaultLanguageImplementation {
 
 	@Override
 	public final String translatePromptStatement(final PromptStatement statement) {
-		final String comment = "# " + statement.getIdentifier() + " = Integer.parseInt(scanner.nextLine()); # Uncomment if " + statement.getIdentifier() + " has a number type and comment the above line." + LINE_SEPARATOR;
+		final String comment = "// " + statement.getIdentifier() + " = Integer.parseInt(scanner.nextLine()); // Uncomment if " + statement.getIdentifier() + " has a number type and comment the above line." + LINE_SEPARATOR;
 
 		String content = statement.getIdentifier() + " = scanner.nextLine();" + LINE_SEPARATOR + comment;
 		if(statement.getMessage() != null) {
@@ -170,6 +171,11 @@ public class JavaLanguage extends DefaultLanguageImplementation {
 	@Override
 	public final String translateBlockComment(final BlockComment statement) {
 		return "/*" + statement.getContent().replace("\t", "") +  "*/" + LINE_SEPARATOR;
+	}
+
+	@Override
+	public final String translateAbsoluteValueExpression(final AbsoluteValueExpression expression) {
+		return "Math.abs(" + expression.getExpression().toLanguage(this) + ")";
 	}
 
 	/**
