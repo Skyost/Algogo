@@ -1,4 +1,5 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
     id 'java'
     id 'antlr'
     id 'maven'
@@ -17,6 +18,12 @@ dependencies {
     compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.1'
 
     compile group: 'ch.obermuhlner', name: 'big-math', version: '2.0.1'
+}
+
+shadowJar {
+    destinationDir = new File(rootProject.projectDir, 'build/release/')
+    version = project.version
+    configurations = [project.configurations.compile]
 }
 
 generateGrammarSource {
