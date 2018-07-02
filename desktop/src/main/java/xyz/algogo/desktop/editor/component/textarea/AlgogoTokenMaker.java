@@ -46,8 +46,8 @@ public class AlgogoTokenMaker extends TokenMakerBase {
 			return null;
 		}
 
-		org.antlr.v4.runtime.Token antlrToken = antlrTokens.get(0);
-		TokenImpl tokenImplementation = new TokenImpl(text, text.offset + antlrToken.getStartIndex(), text.offset + antlrToken.getStartIndex() + antlrToken.getText().length() - 1, startOffset + antlrToken.getStartIndex(), antlrToken.getType(), 0);
+		final org.antlr.v4.runtime.Token antlrToken = antlrTokens.get(0);
+		final TokenImpl tokenImplementation = new TokenImpl(text, text.offset + antlrToken.getStartIndex(), text.offset + antlrToken.getStartIndex() + antlrToken.getText().length() - 1, startOffset + antlrToken.getStartIndex(), antlrToken.getType(), 0);
 		tokenImplementation.setNextToken(toList(text, startOffset, antlrTokens.subList(1, antlrTokens.size())));
 		return tokenImplementation;
 	}

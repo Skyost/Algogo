@@ -1,5 +1,7 @@
 package xyz.algogo.desktop;
 
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
+import org.kordamp.ikonli.swing.FontIcon;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.exception.ParseException;
@@ -673,7 +675,7 @@ public class AlgorithmDesktopLineEditor {
 	 */
 
 	public static void setFunctionButtonBorder(final JTextComponent component, final EditorFrame editor) {
-		final JButton button = new JButton("{ }");
+		final JButton button = new JButton(FontIcon.of(MaterialDesign.MDI_CODE_BRACES));
 		button.addActionListener(actionEvent -> new PickerDialog(editor, component).setVisible(true));
 
 		final ComponentBorder componentBorder = new ComponentBorder(button);

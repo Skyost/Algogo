@@ -48,6 +48,7 @@ public class HTMLExportTarget extends LanguageExportTarget {
 			builder.append(appLanguage.getString("editor.title", editor.getCredits().getTitle(), "", editor.getCredits().getAuthor(), AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION));
 			builder.append("</title>").append(LINE_SEPARATOR);
 
+			builder.append("<link rel=\"icon\" type=\"image/png\" href=\"https://www.algogo.xyz/assets/img/icon.png\"/>").append(LINE_SEPARATOR);
 			builder.append("</html>").append(LINE_SEPARATOR);
 			builder.append("<body style=\"font-family: Helvetica;\">").append(LINE_SEPARATOR);
 			builder.append(modelToHTML());

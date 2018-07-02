@@ -204,16 +204,18 @@ public class ConsoleDialog extends JDialog implements ActionListener, InputListe
 	private void saveTextAreaContent(final File file) {
 		try {
 			final StringBuilder builder = new StringBuilder();
-			builder.append("<!DOCTYPE html>" + LINE_SEPARATOR);
-			builder.append("<html>" + LINE_SEPARATOR);
-			builder.append("<head>" + LINE_SEPARATOR);
+			builder.append("<!DOCTYPE html>").append(LINE_SEPARATOR);
+			builder.append("<html lang=\"" + editor.getAppLanguage().getCurrentLanguageCode() + "\">").append(LINE_SEPARATOR);
+			builder.append("<meta charset=\"utf-8\">").append(LINE_SEPARATOR);
+			builder.append("<head>").append(LINE_SEPARATOR);
 			builder.append("<title>");
 			builder.append(editor.getAppLanguage().getString("editor.title", editor.getCredits().getTitle(), "", editor.getCredits().getAuthor(), AlgogoDesktop.APP_NAME, AlgogoDesktop.APP_VERSION));
-			builder.append("</title>");
-			builder.append("</head>" + LINE_SEPARATOR);
-			builder.append("<body style=\"background-color: black; color: white; font-family: Lucida Console, Monaco, monospace; font-size: 1.2em;\">" + LINE_SEPARATOR);
+			builder.append("</title>").append(LINE_SEPARATOR);
+			builder.append("</head>").append(LINE_SEPARATOR);
+			builder.append("<link rel=\"icon\" type=\"image/png\" href=\"https://www.algogo.xyz/assets/img/icon.png\"/>").append(LINE_SEPARATOR);
+			builder.append("<body style=\"background-color: black; color: white; font-family: Lucida Console, Monaco, monospace; font-size: 1.2em;\">").append(LINE_SEPARATOR);
 			builder.append(Utils.escapeHTML(textArea.getText()).replace(LINE_SEPARATOR, "<br>"));
-			builder.append("</body>" + LINE_SEPARATOR);
+			builder.append("</body>").append(LINE_SEPARATOR);
 			builder.append("</html>");
 
 			Files.write(file.toPath(), builder.toString().getBytes(StandardCharsets.UTF_8));

@@ -13,8 +13,8 @@ package xyz.algogo.desktop.antlr;
 NEWLINE: ('\r' '\n' | '\n' | '\r');
 WS: [ \t]+ -> channel(EXTRA);
 
-OR: '||';
-AND: '&&';
+OR: '||' | 'OR';
+AND: '&&' | 'AND';
 EQ: '==';
 NEQ: '!=';
 GT: '>';
@@ -74,6 +74,6 @@ FLOAT
 STRING: '"' (~["\r\n] | '""')* '"';
 
 LineComment: LINECOMMENT_START ~[\r\n]*;
-BlockComment: BLOCKCOMMENT_START .* BLOCKCOMMENT_END;
+BlockComment: BLOCKCOMMENT_START .*? BLOCKCOMMENT_END;
 
 UNMATCHED: .  -> channel(EXTRA);

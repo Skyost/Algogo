@@ -63,13 +63,13 @@ public class PickerDialog extends JDialog {
 		new ListAction(pickerList, new AbstractAction() {
 
 			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
+			public final void actionPerformed(final ActionEvent actionEvent) {
 				final PickerListObject selected = pickerList.getSelectedValue();
 				if(selected.isTitle()) {
 					return;
 				}
 
-				target.setText(selected.getValue() + " " + target.getText());
+				target.setText(selected.getValue() + (target.getText().isEmpty() ? "" : " ") + target.getText());
 				target.setCaretPosition(selected.getValue().length());
 
 				PickerDialog.this.dispose();
