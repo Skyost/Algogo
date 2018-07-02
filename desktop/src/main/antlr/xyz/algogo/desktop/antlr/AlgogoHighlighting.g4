@@ -27,7 +27,7 @@ MULT: '*';
 DIV: '/';
 MOD: '%';
 POW: '^';
-NOT: '!';
+NOT: '!' | 'NOT';
 COMMA: ',';
 
 ASSIGN: '<-';

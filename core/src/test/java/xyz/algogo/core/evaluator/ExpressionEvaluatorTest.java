@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ExpressionEvaluatorTest {
+class ExpressionEvaluatorTest {
 
 	private static final Logger logger = Logger.getLogger(ExpressionEvaluatorTest.class.getName());
 
@@ -106,6 +106,7 @@ public class ExpressionEvaluatorTest {
 		assertEquals(new BigDecimal("0.6931471805599453"), evaluator.evaluate("LOG(2)").getValue());
 		assertEquals(new BigDecimal("23.14069263277926"), evaluator.evaluate("EXP(pi)").getValue());
 		assertEquals(new BigDecimal(100), evaluator.evaluate("MAX(1 + 1, SQRT(2), 50 * 2)").getValue());
+		assertEquals(evaluator.evaluate("| 10 - 20 |").getValue(), evaluator.evaluate("ABS(10 - 20)").getValue());
 	}
 
 	@Test
@@ -118,7 +119,9 @@ public class ExpressionEvaluatorTest {
 	@Test
 	void booleanExpressionTest() {
 		assertEquals(BigDecimal.ONE, evaluator.evaluate("2 + 2 == 2^2").getValue());
-		assertEquals(BigDecimal.ONE, evaluator.evaluate("(2 + 2 != 4 || 2 + 3 == 5) && (4^2 == 16 || 4 % 2 == 1)").getValue());
+		assertEquals(BigDecimal.ONE, evaluator.evaluate("(2 + 2 != 4 OR 2 + 3 == 5) && (4^2 == 16 OR 4 % 2 == 1)").getValue());
+		assertEquals(BigDecimal.ONE, evaluator.evaluate("|-2 + 2| == 1 || |-2 + 2| == 0").getValue());
+		assertEquals(BigDecimal.ONE, evaluator.evaluate("NOT (true AND false)").getValue());
 		assertEquals(BigDecimal.ONE, evaluator.evaluate("!false").getValue());
 		assertEquals(BigDecimal.ZERO, evaluator.evaluate("!true").getValue());
 	}

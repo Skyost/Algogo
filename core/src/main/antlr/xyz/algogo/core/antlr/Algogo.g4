@@ -142,8 +142,8 @@ stringAtom: STRING;
 NEWLINE: ('\r' '\n' | '\n' | '\r') { if (pendingDent) { setChannel(HIDDEN); } pendingDent = true; indentCount = 0; initialIndentToken = null; };
 WS: [ \t]+ { setChannel(HIDDEN); if (pendingDent) { indentCount += getText().length(); } };    
 
-OR: '||';
-AND: '&&';
+OR: '||' | 'OR';
+AND: '&&' | 'AND';
 EQ: '==';
 NEQ: '!=';
 GT: '>';
@@ -156,7 +156,7 @@ MULT: '*';
 DIV: '/';
 MOD: '%';
 POW: '^';
-NOT: '!';
+NOT: '!' | 'NOT';
 COMMA: ',';
 
 ASSIGN: '<-';
@@ -204,4 +204,4 @@ FLOAT
 STRING: '"' (~["\r\n] | '""')* '"';
 
 LineComment: LINECOMMENT_START ~[\r\n]*;
-BlockComment: BLOCKCOMMENT_START .* BLOCKCOMMENT_END;
+BlockComment: BLOCKCOMMENT_START .*? BLOCKCOMMENT_END;

@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AlgorithmTest {
+class AlgorithmTest {
 
 	private static final Logger logger = Logger.getLogger(AlgorithmTest.class.getName());
 
