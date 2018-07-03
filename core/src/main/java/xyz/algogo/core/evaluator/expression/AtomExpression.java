@@ -3,7 +3,6 @@ package xyz.algogo.core.evaluator.expression;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-import xyz.algogo.core.language.Language;
 
 /**
  * Represents an atom expression.
@@ -50,11 +49,6 @@ public class AtomExpression extends Expression {
 	@Override
 	public final Atom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		return atom.evaluate(evaluator, context);
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateAtomExpression(this);
 	}
 
 	@Override

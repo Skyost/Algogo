@@ -5,7 +5,6 @@ import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.function.other.AbsFunction;
-import xyz.algogo.core.language.Language;
 
 /**
  * Creates a new absolute value expression.
@@ -31,11 +30,6 @@ public class AbsoluteValueExpression extends ParenthesisExpression {
 		}
 
 		return AbsFunction.abs(atom);
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateAbsoluteValueExpression(this);
 	}
 
 	@Override

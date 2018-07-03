@@ -35,6 +35,12 @@ import java.util.Stack;
 public class AlgorithmAdapter extends RecyclerView.Adapter<AlgorithmViewHolder> implements AlgorithmMobileLineEditor.Listener {
 
 	/**
+	 * The algorithm localization language.
+	 */
+
+	private final AlgorithmLocalization algorithmLocalization = new AlgorithmLocalization(this);
+
+	/**
 	 * The activity this adapter belongs to.
 	 */
 
@@ -103,7 +109,6 @@ public class AlgorithmAdapter extends RecyclerView.Adapter<AlgorithmViewHolder> 
 		refreshCurrentStatement();
 	}
 
-	@NonNull
 	@Override
 	public final AlgorithmViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
 		final RelativeLayout item = (RelativeLayout)LayoutInflater.from(parent.getContext()).inflate(R.layout.main_algorithm_item, parent, false);
@@ -119,6 +124,16 @@ public class AlgorithmAdapter extends RecyclerView.Adapter<AlgorithmViewHolder> 
 	@Override
 	public final int getItemCount() {
 		return displayedStatements.size();
+	}
+
+	/**
+	 * Returns the algorithm localization language.
+	 *
+	 * @return The algorithm localization language.
+	 */
+
+	public final AlgorithmLocalization getAlgorithmLocalizationLanguage() {
+		return algorithmLocalization;
 	}
 
 	/**
@@ -301,7 +316,7 @@ public class AlgorithmAdapter extends RecyclerView.Adapter<AlgorithmViewHolder> 
 
 		final View layout = activity.getLayoutInflater().inflate(R.layout.main_actionbar, null);
 		final TextView title = layout.findViewById(R.id.main_actionbar_title);
-		currentStatement.toLanguage(new AlgorithmLocalization(this, title));
+		algorithmLocalization.translate(currentStatement, title);
 
 		title.setTextColor(ContextCompat.getColor(activity, android.R.color.white));
 		if(path.isEmpty()) {

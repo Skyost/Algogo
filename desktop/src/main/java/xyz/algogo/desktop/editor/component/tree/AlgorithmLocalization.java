@@ -1,7 +1,6 @@
 package xyz.algogo.desktop.editor.component.tree;
 
 import xyz.algogo.core.evaluator.variable.VariableType;
-import xyz.algogo.core.language.AlgogoLanguage;
 import xyz.algogo.core.language.DefaultLanguageImplementation;
 import xyz.algogo.core.statement.block.conditional.ElseBlock;
 import xyz.algogo.core.statement.block.conditional.IfBlock;
@@ -42,95 +41,54 @@ public class AlgorithmLocalization extends DefaultLanguageImplementation {
 		super(language.getString("menu.file.export.html"), "html");
 
 		this.language = language;
+		addTranslations();
 	}
 
-	@Override
-	public final String translateVariablesBlock(final VariablesBlock statement) {
-		return toHTML(AlgorithmTreeRenderer.ROOT_BLOCK_STATEMENT_COLOR, "statement.root.variables");
-	}
+	/**
+	 * Adds translations.
+	 */
 
-	@Override
-	public final String translateBeginningBlock(final BeginningBlock statement) {
-		return toHTML(AlgorithmTreeRenderer.ROOT_BLOCK_STATEMENT_COLOR, "statement.root.beginning");
-	}
+	private void addTranslations() {
+		this.putTranslation(VariablesBlock.class, (TranslationFunction<VariablesBlock>) statement -> toHTML(AlgorithmTreeRenderer.ROOT_BLOCK_STATEMENT_COLOR, "statement.root.variables"));
+		this.putTranslation(BeginningBlock.class, (TranslationFunction<BeginningBlock>) statement -> toHTML(AlgorithmTreeRenderer.ROOT_BLOCK_STATEMENT_COLOR, "statement.root.beginning"));
+		this.putTranslation(EndBlock.class, (TranslationFunction<EndBlock>) statement -> toHTML(AlgorithmTreeRenderer.ROOT_BLOCK_STATEMENT_COLOR, "statement.root.end"));
 
-	@Override
-	public final String translateEndBlock(final EndBlock statement) {
-		return toHTML(AlgorithmTreeRenderer.ROOT_BLOCK_STATEMENT_COLOR, "statement.root.end");
-	}
+		this.putTranslation(CreateVariableStatement.class, (TranslationFunction<CreateVariableStatement>) statement -> toHTML(AlgorithmTreeRenderer.SIMPLE_STATEMENT_COLOR, "statement.simple.createVariableStatement", statement.getIdentifier(), language.getString(statement.getType() == VariableType.NUMBER ? "statement.simple.createVariableStatement.number" : "statement.simple.createVariableStatement.string")));
+		this.putTranslation(AssignStatement.class, (TranslationFunction<AssignStatement>) statement -> toHTML(AlgorithmTreeRenderer.SIMPLE_STATEMENT_COLOR, "statement.simple.assignStatement", statement.getIdentifier(), Utils.escapeHTML(statement.getValue().toLanguage(this))));
+		this.putTranslation(PromptStatement.class, (TranslationFunction<PromptStatement>) statement -> {
+			String message = language.getString("statement.simple.promptStatement", statement.getIdentifier());
+			if(statement.getMessage() != null) {
+				message += " " + language.getString("statement.simple.optionalString", Utils.escapeHTML(statement.getMessage()));
+			}
 
-	@Override
-	public final String translateCreateVariableStatement(final CreateVariableStatement statement) {
-		return toHTML(AlgorithmTreeRenderer.SIMPLE_STATEMENT_COLOR, "statement.simple.createVariableStatement", statement.getIdentifier(), language.getString(statement.getType() == VariableType.NUMBER ? "statement.simple.createVariableStatement.number" : "statement.simple.createVariableStatement.string"));
-	}
+			return rawStringToHTML(AlgorithmTreeRenderer.SIMPLE_STATEMENT_COLOR, message);
+		});
+		this.putTranslation(PrintVariableStatement.class, (TranslationFunction<PrintVariableStatement>) statement -> {
+			String message = language.getString("statement.simple.printVariableStatement", statement.getIdentifier());
+			if(statement.getMessage() != null) {
+				message += " " + language.getString("statement.simple.optionalString", Utils.escapeHTML(statement.getMessage()));
+			}
 
-	@Override
-	public final String translateAssignStatement(final AssignStatement statement) {
-		return toHTML(AlgorithmTreeRenderer.SIMPLE_STATEMENT_COLOR, "statement.simple.assignStatement", statement.getIdentifier(), Utils.escapeHTML(statement.getValue().toLanguage(new AlgogoLanguage())));
-	}
+			if(!statement.shouldLineBreak()) {
+				message += " " + language.getString("statement.simple.noLineBreak");
+			}
 
-	@Override
-	public final String translatePromptStatement(final PromptStatement statement) {
-		String message = language.getString("statement.simple.promptStatement", statement.getIdentifier());
-		if(statement.getMessage() != null) {
-			message += " " + language.getString("statement.simple.optionalString", Utils.escapeHTML(statement.getMessage()));
-		}
+			return rawStringToHTML(AlgorithmTreeRenderer.SIMPLE_STATEMENT_COLOR, message);
+		});
+		this.putTranslation(PrintStatement.class, (TranslationFunction<PrintStatement>) statement -> {
+			String content = language.getString("statement.simple.printStatement", Utils.escapeHTML(statement.getMessage()));
+			if(!statement.shouldLineBreak()) {
+				content += " " + language.getString("statement.simple.noLineBreak");
+			}
 
-		return rawStringToHTML(AlgorithmTreeRenderer.SIMPLE_STATEMENT_COLOR, message);
-	}
-
-	@Override
-	public final String translatePrintVariableStatement(final PrintVariableStatement statement) {
-		String message = language.getString("statement.simple.printVariableStatement", statement.getIdentifier());
-		if(statement.getMessage() != null) {
-			message += " " + language.getString("statement.simple.optionalString", Utils.escapeHTML(statement.getMessage()));
-		}
-
-		if(!statement.shouldLineBreak()) {
-			message += " " + language.getString("statement.simple.noLineBreak");
-		}
-
-		return rawStringToHTML(AlgorithmTreeRenderer.SIMPLE_STATEMENT_COLOR, message);
-	}
-
-	@Override
-	public final String translatePrintStatement(final PrintStatement statement) {
-		String content = language.getString("statement.simple.printStatement", Utils.escapeHTML(statement.getMessage()));
-		if(!statement.shouldLineBreak()) {
-			content += " " + language.getString("statement.simple.noLineBreak");
-		}
-
-		return rawStringToHTML(AlgorithmTreeRenderer.SIMPLE_STATEMENT_COLOR, content);
-	}
-
-	@Override
-	public final String translateIfBlock(final IfBlock statement) {
-		return toHTML(AlgorithmTreeRenderer.BLOCK_STATEMENT_COLOR, "statement.block.ifBlock", Utils.escapeHTML(statement.getCondition().toLanguage(new AlgogoLanguage())));
-	}
-
-	@Override
-	public final String translateElseBlock(final ElseBlock statement) {
-		return toHTML(AlgorithmTreeRenderer.BLOCK_STATEMENT_COLOR, "statement.block.elseBlock");
-	}
-
-	@Override
-	public final String translateForLoop(final ForLoop statement) {
-		return toHTML(AlgorithmTreeRenderer.BLOCK_STATEMENT_COLOR, "statement.loop.forLoop", statement.getIdentifier(), Utils.escapeHTML(statement.getStart().toLanguage(this)), Utils.escapeHTML(statement.getEnd().toLanguage(this)));
-	}
-
-	@Override
-	public final String translateWhileLoop(final WhileLoop statement) {
-		return toHTML(AlgorithmTreeRenderer.BLOCK_STATEMENT_COLOR, "statement.loop.whileLoop", Utils.escapeHTML(statement.getCondition().toLanguage(new AlgogoLanguage())));
-	}
-
-	@Override
-	public final String translateLineComment(final LineComment statement) {
-		return toHTML(AlgorithmTreeRenderer.COMMENT_COLOR, "statement.comment.lineComment", Utils.escapeHTML(statement.getContent()));
-	}
-
-	@Override
-	public final String translateBlockComment(final BlockComment statement) {
-		return toHTML(AlgorithmTreeRenderer.COMMENT_COLOR, "statement.comment.blockComment", Utils.escapeHTML(statement.getContent()).replace(System.lineSeparator(), "<br>"));
+			return rawStringToHTML(AlgorithmTreeRenderer.SIMPLE_STATEMENT_COLOR, content);
+		});
+		this.putTranslation(IfBlock.class, (TranslationFunction<IfBlock>) statement -> toHTML(AlgorithmTreeRenderer.BLOCK_STATEMENT_COLOR, "statement.block.ifBlock", Utils.escapeHTML(statement.getCondition().toLanguage(this))));
+		this.putTranslation(ElseBlock.class, (TranslationFunction<ElseBlock>) statement -> toHTML(AlgorithmTreeRenderer.BLOCK_STATEMENT_COLOR, "statement.block.elseBlock"));
+		this.putTranslation(ForLoop.class, (TranslationFunction<ForLoop>) statement -> toHTML(AlgorithmTreeRenderer.BLOCK_STATEMENT_COLOR, "statement.loop.forLoop", statement.getIdentifier(), Utils.escapeHTML(statement.getStart().toLanguage(this)), Utils.escapeHTML(statement.getEnd().toLanguage(this))));
+		this.putTranslation(WhileLoop.class, (TranslationFunction<WhileLoop>) statement -> toHTML(AlgorithmTreeRenderer.BLOCK_STATEMENT_COLOR, "statement.loop.whileLoop", Utils.escapeHTML(statement.getCondition().toLanguage(this))));
+		this.putTranslation(LineComment.class, (TranslationFunction<LineComment>) statement -> toHTML(AlgorithmTreeRenderer.COMMENT_COLOR, "statement.comment.lineComment", Utils.escapeHTML(statement.getContent())));
+		this.putTranslation(BlockComment.class, (TranslationFunction<BlockComment>) statement -> toHTML(AlgorithmTreeRenderer.COMMENT_COLOR, "statement.comment.blockComment", Utils.escapeHTML(statement.getContent()).replace(System.lineSeparator(), "<br>")));
 	}
 
 	/**

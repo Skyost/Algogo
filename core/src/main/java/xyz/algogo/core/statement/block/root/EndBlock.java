@@ -2,7 +2,6 @@ package xyz.algogo.core.statement.block.root;
 
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-import xyz.algogo.core.language.Language;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.BlockStatement;
 
@@ -28,11 +27,6 @@ public class EndBlock extends BlockStatement {
 
 	@Override
 	public final void insertStatement(final Statement statement, final int index) {}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateEndBlock(this);
-	}
 
 	@Override
 	public final int getStatementId() {

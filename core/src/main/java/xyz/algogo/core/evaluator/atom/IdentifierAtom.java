@@ -4,7 +4,6 @@ import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.variable.Variable;
 import xyz.algogo.core.evaluator.variable.VariableType;
-import xyz.algogo.core.language.Language;
 
 import java.math.BigDecimal;
 
@@ -36,11 +35,6 @@ public class IdentifierAtom extends StringAtom {
 		}
 
 		return new StringAtom((String)variable.getValue());
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateIdentifierAtom(this);
 	}
 
 	@Override

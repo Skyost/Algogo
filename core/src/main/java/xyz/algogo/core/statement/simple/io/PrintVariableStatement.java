@@ -6,7 +6,6 @@ import xyz.algogo.core.evaluator.context.OutputListener;
 import xyz.algogo.core.evaluator.variable.Variable;
 import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.exception.InvalidIdentifierException;
-import xyz.algogo.core.language.Language;
 
 import java.math.BigDecimal;
 
@@ -89,11 +88,6 @@ public class PrintVariableStatement extends PrintStatement {
 	@Override
 	public final Exception validate() {
 		return null;
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translatePrintVariableStatement(this);
 	}
 
 	@Override

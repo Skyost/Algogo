@@ -3,7 +3,6 @@ package xyz.algogo.core.evaluator.expression;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.BooleanAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-import xyz.algogo.core.language.Language;
 
 import java.math.BigDecimal;
 
@@ -30,11 +29,6 @@ public class OrExpression extends RelationalExpression {
 		final Object right = this.getRight().evaluate(evaluator, context).getValue();
 
 		return new BooleanAtom(left.equals(BigDecimal.ONE) || right.equals(BigDecimal.ONE));
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateOrExpression(this);
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package xyz.algogo.core.statement.simple.comment;
 
-import xyz.algogo.core.language.Language;
-
 /**
  * Represents a block comment.
  */
@@ -22,11 +20,6 @@ public class BlockComment extends Comment {
 
 	public BlockComment(final String content) {
 		super(content);
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateBlockComment(this);
 	}
 
 	@Override

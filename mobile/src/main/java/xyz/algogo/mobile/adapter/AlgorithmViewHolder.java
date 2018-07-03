@@ -11,7 +11,6 @@ import xyz.algogo.core.statement.block.conditional.ElseBlock;
 import xyz.algogo.core.statement.block.root.EndBlock;
 import xyz.algogo.mobile.AlgorithmMobileLineEditor;
 import xyz.algogo.mobile.R;
-import xyz.algogo.mobile.language.AlgorithmLocalization;
 
 /**
  * Represents a view hold that holds statement contents.
@@ -57,7 +56,7 @@ public class AlgorithmViewHolder extends RecyclerView.ViewHolder {
 		itemView.setOnLongClickListener(null);
 		arrow.setVisibility(View.GONE);
 
-		statement.toLanguage(new AlgorithmLocalization(adapter, content));
+		adapter.getAlgorithmLocalizationLanguage().translate(statement, content);
 
 		if(statement instanceof BlockStatement && statement.getStatementId() != EndBlock.STATEMENT_ID) {
 			itemView.setOnClickListener(listener -> adapter.expandChild(position));

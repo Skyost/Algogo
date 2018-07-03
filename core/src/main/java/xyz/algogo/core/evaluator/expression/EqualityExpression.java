@@ -4,7 +4,6 @@ import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.BooleanAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-import xyz.algogo.core.language.Language;
 
 /**
  * Represents an equality expression.
@@ -37,11 +36,6 @@ public class EqualityExpression extends RelationalExpression {
 			default:
 				return BooleanAtom.FALSE;
 		}
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateEqualityExpression(this);
 	}
 
 	@Override

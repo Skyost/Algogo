@@ -4,7 +4,6 @@ import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-import xyz.algogo.core.language.Language;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,11 +90,6 @@ public class FunctionExpression extends Expression {
 		}
 
 		return evaluator.getFunction(identifier).evaluate(context, arguments.toArray(new Atom[arguments.size()]));
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateFunctionExpression(this);
 	}
 
 	@Override

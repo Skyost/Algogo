@@ -5,7 +5,6 @@ import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.atom.StringAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-import xyz.algogo.core.language.Language;
 
 import java.math.BigDecimal;
 
@@ -51,11 +50,6 @@ public class AdditiveExpression extends LeftOpRightExpression {
 			default:
 				return NumberAtom.ZERO;
 		}
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateAdditiveExpression(this);
 	}
 
 	@Override

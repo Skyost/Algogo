@@ -4,7 +4,6 @@ import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-import xyz.algogo.core.language.Language;
 
 import java.math.BigDecimal;
 
@@ -48,11 +47,6 @@ public class MultiplicationExpression extends LeftOpRightExpression {
 			default:
 				return NumberAtom.ZERO;
 		}
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateMultiplicationExpression(this);
 	}
 
 	@Override

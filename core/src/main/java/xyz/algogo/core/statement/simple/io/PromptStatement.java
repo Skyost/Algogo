@@ -6,7 +6,6 @@ import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.exception.InvalidIdentifierException;
 import xyz.algogo.core.exception.ParseException;
-import xyz.algogo.core.language.Language;
 import xyz.algogo.core.statement.simple.variable.VariableStatement;
 
 public class PromptStatement extends VariableStatement {
@@ -58,11 +57,6 @@ public class PromptStatement extends VariableStatement {
 	@Override
 	public final Exception validate() {
 		return null;
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translatePromptStatement(this);
 	}
 
 	@Override

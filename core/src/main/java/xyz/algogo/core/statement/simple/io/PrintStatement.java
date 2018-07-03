@@ -2,7 +2,6 @@ package xyz.algogo.core.statement.simple.io;
 
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-import xyz.algogo.core.language.Language;
 import xyz.algogo.core.statement.simple.SimpleStatement;
 
 /**
@@ -98,11 +97,6 @@ public class PrintStatement extends SimpleStatement {
 	@Override
 	public Exception validate() {
 		return null;
-	}
-
-	@Override
-	public String toLanguage(final Language language) {
-		return language.translatePrintStatement(this);
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.BooleanAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-import xyz.algogo.core.language.Language;
 
 /**
  * Represents a relational expression.
@@ -42,11 +41,6 @@ public class RelationalExpression extends LeftOpRightExpression {
 			default:
 				return BooleanAtom.FALSE;
 		}
-	}
-
-	@Override
-	public String toLanguage(final Language language) {
-		return language.translateRelationalExpression(this);
 	}
 
 	@Override

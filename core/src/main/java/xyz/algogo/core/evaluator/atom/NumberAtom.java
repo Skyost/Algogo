@@ -1,7 +1,5 @@
 package xyz.algogo.core.evaluator.atom;
 
-import xyz.algogo.core.language.Language;
-
 import java.math.BigDecimal;
 
 /**
@@ -49,11 +47,6 @@ public class NumberAtom extends Atom<BigDecimal> {
 	@Override
 	public final boolean hasSameType(final Atom atom) {
 		return hasNumberType(atom);
-	}
-
-	@Override
-	public String toLanguage(final Language language) {
-		return language.translateNumberAtom(this);
 	}
 
 	@Override

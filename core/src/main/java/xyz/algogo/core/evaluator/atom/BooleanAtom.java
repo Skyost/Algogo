@@ -1,7 +1,5 @@
 package xyz.algogo.core.evaluator.atom;
 
-import xyz.algogo.core.language.Language;
-
 import java.math.BigDecimal;
 
 /**
@@ -50,11 +48,6 @@ public class BooleanAtom extends NumberAtom {
 
 	public final void setBooleanValue(final boolean value) {
 		super.setValue(value ? BigDecimal.ONE : BigDecimal.ZERO);
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateBooleanAtom(this);
 	}
 
 	@Override

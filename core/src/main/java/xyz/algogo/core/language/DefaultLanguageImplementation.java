@@ -1,9 +1,6 @@
 package xyz.algogo.core.language;
 
-import xyz.algogo.core.evaluator.atom.BooleanAtom;
-import xyz.algogo.core.evaluator.atom.IdentifierAtom;
-import xyz.algogo.core.evaluator.atom.NumberAtom;
-import xyz.algogo.core.evaluator.atom.StringAtom;
+import xyz.algogo.core.evaluator.atom.*;
 import xyz.algogo.core.evaluator.expression.*;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.BlockStatement;
@@ -37,6 +34,7 @@ public abstract class DefaultLanguageImplementation extends Language {
 	
 	public DefaultLanguageImplementation(final String name) {
 		super(name);
+		addDefaultTranslations();
 	}
 
 	/**
@@ -48,102 +46,42 @@ public abstract class DefaultLanguageImplementation extends Language {
 	
 	public DefaultLanguageImplementation(final String name, final String extension) {
 		super(name, extension);
+		addDefaultTranslations();
 	}
 
-	@Override
-	public String translateAlgorithmRootBlock(final AlgorithmRootBlock statement) {
-		return translateBlockChildren(statement);
-	}
+	/**
+	 * Adds default translations.
+	 */
 
-	@Override
-	public String translateAdditiveExpression(final AdditiveExpression expression) {
-		return translateLeftOpRightExpression(expression);
-	}
+	private void addDefaultTranslations() {
+		this.putTranslation(AlgorithmRootBlock.class, (TranslationFunction<AlgorithmRootBlock>) this::translateBlockChildren);
 
-	@Override
-	public String translateMultiplicationExpression(final MultiplicationExpression expression) {
-		return translateLeftOpRightExpression(expression);
-	}
+		this.putTranslation(AdditiveExpression.class, (TranslationFunction<AdditiveExpression>) this::translateLeftOpRightExpression);
+		this.putTranslation(MultiplicationExpression.class, (TranslationFunction<MultiplicationExpression>) this::translateLeftOpRightExpression);
+		this.putTranslation(PowerExpression.class, (TranslationFunction<PowerExpression>) expression -> expression.getBase().toLanguage(this) + "^" + expression.getExponent().toLanguage(this));
+		this.putTranslation(RelationalExpression.class, (TranslationFunction<RelationalExpression>) this::translateLeftOpRightExpression);
+		this.putTranslation(EqualityExpression.class, (TranslationFunction<EqualityExpression>) this::translateLeftOpRightExpression);
+		this.putTranslation(AndExpression.class, (TranslationFunction<AndExpression>) this::translateLeftOpRightExpression);
+		this.putTranslation(OrExpression.class, (TranslationFunction<OrExpression>) this::translateLeftOpRightExpression);
+		this.putTranslation(NotExpression.class, (TranslationFunction<NotExpression>) expression -> "!" + expression.getExpression().toLanguage(this));
+		this.putTranslation(ParenthesisExpression.class, (TranslationFunction<ParenthesisExpression>) expression -> "(" + expression.getExpression().toLanguage(this) + ")");
+		this.putTranslation(AbsoluteValueExpression.class, (TranslationFunction<AbsoluteValueExpression>) expression -> "abs(" + expression.getExpression().toLanguage(this) + ")");
+		this.putTranslation(UnaryMinusExpression.class, (TranslationFunction<UnaryMinusExpression>) expression -> "-" + expression.getExpression().toLanguage(this));
+		this.putTranslation(FunctionExpression.class, (TranslationFunction<FunctionExpression>) expression -> {
+			final StringBuilder builder = new StringBuilder();
+			for(final Expression argument : expression.getArguments()) {
+				builder.append(argument.toLanguage(this)).append(", ");
+			}
+			builder.setLength(builder.length() - 2);
 
-	@Override
-	public String translatePowerExpression(final PowerExpression expression) {
-		return expression.getBase().toLanguage(this) + "^" + expression.getExponent().toLanguage(this);
-	}
+			return expression.getIdentifier() + "(" + builder.toString() + ")";
+		});
+		this.putTranslation(AtomExpression.class, (TranslationFunction<AtomExpression>) expression -> expression.getAtom().toLanguage(this));
 
-	@Override
-	public String translateRelationalExpression(final RelationalExpression expression) {
-		return translateLeftOpRightExpression(expression);
-	}
-
-	@Override
-	public String translateEqualityExpression(final EqualityExpression expression) {
-		return translateLeftOpRightExpression(expression);
-	}
-
-	@Override
-	public String translateAndExpression(final AndExpression expression) {
-		return translateLeftOpRightExpression(expression);
-	}
-
-	@Override
-	public String translateOrExpression(final OrExpression expression) {
-		return translateLeftOpRightExpression(expression);
-	}
-
-	@Override
-	public String translateNotExpression(final NotExpression expression) {
-		return "!" + expression.toLanguage(this);
-	}
-
-	@Override
-	public String translateParenthesisExpression(final ParenthesisExpression expression) {
-		return "(" + expression.getExpression().toLanguage(this) + ")";
-	}
-
-	@Override
-	public String translateAbsoluteValueExpression(final AbsoluteValueExpression expression) {
-		return "abs(" + expression.getExpression().toLanguage(this) + ")";
-	}
-
-	@Override
-	public String translateUnaryMinusExpression(final UnaryMinusExpression expression) {
-		return "-" + expression.getExpression().toLanguage(this);
-	}
-
-	@Override
-	public String translateFunctionExpression(final FunctionExpression expression) {
-		final StringBuilder builder = new StringBuilder();
-		for(final Expression argument : expression.getArguments()) {
-			builder.append(argument.toLanguage(this) + ", ");
-		}
-		builder.setLength(builder.length() - 2);
-
-		return expression.getIdentifier() + "(" + builder.toString() + ")";
-	}
-
-	@Override
-	public String translateAtomExpression(final AtomExpression expression) {
-		return expression.getAtom().toLanguage(this);
-	}
-
-	@Override
-	public String translateNumberAtom(final NumberAtom atom) {
-		return atom.getValue().toPlainString();
-	}
-
-	@Override
-	public String translateStringAtom(final StringAtom atom) {
-		return "\"" + atom.getValue().replace("\"", "\\\"") + "\"";
-	}
-
-	@Override
-	public String translateIdentifierAtom(final IdentifierAtom atom) {
-		return atom.getValue();
-	}
-
-	@Override
-	public String translateBooleanAtom(final BooleanAtom atom) {
-		return String.valueOf(atom.getBooleanValue());
+		this.putTranslation(NumberAtom.class, (TranslationFunction<NumberAtom>) atom -> atom.getValue().toPlainString());
+		this.putTranslation(StringAtom.class, (TranslationFunction<StringAtom>) atom -> "\"" + atom.getValue().replace("\"", "\\\"") + "\"");
+		this.putTranslation(IdentifierAtom.class, (TranslationFunction<IdentifierAtom>) Atom::getValue);
+		this.putTranslation(BooleanAtom.class, (TranslationFunction<BooleanAtom>) atom -> String.valueOf(atom.getBooleanValue()));
 	}
 
 	/**
@@ -185,6 +123,24 @@ public abstract class DefaultLanguageImplementation extends Language {
 		}
 
 		return builder.toString();
+	}
+
+	/**
+	 * Translates a block statement.
+	 *
+	 * @param blockTitle The block title.
+	 * @param blockStatement The block statement.
+	 *
+	 * @return The translated block statement.
+	 */
+
+	protected String translateBlockStatement(final String blockTitle, final BlockStatement blockStatement) {
+		String content = blockTitle + LINE_SEPARATOR;
+		if(blockStatement.getStatementCount() > 0) {
+			content += indentStringBlock(translateBlockChildren(blockStatement));
+		}
+
+		return content;
 	}
 	
 }

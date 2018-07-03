@@ -3,7 +3,6 @@ package xyz.algogo.core.evaluator.expression;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-import xyz.algogo.core.language.Language;
 
 /**
  * Creates a new parenthesis expression.
@@ -50,11 +49,6 @@ public class ParenthesisExpression extends Expression {
 	@Override
 	public Atom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		return expression.evaluate(evaluator, context);
-	}
-
-	@Override
-	public String toLanguage(final Language language) {
-		return language.translateParenthesisExpression(this);
 	}
 
 	@Override

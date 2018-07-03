@@ -199,7 +199,7 @@ public class Algorithm implements Serializable, Translatable {
 	 */
 
 	public final String toLanguage(final Language language) {
-		return language.translateAlgorithm(this);
+		return language.translate(this);
 	}
 
 	/**

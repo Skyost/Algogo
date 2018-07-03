@@ -1,7 +1,5 @@
 package xyz.algogo.core.evaluator.atom;
 
-import xyz.algogo.core.language.Language;
-
 /**
  * Represents a string atom.
  */
@@ -21,11 +19,6 @@ public class StringAtom extends Atom<String> {
 	@Override
 	public final boolean hasSameType(final Atom atom) {
 		return hasStringType(atom);
-	}
-
-	@Override
-	public String toLanguage(final Language language) {
-		return language.translateStringAtom(this);
 	}
 
 	@Override

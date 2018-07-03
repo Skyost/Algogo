@@ -1,7 +1,5 @@
 package xyz.algogo.core.statement.simple.comment;
 
-import xyz.algogo.core.language.Language;
-
 /**
  * Represents a line comment.
  */
@@ -22,11 +20,6 @@ public class LineComment extends Comment {
 
 	public LineComment(final String content) {
 		super(content);
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateLineComment(this);
 	}
 
 	@Override

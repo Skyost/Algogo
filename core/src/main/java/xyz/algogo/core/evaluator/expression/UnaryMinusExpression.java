@@ -4,7 +4,6 @@ import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-import xyz.algogo.core.language.Language;
 
 import java.math.BigDecimal;
 
@@ -59,11 +58,6 @@ public class UnaryMinusExpression extends Expression {
 		}
 
 		return new NumberAtom(((BigDecimal)atom.getValue()).negate());
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateUnaryMinusExpression(this);
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.exception.InvalidExpressionException;
-import xyz.algogo.core.language.Language;
 import xyz.algogo.core.statement.Statement;
 
 import java.math.BigDecimal;
@@ -91,11 +90,6 @@ public class IfBlock extends ConditionalBlock {
 
 	public final boolean hasElseBlock() {
 		return elseBlock != null;
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateIfBlock(this);
 	}
 
 	@Override

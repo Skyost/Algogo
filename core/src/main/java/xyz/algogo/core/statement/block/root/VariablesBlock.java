@@ -1,6 +1,5 @@
 package xyz.algogo.core.statement.block.root;
 
-import xyz.algogo.core.language.Language;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.BlockStatement;
 import xyz.algogo.core.statement.simple.comment.BlockComment;
@@ -27,11 +26,6 @@ public class VariablesBlock extends BlockStatement {
 
 	public VariablesBlock(final Statement... statements) {
 		super(statements);
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateVariablesBlock(this);
 	}
 
 	@Override

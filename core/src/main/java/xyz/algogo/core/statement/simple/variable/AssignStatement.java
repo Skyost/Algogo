@@ -4,7 +4,6 @@ import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.exception.InvalidIdentifierException;
-import xyz.algogo.core.language.Language;
 
 /**
  * Represents an assign statement.
@@ -70,11 +69,6 @@ public class AssignStatement extends VariableStatement {
 	@Override
 	public final Exception validate() {
 		return value == null ? new NullPointerException("Value cannot be null.") : null;
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateAssignStatement(this);
 	}
 
 	@Override

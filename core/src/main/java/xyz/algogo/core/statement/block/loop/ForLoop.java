@@ -9,7 +9,6 @@ import xyz.algogo.core.evaluator.variable.Variable;
 import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.exception.InvalidIdentifierException;
 import xyz.algogo.core.exception.ParseException;
-import xyz.algogo.core.language.Language;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.BlockStatement;
 
@@ -120,11 +119,6 @@ public class ForLoop extends BlockStatement {
 
 	public final void setEnd(final Expression end) {
 		this.end = end;
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateForLoop(this);
 	}
 
 	@Override

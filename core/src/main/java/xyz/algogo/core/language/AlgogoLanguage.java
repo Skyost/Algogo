@@ -2,7 +2,6 @@ package xyz.algogo.core.language;
 
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.evaluator.expression.AbsoluteValueExpression;
-import xyz.algogo.core.statement.block.BlockStatement;
 import xyz.algogo.core.statement.block.conditional.ElseBlock;
 import xyz.algogo.core.statement.block.conditional.IfBlock;
 import xyz.algogo.core.statement.block.loop.ForLoop;
@@ -48,105 +47,61 @@ public class AlgogoLanguage extends DefaultLanguageImplementation {
 		super("Algogo v1.x Algorithm", "agg2");
 
 		this.addCredits = addCredits;
+		addTranslations();
 	}
 
-	@Override
-	public final String translateAlgorithm(final Algorithm algorithm) {
-		String content = super.translateAlgorithm(algorithm);
-		if(addCredits) {
-			content = new LineComment(algorithm.getTitle() + " by " + algorithm.getAuthor()).toLanguage(this) + content;
-		}
+	/**
+	 * Adds translations.
+	 */
 
-		return content;
-	}
+	private void addTranslations() {
+		final TranslationFunction superFunction = this.getTranslationFunction(Algorithm.class);
+		this.putTranslation(Algorithm.class, (TranslationFunction<Algorithm>) algorithm -> {
+			String content = superFunction.translate(algorithm);
+			if(addCredits) {
+				content = new LineComment(algorithm.getTitle() + " by " + algorithm.getAuthor()).toLanguage(this) + content;
+			}
 
-	@Override
-	public final String translateVariablesBlock(final VariablesBlock statement) {
-		return translateBlockStatement("VARIABLES", statement);
-	}
+			return content;
+		});
 
-	@Override
-	public final String translateBeginningBlock(final BeginningBlock statement) {
-		return translateBlockStatement("BEGINNING", statement);
-	}
+		this.putTranslation(VariablesBlock.class, (TranslationFunction<VariablesBlock>) statement -> translateBlockStatement("VARIABLES", statement));
+		this.putTranslation(BeginningBlock.class, (TranslationFunction<BeginningBlock>) statement -> translateBlockStatement("BEGINNING", statement));
+		this.putTranslation(EndBlock.class, (TranslationFunction<EndBlock>) statement -> "END" + LINE_SEPARATOR);
 
-	@Override
-	public final String translateEndBlock(final EndBlock statement) {
-		return "END" + LINE_SEPARATOR;
-	}
+		this.putTranslation(CreateVariableStatement.class, (TranslationFunction<CreateVariableStatement>) statement -> statement.getIdentifier() + " : " + statement.getType().name() + LINE_SEPARATOR);
+		this.putTranslation(AssignStatement.class, (TranslationFunction<AssignStatement>) statement -> statement.getIdentifier() + " <- " + statement.getValue().toLanguage(this) + LINE_SEPARATOR);
+		this.putTranslation(PrintStatement.class, (TranslationFunction<PrintStatement>) statement -> {
+			String content = "PRINT \"" + statement.getMessage().replace("\"", "\\\"") + "\"";
+			if(!statement.shouldLineBreak()) {
+				content += " NLB";
+			}
 
-	@Override
-	public final String translateCreateVariableStatement(final CreateVariableStatement statement) {
-		return statement.getIdentifier() + " : " + statement.getType().name() + LINE_SEPARATOR;
-	}
+			return content + LINE_SEPARATOR;
+		});
+		this.putTranslation(PrintVariableStatement.class, (TranslationFunction<PrintVariableStatement>) statement -> {
+			String content = "PRINT_VARIABLE " + statement.getIdentifier() + (statement.getMessage() == null ? "" : " \"" + statement.getMessage().replace("\"", "\\\"") + "\"");
+			if(!statement.shouldLineBreak()) {
+				content += " NLB";
+			}
 
-	@Override
-	public final String translateAssignStatement(final AssignStatement statement) {
-		return statement.getIdentifier() + " <- " + statement.getValue().toLanguage(this) + LINE_SEPARATOR;
-	}
+			return content + LINE_SEPARATOR;
+		});
+		this.putTranslation(PromptStatement.class, (TranslationFunction<PromptStatement>) statement -> "PROMPT " + statement.getIdentifier() + (statement.getMessage() == null ? "" : " \"" + statement.getMessage() + "\"") + LINE_SEPARATOR);
+		this.putTranslation(IfBlock.class, (TranslationFunction<IfBlock>) statement -> {
+			String content = translateBlockStatement("IF " + statement.getCondition().toLanguage(this) + " THEN", statement);
+			if(statement.hasElseBlock()) {
+				content += statement.getElseBlock().toLanguage(this);
+			}
+			return content;
+		});
+		this.putTranslation(ElseBlock.class, (TranslationFunction<ElseBlock>) statement -> translateBlockStatement("ELSE", statement));
+		this.putTranslation(ForLoop.class, (TranslationFunction<ForLoop>) statement -> translateBlockStatement("FOR " + statement.getIdentifier() + " FROM " + statement.getStart().toLanguage(this) + " TO " + statement.getEnd().toLanguage(this) + " DO", statement));
+		this.putTranslation(WhileLoop.class, (TranslationFunction<WhileLoop>) statement -> translateBlockStatement("WHILE " + statement.getCondition().toLanguage(this) + " DO", statement));
+		this.putTranslation(LineComment.class, (TranslationFunction<LineComment>) statement -> "// " + statement.getContent() + LINE_SEPARATOR);
+		this.putTranslation(BlockComment.class, (TranslationFunction<BlockComment>) statement -> "/*" + statement.getContent().replace("\t", "") +  "*/" + LINE_SEPARATOR);
 
-	@Override
-	public final String translatePrintStatement(final PrintStatement statement) {
-		String content = "PRINT \"" + statement.getMessage().replace("\"", "\\\"") + "\"";
-		if(!statement.shouldLineBreak()) {
-			content += " NLB";
-		}
-
-		return content + LINE_SEPARATOR;
-	}
-
-	@Override
-	public final String translatePrintVariableStatement(final PrintVariableStatement statement) {
-		String content = "PRINT_VARIABLE " + statement.getIdentifier() + (statement.getMessage() == null ? "" : " \"" + statement.getMessage().replace("\"", "\\\"") + "\"");
-		if(!statement.shouldLineBreak()) {
-			content += " NLB";
-		}
-
-		return content + LINE_SEPARATOR;
-	}
-
-	@Override
-	public final String translatePromptStatement(final PromptStatement statement) {
-		return "PROMPT " + statement.getIdentifier() + (statement.getMessage() == null ? "" : " \"" + statement.getMessage() + "\"") + LINE_SEPARATOR;
-	}
-
-	@Override
-	public final String translateIfBlock(final IfBlock statement) {
-		String content = translateBlockStatement("IF " + statement.getCondition().toLanguage(this) + " THEN", statement);
-		if(statement.hasElseBlock()) {
-			content += statement.getElseBlock().toLanguage(this);
-		}
-		return content;
-	}
-
-	@Override
-	public final String translateElseBlock(final ElseBlock statement) {
-		return translateBlockStatement("ELSE", statement);
-	}
-
-	@Override
-	public final String translateForLoop(final ForLoop statement) {
-		return translateBlockStatement("FOR " + statement.getIdentifier() + " FROM " + statement.getStart().toLanguage(this) + " TO " + statement.getEnd().toLanguage(this) + " DO", statement);
-	}
-
-	@Override
-	public final String translateWhileLoop(final WhileLoop statement) {
-		return translateBlockStatement("WHILE " + statement.getCondition().toLanguage(this) + " DO", statement);
-	}
-
-	@Override
-	public final String translateLineComment(final LineComment statement) {
-		return "// " + statement.getContent() + LINE_SEPARATOR;
-	}
-
-	@Override
-	public final String translateBlockComment(final BlockComment statement) {
-		return "/*" + statement.getContent().replace("\t", "") +  "*/" + LINE_SEPARATOR;
-	}
-
-	@Override
-	public final String translateAbsoluteValueExpression(final AbsoluteValueExpression expression) {
-		return "|" + expression.getExpression().toLanguage(this) + "|";
+		this.putTranslation(AbsoluteValueExpression.class, (TranslationFunction<AbsoluteValueExpression>) expression -> "|" + expression.getExpression().toLanguage(this) + "|" + LINE_SEPARATOR);
 	}
 
 	/**
@@ -167,24 +122,6 @@ public class AlgogoLanguage extends DefaultLanguageImplementation {
 
 	public final void setAddCredits(final boolean addCredits) {
 		this.addCredits = addCredits;
-	}
-
-	/**
-	 * Translates a block statement.
-	 *
-	 * @param blockTitle The block title.
-	 * @param blockStatement The block statement.
-	 *
-	 * @return The translated block statement.
-	 */
-
-	private String translateBlockStatement(final String blockTitle, final BlockStatement blockStatement) {
-		String content = blockTitle + LINE_SEPARATOR;
-		if(blockStatement.getStatementCount() > 0) {
-			content += indentStringBlock(translateBlockChildren(blockStatement));
-		}
-
-		return content;
 	}
 
 }

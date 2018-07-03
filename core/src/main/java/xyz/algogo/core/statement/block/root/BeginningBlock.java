@@ -1,6 +1,5 @@
 package xyz.algogo.core.statement.block.root;
 
-import xyz.algogo.core.language.Language;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.BlockStatement;
 
@@ -24,11 +23,6 @@ public class BeginningBlock extends BlockStatement {
 
 	public BeginningBlock(final Statement... statements) {
 		super(statements);
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateBeginningBlock(this);
 	}
 
 	@Override

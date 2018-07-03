@@ -14,6 +14,8 @@ public interface Translatable {
 	 * @return The current object translated to the specified language.
 	 */
 
-	String toLanguage(final Language language);
+	default String toLanguage(final Language language) {
+		return language.translate(this);
+	}
 
 }

@@ -5,7 +5,6 @@ import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.variable.Variable;
 import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.exception.InvalidIdentifierException;
-import xyz.algogo.core.language.Language;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -85,11 +84,6 @@ public class CreateVariableStatement extends VariableStatement {
 		}
 
 		return type == null ? new NullPointerException("Type cannot be null.") : null;
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateCreateVariableStatement(this);
 	}
 
 	@Override

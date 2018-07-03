@@ -4,7 +4,6 @@ import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
-import xyz.algogo.core.language.Language;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.conditional.ConditionalBlock;
 
@@ -31,11 +30,6 @@ public class WhileLoop extends ConditionalBlock {
 
 	public WhileLoop(final Expression condition, final Statement... statements) {
 		super(condition, statements);
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return language.translateWhileLoop(this);
 	}
 
 	@Override
