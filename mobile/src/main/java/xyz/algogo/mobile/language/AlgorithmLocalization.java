@@ -1,6 +1,8 @@
 package xyz.algogo.mobile.language;
 
+import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
+
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.language.DefaultLanguageImplementation;
@@ -57,8 +59,8 @@ public class AlgorithmLocalization extends DefaultLanguageImplementation {
 	 */
 
 	public final void translate(final Statement statement, final TextView textView) {
-		textView.setText(Utils.fromHtml(this.translate(statement)));
-		textView.setTextColor(getColor(statement));
+		textView.setText(Utils.fromHtml(statement.toLanguage(this)));
+		textView.setTextColor(ContextCompat.getColor(adapter.getActivity(), getColor(statement)));
 	}
 
 	/**
@@ -97,14 +99,14 @@ public class AlgorithmLocalization extends DefaultLanguageImplementation {
 	private void addTranslations() {
 		this.putTranslation(AlgorithmRootBlock.class, (TranslationFunction<AlgorithmRootBlock>) statement -> {
 			final Algorithm algorithm = adapter.getAlgorithm();
-			return getString(android.R.color.white, R.string.main_title, algorithm.getTitle(), algorithm.getAuthor());
+			return getString(R.string.main_title, algorithm.getTitle(), algorithm.getAuthor());
 		});
-		this.putTranslation(VariablesBlock.class, (TranslationFunction<VariablesBlock>) statement -> getString(R.color.rootBlockStatementColor, R.string.statement_root_variables));
-		this.putTranslation(BeginningBlock.class, (TranslationFunction<BeginningBlock>) statement -> getString(R.color.rootBlockStatementColor, R.string.statement_root_beginning));
-		this.putTranslation(EndBlock.class, (TranslationFunction<EndBlock>) statement -> getString(R.color.rootBlockStatementColor, R.string.statement_root_end));
+		this.putTranslation(VariablesBlock.class, (TranslationFunction<VariablesBlock>) statement -> getString(R.string.statement_root_variables));
+		this.putTranslation(BeginningBlock.class, (TranslationFunction<BeginningBlock>) statement -> getString(R.string.statement_root_beginning));
+		this.putTranslation(EndBlock.class, (TranslationFunction<EndBlock>) statement -> getString(R.string.statement_root_end));
 
-		this.putTranslation(CreateVariableStatement.class, (TranslationFunction<CreateVariableStatement>) statement -> getString(R.color.simpleStatementColor, R.string.statement_simple_createVariableStatement, statement.getIdentifier(), adapter.getActivity().getString(statement.getType() == VariableType.NUMBER ? R.string.statement_simple_createVariableStatement_number : R.string.statement_simple_createVariableStatement_string)));
-		this.putTranslation(AssignStatement.class, (TranslationFunction<AssignStatement>) statement -> getString(R.color.simpleStatementColor, R.string.statement_simple_assignStatement, statement.getIdentifier(), Utils.escapeHTML(statement.getValue().toLanguage(this))));
+		this.putTranslation(CreateVariableStatement.class, (TranslationFunction<CreateVariableStatement>) statement -> getString(R.string.statement_simple_createVariableStatement, statement.getIdentifier(), getString(statement.getType() == VariableType.NUMBER ? R.string.statement_simple_createVariableStatement_number : R.string.statement_simple_createVariableStatement_string)));
+		this.putTranslation(AssignStatement.class, (TranslationFunction<AssignStatement>) statement -> getString(R.string.statement_simple_assignStatement, statement.getIdentifier(), Utils.escapeHTML(statement.getValue().toLanguage(this))));
 		this.putTranslation(PromptStatement.class, (TranslationFunction<PromptStatement>) statement -> {
 			String message = getString(R.string.statement_simple_promptStatement, statement.getIdentifier());
 			if(statement.getMessage() != null) {
@@ -133,12 +135,12 @@ public class AlgorithmLocalization extends DefaultLanguageImplementation {
 
 			return content;
 		});
-		this.putTranslation(IfBlock.class, (TranslationFunction<IfBlock>) statement -> getString(R.color.blockStatementColor, R.string.statement_block_ifBlock, Utils.escapeHTML(statement.getCondition().toLanguage(this))));
-		this.putTranslation(ElseBlock.class, (TranslationFunction<ElseBlock>) statement -> getString(R.color.blockStatementColor, R.string.statement_block_elseBlock));
-		this.putTranslation(ForLoop.class, (TranslationFunction<ForLoop>) statement -> getString(R.color.blockStatementColor, R.string.statement_loop_forLoop, statement.getIdentifier(), Utils.escapeHTML(statement.getStart().toLanguage(this)), Utils.escapeHTML(statement.getEnd().toLanguage(this))));
-		this.putTranslation(WhileLoop.class, (TranslationFunction<WhileLoop>) statement -> getString(R.color.blockStatementColor, R.string.statement_loop_whileLoop, Utils.escapeHTML(statement.getCondition().toLanguage(this))));
-		this.putTranslation(LineComment.class, (TranslationFunction<LineComment>) statement -> getString(R.color.commentColor, R.string.statement_comment_lineComment, Utils.escapeHTML(statement.getContent())));
-		this.putTranslation(BlockComment.class, (TranslationFunction<BlockComment>) statement -> getString(R.color.commentColor, R.string.statement_comment_blockComment, Utils.escapeHTML(statement.getContent()).replace(System.getProperty("line.separator"), "<br>")));
+		this.putTranslation(IfBlock.class, (TranslationFunction<IfBlock>) statement -> getString(R.string.statement_block_ifBlock, Utils.escapeHTML(statement.getCondition().toLanguage(this))));
+		this.putTranslation(ElseBlock.class, (TranslationFunction<ElseBlock>) statement -> getString(R.string.statement_block_elseBlock));
+		this.putTranslation(ForLoop.class, (TranslationFunction<ForLoop>) statement -> getString(R.string.statement_loop_forLoop, statement.getIdentifier(), Utils.escapeHTML(statement.getStart().toLanguage(this)), Utils.escapeHTML(statement.getEnd().toLanguage(this))));
+		this.putTranslation(WhileLoop.class, (TranslationFunction<WhileLoop>) statement -> getString(R.string.statement_loop_whileLoop, Utils.escapeHTML(statement.getCondition().toLanguage(this))));
+		this.putTranslation(LineComment.class, (TranslationFunction<LineComment>) statement -> getString(R.string.statement_comment_lineComment, Utils.escapeHTML(statement.getContent())));
+		this.putTranslation(BlockComment.class, (TranslationFunction<BlockComment>) statement -> getString(R.string.statement_comment_blockComment, Utils.escapeHTML(statement.getContent()).replace(System.getProperty("line.separator"), "<br>")));
 	}
 
 	/**

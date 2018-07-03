@@ -26,13 +26,13 @@
     <string name="statement_root_end">&lt;strong&gt;FIN&lt;/strong&gt;</string>
 
     <string name="statement_simple_noLineBreak">&lt;em&gt;(Pas de saut de ligne)&lt;/em&gt;</string>
-    <string name="statement_simple_optionalString">&lt;em&gt;%s&lt;/em&gt;</string>
+    <string name="statement_simple_optionalString">\"&lt;em&gt;%s&lt;/em&gt;\"</string>
     <string name="statement_simple_createVariableStatement">&lt;strong&gt;%s&lt;/strong&gt; : &lt;em&gt;%s&lt;/em&gt;</string>
     <string name="statement_simple_createVariableStatement_number">NOMBRE</string>
     <string name="statement_simple_createVariableStatement_string">CHAÎNE</string>
     <string name="statement_simple_assignStatement">&lt;strong&gt;%s&lt;/strong&gt; ← &lt;strong&gt;%s&lt;/strong&gt;</string>
     <string name="statement_simple_promptStatement">&lt;strong&gt;LIRE&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt;</string>
-    <string name="statement_simple_printStatement">&lt;strong&gt;AFFICHER&lt;/strong&gt; "&lt;em&gt;%s&lt;/em&gt;"</string>
+    <string name="statement_simple_printStatement">&lt;strong&gt;AFFICHER&lt;/strong&gt; \"&lt;em&gt;%s&lt;/em&gt;\"</string>
     <string name="statement_simple_printVariableStatement">&lt;strong&gt;AFFICHER VARIABLE&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt;</string>
 
     <string name="statement_block_ifBlock">&lt;strong&gt;SI&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;ALORS&lt;/strong&gt;</string>
@@ -100,7 +100,7 @@
 
     <string name="snackbar_message_saved">Algorithme enregistré à la location suivante : %s</string>
     <string name="snackbar_error_parse">Erreur d\'analyse à la ligne %d : %s.</string>
-    <string name="snackbar_error_generic">Impossible d\'exécuter l\'opération : \"%s\".</string>
+    <string name="snackbar_error_generic">Impossible d\'exécuter l\'opération : %s</string>
     <string name="snackbar_error_wrongLocation">Impossible d\'ajouter cette ligne ici !</string>
     <string name="snackbar_error_noVariable">Vous devez tout d\'abord ajouter une variable !</string>
     <string name="snackbar_error_noNumberVariable">Vous devez tout d\'abord ajouter une variable de type nombre !</string>

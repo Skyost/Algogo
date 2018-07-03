@@ -1,7 +1,5 @@
 package xyz.algogo.core.evaluator.atom;
 
-import xyz.algogo.core.language.Language;
-
 /**
  * Creates a new interruption atom.
  * <br>Interruption atom are returned by the expression evaluator when the current evaluation is interrupted.
@@ -20,11 +18,6 @@ public class InterruptionAtom extends Atom<Integer> {
 	@Override
 	public final boolean hasSameType(final Atom atom) {
 		return hasInterruptionType(atom);
-	}
-
-	@Override
-	public final String toLanguage(final Language language) {
-		return null;
 	}
 
 	@Override

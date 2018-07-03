@@ -28,13 +28,13 @@
     <string name="statement_root_end">&lt;strong&gt;END&lt;/strong&gt;</string>
 
     <string name="statement_simple_noLineBreak">&lt;em&gt;(No line break)&lt;/em&gt;</string>
-    <string name="statement_simple_optionalString">"&lt;em&gt;%s&lt;/em&gt;"</string>
+    <string name="statement_simple_optionalString">\"&lt;em&gt;%s&lt;/em&gt;\"</string>
     <string name="statement_simple_createVariableStatement">&lt;strong&gt;%s&lt;/strong&gt; : &lt;em&gt;%s&lt;/em&gt;</string>
     <string name="statement_simple_createVariableStatement_number">NUMBER</string>
     <string name="statement_simple_createVariableStatement_string">STRING</string>
     <string name="statement_simple_assignStatement">&lt;strong&gt;%s&lt;/strong&gt; ← &lt;strong&gt;%s&lt;/strong&gt;</string>
     <string name="statement_simple_promptStatement">&lt;strong&gt;PROMPT&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt;</string>
-    <string name="statement_simple_printStatement">&lt;strong&gt;PRINT&lt;/strong&gt; "&lt;em&gt;%s&lt;/em&gt;"</string>
+    <string name="statement_simple_printStatement">&lt;strong&gt;PRINT&lt;/strong&gt; \"&lt;em&gt;%s&lt;/em&gt;\"</string>
     <string name="statement_simple_printVariableStatement">&lt;strong&gt;PRINT VARIABLE&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt;</string>
 
     <string name="statement_block_ifBlock">&lt;strong&gt;IF&lt;/strong&gt; &lt;em&gt;%s&lt;/em&gt; &lt;strong&gt;THEN&lt;/strong&gt;</string>
@@ -102,7 +102,7 @@
 
     <string name="snackbar_message_saved">Saved algorithm with success at the following location : %s</string>
     <string name="snackbar_error_parse">Parse error line %d : %s.</string>
-    <string name="snackbar_error_generic">Cannot perform operation : \"%s\".</string>
+    <string name="snackbar_error_generic">Cannot perform operation : %s</string>
     <string name="snackbar_error_wrongLocation">Cannot add this line here !</string>
     <string name="snackbar_error_noVariable">You must add a variable first !</string>
     <string name="snackbar_error_noNumberVariable">You must add a number variable first !</string>
