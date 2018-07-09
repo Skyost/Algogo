@@ -36,7 +36,7 @@ public class StringAtom extends Atom<String> {
 	 */
 
 	public static boolean hasStringType(final Atom atom) {
-		return atom.getValue() instanceof String;
+		return atom != null && atom.getValue() instanceof String;
 	}
 
 }

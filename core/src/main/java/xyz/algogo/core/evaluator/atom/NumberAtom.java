@@ -64,7 +64,7 @@ public class NumberAtom extends Atom<BigDecimal> {
 	 */
 
 	public static boolean hasNumberType(final Atom atom) {
-		return atom.getValue() instanceof BigDecimal;
+		return atom != null && atom.getValue() instanceof BigDecimal;
 	}
 
 }

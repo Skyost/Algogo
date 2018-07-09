@@ -2,8 +2,8 @@
 <launch4jConfig> 
   <dontWrapJar>false</dontWrapJar> 
   <headerType>gui</headerType> 
-  <jar>desktop-1.0-all.jar</jar> 
-  <outfile>desktop-1.0-all.exe</outfile> 
+  <jar>desktop-1.0.1-all.jar</jar> 
+  <outfile>desktop-1.0.1-all.exe</outfile> 
   <errTitle></errTitle> 
   <cmdLine></cmdLine> 
   <chdir>.</chdir> 
@@ -24,16 +24,16 @@
     <runtimeBits>64/32</runtimeBits> 
   </jre> 
   <versionInfo> 
-    <fileVersion>1.0.0.0</fileVersion> 
-    <txtFileVersion>v1.0</txtFileVersion> 
-    <fileDescription>Algogo Desktop v1.0</fileDescription> 
+    <fileVersion>1.0.1.0</fileVersion> 
+    <txtFileVersion>v1.0.1</txtFileVersion> 
+    <fileDescription>Algogo Desktop v1.0.1</fileDescription> 
     <copyright>This product is licensed under GNU GPL v3. Please check https://github.com/Skyost/Algogo/blob/master/LICENSE.md for more informations.</copyright> 
-    <productVersion>1.0.0.0</productVersion> 
-    <txtProductVersion>v1.0</txtProductVersion> 
-    <productName>Algogo Desktop v1.0</productName> 
+    <productVersion>1.0.1.0</productVersion> 
+    <txtProductVersion>v1.0.1</txtProductVersion> 
+    <productName>Algogo Desktop v1.0.1</productName> 
     <companyName>Skyost</companyName> 
     <internalName>Algogo Desktop</internalName> 
-    <originalFilename>desktop-1.0-all.exe</originalFilename> 
+    <originalFilename>desktop-1.0.1-all.exe</originalFilename> 
     <trademarks></trademarks> 
     <language>ENGLISH_US</language> 
   </versionInfo> 
