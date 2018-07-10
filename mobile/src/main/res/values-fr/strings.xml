@@ -113,6 +113,6 @@
     <string name="console_error">Erreur rencontrée pendant l\'exécution de l\'algorithme :</string>
 
     <string name="console_dialog_title">Lire une variable</string>
-    <string name="console_dialog_message">Veuillez entrer la valeur de &lt;em&gt;%s&lt;/em&gt;. Si cette valeur est une &lt;em&gt;Chaîne&lt;/em&gt;, veuillez ne pas oublier les guillemets (eg. &lt;em&gt;"Une Chaîne"&lt;/em&gt;).</string>
+    <string name="console_dialog_message">Veuillez entrer la valeur de &lt;em&gt;%s&lt;/em&gt;. Si cette valeur est une &lt;em&gt;Chaîne&lt;/em&gt;, veuillez ne pas oublier les guillemets (eg. &lt;em&gt;\"Une Chaîne\"&lt;/em&gt;).</string>
     <string name="console_dialog_hint">Entrez la valeur de la variable ici</string>
 </resources>

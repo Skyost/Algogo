@@ -115,6 +115,6 @@
     <string name="console_error">Error occurred while running your algorithm :</string>
 
     <string name="console_dialog_title">Input</string>
-    <string name="console_dialog_message">Please enter a value of &lt;em&gt;%s&lt;/em&gt;. If this value is a &lt;em&gt;String&lt;/em&gt;, please do not forget the quotes (eg. &lt;em&gt;"A String"&lt;/em&gt;).</string>
+    <string name="console_dialog_message">Please enter a value of &lt;em&gt;%s&lt;/em&gt;. If this value is a &lt;em&gt;String&lt;/em&gt;, please do not forget the quotes (eg. &lt;em&gt;\"A String\"&lt;/em&gt;).</string>
     <string name="console_dialog_hint">Put the variable value here</string>
 </resources>

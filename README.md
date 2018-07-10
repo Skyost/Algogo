@@ -4,6 +4,8 @@
 
 </div>
 
+![Blank image](https://i.imgur.com/85NiIzM.png)
+
 [![Downloads](https://img.shields.io/github/downloads/Skyost/Algogo/total.svg?style=flat-square)](https://github.com/Skyost/Algogo/releases)
 [![Travis](https://img.shields.io/travis/Skyost/Algogo.svg?style=flat-square)](https://travis-ci.org/Skyost/Algogo)
 [![License](https://img.shields.io/github/license/Skyost/Algogo.svg?style=flat-square)](https://github.com/Skyost/Algogo/blob/desktop/LICENSE.md)
@@ -39,24 +41,24 @@ Algogo has a lot of features ! Let's see the main ones :
 
 ## Documentation
 
-A wiki is available [here](wiki/), on Github. If you want to get a list of supported constants, operators and functions, [here is it](wiki#expression-evaluation) !
+A wiki is available [here](https://github.com/Skyost/Algogo/wiki/), on Github. If you want to get a list of supported constants, operators and functions, [here is it](https://github.com/Skyost/Algogo/wiki#expression-evaluation) !
 
 ## Download
  
 Here are the links to download Algogo :
 
-* [Algogo Desktop](releases/latest/)
+* [Algogo Desktop](https://github.com/Skyost/Algogo/releases/latest/)
 * [Algogo Mobile](https://play.google.com/store/apps/details?id=fr.skyost.algo.mobile)
 * [Algogo Core](https://github.com/Skyost/Algogo/wiki/Algogo-Core#include-it)
 
 ## Contributions
 
-It's easy to contribute to Algogo ! If you are a developer, first, you have to create a [fork](fork/) and make your changes. Then make a pull request describing what are the improvements.
+It's easy to contribute to Algogo ! If you are a developer, first, you have to create a [fork](https://github.com/Skyost/Algogo/fork/) and make your changes. Then make a pull request describing what are the improvements.
 
-If you are not a developer, well, you can contribute as well ! Report bugs, problems and improvements in the [_Issues_](issues/) section. You can also contribute by [making a donation](https://www.paypal.com/cgi-bin/webscr?hosted_button_id=XLEBVBMQNTXMY&item_name=Algogo&cmd=_s-xclick).
+If you are not a developer, well, you can contribute as well ! Report bugs, problems and improvements in the [_Issues_](https://github.com/Skyost/Algogo/issues) section. You can also contribute by [making a donation](https://www.paypal.com/cgi-bin/webscr?hosted_button_id=XLEBVBMQNTXMY&item_name=Algogo&cmd=_s-xclick).
 
 **Anyway, help is greatly appreciated under any form !**
 
 ## Support
 
-If you want to report a bug / suggest an improvement / anything else, do not hesitate to [open an issue](issues/new/).
+If you want to report a bug / suggest an improvement / anything else, do not hesitate to [open an issue](https://github.com/Skyost/Algogo/issues).

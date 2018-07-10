@@ -23,8 +23,8 @@ android {
         applicationId "fr.skyost.algo.mobile"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 7
-        versionName "v1.0.1"
+        versionCode 8
+        versionName "v1.0.2"
         vectorDrawables.useSupportLibrary = true
     }
 

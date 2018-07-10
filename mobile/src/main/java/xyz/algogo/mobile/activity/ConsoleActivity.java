@@ -8,6 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.context.InputListener;
@@ -15,9 +19,6 @@ import xyz.algogo.core.evaluator.context.OutputListener;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.mobile.R;
 import xyz.algogo.mobile.utils.Utils;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
 
 /**
  * Represents the console activity.
@@ -106,7 +107,7 @@ public class ConsoleActivity extends AppCompatActivity implements InputListener,
 				final View layout = this.getLayoutInflater().inflate(R.layout.console_dialog_prompt, null);
 				new AlertDialog.Builder(ConsoleActivity.this)
 						.setTitle(R.string.console_dialog_title)
-						.setMessage(arguments[1] == null ? this.getString(R.string.console_dialog_message, arguments[0].toString()) : arguments[1].toString())
+						.setMessage(Utils.fromHtml(arguments[1] == null ? this.getString(R.string.console_dialog_message, arguments[0].toString()) : arguments[1].toString()))
 						.setView(layout)
 						.setPositiveButton(android.R.string.ok, (dialog, selected) -> callable.setMessage(((EditText)layout.findViewById(R.id.console_dialog_input)).getText().toString()))
 						.setCancelable(false)
