@@ -60,8 +60,8 @@
     <string name="lineEditor_printVariable_message">Message (facultatif) :</string>
     <string name="lineEditor_print_title">Afficher un message</string>
     <string name="lineEditor_print_message">Message :</string>
-    <string name="lineEditor_ifElse_title">IF/ELSE block</string>
-    <string name="lineEditor_ifElse_addElse">Bloc SI/SINON</string>
+    <string name="lineEditor_ifElse_title">Bloc SI/SINON</string>
+    <string name="lineEditor_ifElse_addElse">Ajouter un bloc SINON</string>
     <string name="lineEditor_for_title">Boucle POUR</string>
     <string name="lineEditor_for_startValue">Valeur de départ (doit être une expression valide) :</string>
     <string name="lineEditor_for_endValue">Valeur de fin (doit être une expression valide) :</string>
