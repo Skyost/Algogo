@@ -4,7 +4,7 @@
 
 </div>
 
-![Blank image](https://i.imgur.com/85NiIzM.png)
+![Blank image](https://i.imgur.com/sHX9bHa.png)
 
 [![Downloads](https://img.shields.io/github/downloads/Skyost/Algogo/total.svg?style=flat-square)](https://github.com/Skyost/Algogo/releases)
 [![Travis](https://img.shields.io/travis/Skyost/Algogo.svg?style=flat-square)](https://travis-ci.org/Skyost/Algogo)
