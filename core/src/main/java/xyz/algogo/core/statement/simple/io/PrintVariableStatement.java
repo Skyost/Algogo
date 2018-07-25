@@ -6,6 +6,7 @@ import xyz.algogo.core.evaluator.context.OutputListener;
 import xyz.algogo.core.evaluator.variable.Variable;
 import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.exception.InvalidIdentifierException;
+import xyz.algogo.core.exception.InvalidVariableValueException;
 
 import java.math.BigDecimal;
 
@@ -76,7 +77,12 @@ public class PrintVariableStatement extends PrintStatement {
 			}
 		}
 
-		String variableValue = variable.getType() == VariableType.NUMBER ? ((BigDecimal)variable.getValue()).toPlainString() : (String)variable.getValue();
+		final Object value = variable.getValue();
+		if(value == null) {
+			return new InvalidVariableValueException(identifier);
+		}
+
+		String variableValue = value == VariableType.NUMBER ? ((BigDecimal)variable.getValue()).toPlainString() : (String)variable.getValue();
 		if(this.shouldLineBreak()) {
 			variableValue += System.getProperty("line.separator");
 		}

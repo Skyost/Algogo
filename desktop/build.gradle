@@ -29,7 +29,6 @@ dependencies {
 
     compile group: 'com.fifesoft', name: 'rsyntaxtextarea', version: '2.6.1'
     compile group: 'com.fifesoft', name: 'autocomplete', version: '2.6.1'
-    compile group: 'com.fifesoft', name: 'spellchecker', version: '2.6.0'
 }
 
 generateGrammarSource {
