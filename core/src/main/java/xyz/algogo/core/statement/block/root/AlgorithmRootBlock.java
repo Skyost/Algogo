@@ -1,5 +1,7 @@
 package xyz.algogo.core.statement.block.root;
 
+import xyz.algogo.core.evaluator.ExpressionEvaluator;
+import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.BlockStatement;
 import xyz.algogo.core.statement.simple.comment.BlockComment;
@@ -50,6 +52,16 @@ public class AlgorithmRootBlock extends BlockStatement {
 
 	public final BeginningBlock getBeginningBlock() {
 		return (BeginningBlock)this.listStatementsById(BeginningBlock.STATEMENT_ID)[0];
+	}
+
+	@Override
+	public final Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+		try {
+			return super.evaluate(evaluator, context);
+		}
+		catch(final Exception ex) {
+			return ex;
+		}
 	}
 
 	@Override

@@ -2,10 +2,11 @@ package xyz.algogo.desktop.editor.component.textarea;
 
 import org.fife.ui.rsyntaxtextarea.Style;
 import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
+
+import java.awt.Font;
+
 import xyz.algogo.desktop.antlr.AlgogoHighlighting;
 import xyz.algogo.desktop.editor.component.tree.AlgorithmTreeRenderer;
-
-import java.awt.*;
 
 /**
  * Represents the Algogo language syntax scheme.
@@ -65,6 +66,7 @@ public class AlgogoSyntaxScheme extends SyntaxScheme {
 				break;
 			case AlgogoHighlighting.TYPE_NUMBER:
 			case AlgogoHighlighting.TYPE_STRING:
+			case AlgogoHighlighting.NO_LINE_BREAK:
 				style.underline = true;
 		}
 

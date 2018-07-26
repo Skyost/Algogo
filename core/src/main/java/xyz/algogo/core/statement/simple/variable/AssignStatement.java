@@ -1,14 +1,15 @@
 package xyz.algogo.core.statement.simple.variable;
 
+import java.math.BigDecimal;
+
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
+import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.evaluator.variable.Variable;
 import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.exception.InvalidIdentifierException;
 import xyz.algogo.core.exception.InvalidVariableValueException;
-
-import java.math.BigDecimal;
 
 /**
  * Represents an assign statement.
@@ -68,12 +69,12 @@ public class AssignStatement extends VariableStatement {
 		}
 
 		final Variable variable = evaluator.getVariable(this.getIdentifier());
-		final Object value = this.value.evaluate(evaluator, context).getValue();
-		if(value == null || (variable.getType() == VariableType.NUMBER && !(value instanceof BigDecimal)) || (variable.getType() == VariableType.STRING && !(value instanceof String))) {
+		final Atom atom = this.value.evaluate(evaluator, context);
+		if(atom == null || (variable.getType() == VariableType.NUMBER && !(atom.getValue() instanceof BigDecimal)) || (variable.getType() == VariableType.STRING && !(atom.getValue() instanceof String))) {
 			return new InvalidVariableValueException(this.getIdentifier());
 		}
 
-		evaluator.getVariable(this.getIdentifier()).setValue(value);
+		evaluator.getVariable(this.getIdentifier()).setValue(atom.getValue());
 		return null;
 	}
 

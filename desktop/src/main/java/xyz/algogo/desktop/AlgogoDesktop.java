@@ -1,15 +1,22 @@
 package xyz.algogo.desktop;
 
 import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
-import xyz.algogo.desktop.dialog.ErrorDialog;
-import xyz.algogo.desktop.editor.EditorFrame;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
+
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import xyz.algogo.desktop.dialog.ErrorDialog;
+import xyz.algogo.desktop.editor.EditorFrame;
 
 /**
  * Main class of Algogo Desktop.
@@ -27,7 +34,7 @@ public class AlgogoDesktop {
 	 * App version constant.
 	 */
 
-	public static final String APP_VERSION = "v1.0.1";
+	public static final String APP_VERSION = "v1.0.2";
 
 	/**
 	 * App icons list.

@@ -1,10 +1,13 @@
 // ValidTest by Skyost
 // Variables declaration :
 VARIABLES
-	// A simple variable :
+	// Some variables :
 	x : NUMBER
+	str : STRING
 // Main block :
 BEGINNING
+	str <- "Hello " + "world !"
+	PRINT_VARIABLE str
 	x <- (2 + 2) * 2
 	IF x == 8 THEN
 		PRINT_VARIABLE x "Value of x :"

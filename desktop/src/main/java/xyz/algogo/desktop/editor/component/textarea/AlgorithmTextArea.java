@@ -7,6 +7,11 @@ import org.fife.ui.autocomplete.DefaultCompletionProvider;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
+
+import java.awt.datatransfer.ClipboardOwner;
+
+import javax.swing.JOptionPane;
+
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.exception.ParseException;
 import xyz.algogo.core.language.AlgogoLanguage;
@@ -15,9 +20,6 @@ import xyz.algogo.desktop.antlr.AlgogoHighlighting;
 import xyz.algogo.desktop.dialog.ErrorDialog;
 import xyz.algogo.desktop.editor.EditorFrame;
 import xyz.algogo.desktop.editor.component.EditorMainComponent;
-
-import javax.swing.*;
-import java.awt.datatransfer.ClipboardOwner;
 
 /**
  * A text area that syntax highlights algorithm content.
@@ -162,7 +164,8 @@ public class AlgorithmTextArea extends RSyntaxTextArea implements EditorMainComp
 				AlgogoHighlighting.TO,
 				AlgogoHighlighting.PRINT,
 				AlgogoHighlighting.PRINT_VARIABLE,
-				AlgogoHighlighting.PROMPT
+				AlgogoHighlighting.PROMPT,
+				AlgogoHighlighting.NO_LINE_BREAK
 		}) {
 			final String name = AlgogoHighlighting.VOCABULARY.getLiteralName(type);
 			provider.addCompletion(new BasicCompletion(provider, name.substring(1, name.length() - 1)));
