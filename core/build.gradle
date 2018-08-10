@@ -26,6 +26,11 @@ shadowJar {
     configurations = [project.configurations.compile]
 }
 
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
+}
+
 generateGrammarSource {
     arguments += ['-visitor', '-long-messages']
 }

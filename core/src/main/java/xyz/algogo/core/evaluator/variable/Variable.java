@@ -1,7 +1,5 @@
 package xyz.algogo.core.evaluator.variable;
 
-import java.math.BigDecimal;
-
 /**
  * Represents a variable.
  */
@@ -44,7 +42,7 @@ public class Variable {
 	 */
 
 	public Variable(final String identifier, final VariableType type) {
-		this(identifier, type, type == VariableType.NUMBER ? BigDecimal.ZERO : "");
+		this(identifier, type, type.getDefaultValue());
 	}
 
 	/**
@@ -76,7 +74,7 @@ public class Variable {
 	 *
 	 * @return The variable type.
 	 */
-	
+
 	public final VariableType getType() {
 		return type;
 	}

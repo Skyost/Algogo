@@ -20,7 +20,7 @@ $(document).ready(function() {
 				image.attr('title', screenshotData.caption);
 				image.attr('alt', screenshotData.caption);
 			}
-						
+			
 			defaultCallback(data);
 		}
 	});

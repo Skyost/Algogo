@@ -216,7 +216,7 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 			arguments.add(visitExpression(expressionContext));
 		}
 
-		return new FunctionExpression(context.ID().getText(), arguments.toArray(new Expression[arguments.size()]));
+		return new FunctionExpression(context.ID().getText(), arguments.toArray(new Expression[0]));
 	}
 
 	@Override

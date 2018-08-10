@@ -143,6 +143,9 @@ public class ConsoleDialog extends JDialog implements ActionListener, InputListe
 					output(null, LINE_SEPARATOR);
 					output(null, editor.getAppLanguage().getString("consoleDialog.message.error") + LINE_SEPARATOR);
 					output(null, Utils.fromStackTrace(ex));
+
+					final String message = ex.getMessage() == null ? "" : ex.getMessage();
+					JOptionPane.showMessageDialog(this, "<html>" + editor.getAppLanguage().getString("consoleDialog.message.error") + "<br>" + (message.isEmpty() ? ex.getClass().getAnnotatedInterfaces() : message) + "</html>", "", JOptionPane.ERROR_MESSAGE);
 				}
 
 				setRunDefaultStyle();

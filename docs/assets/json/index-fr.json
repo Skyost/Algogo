@@ -1,5 +1,10 @@
 {
 	"title": "Algogo - Interpréteur d'algorithmes gratuit, léger et open-source.",
+	"smartbanner": {
+		"price": "GRATUIT",
+		"suffix-google": " - Sur Google Play",
+		"button": "VOIR"
+	}
 	"header": {
 		"subtitle": {
 			"1": "Algogo est un éditeur et interpréteur d'algorithmes.",
