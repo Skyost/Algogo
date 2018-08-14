@@ -2,6 +2,33 @@ package xyz.algogo.desktop.dialog;
 
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.kordamp.ikonli.swing.FontIcon;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.DefaultCaret;
+
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.context.InputListener;
@@ -13,16 +40,6 @@ import xyz.algogo.desktop.AppLanguage;
 import xyz.algogo.desktop.editor.EditorFrame;
 import xyz.algogo.desktop.editor.menubar.menu.listener.file.FileDialogMenuListener;
 import xyz.algogo.desktop.utils.Utils;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.DefaultCaret;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 /**
  * Represents a console dialog that allows to interpret an algorithm.
@@ -145,7 +162,7 @@ public class ConsoleDialog extends JDialog implements ActionListener, InputListe
 					output(null, Utils.fromStackTrace(ex));
 
 					final String message = ex.getMessage() == null ? "" : ex.getMessage();
-					JOptionPane.showMessageDialog(this, "<html>" + editor.getAppLanguage().getString("consoleDialog.message.error") + "<br>" + (message.isEmpty() ? ex.getClass().getAnnotatedInterfaces() : message) + "</html>", "", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this, "<html>" + editor.getAppLanguage().getString("consoleDialog.message.error") + "<br>" + (message.isEmpty() ? ex.getClass().getName() : message) + "</html>", "", JOptionPane.ERROR_MESSAGE);
 				}
 
 				setRunDefaultStyle();

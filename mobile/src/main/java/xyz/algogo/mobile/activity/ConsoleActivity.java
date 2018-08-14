@@ -56,6 +56,12 @@ public class ConsoleActivity extends AppCompatActivity implements InputListener,
 						output(null, this.getString(R.string.console_error) + System.getProperty("line.separator"));
 						output(null, ex.getMessage() + System.getProperty("line.separator"));
 						output(null, Utils.fromStackTrace(ex));
+
+						final String message = ex.getMessage() == null ? "" : ex.getMessage();
+						new AlertDialog.Builder(this)
+								.setMessage(this.getString(R.string.console_error) + "\n" + (message.isEmpty() ? ex.getClass().getName() : message))
+								.setPositiveButton(android.R.string.ok, null)
+								.show();
 					}
 
 					this.runOnUiThread(this::setFabDefaultStyle);
