@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -450,15 +449,14 @@ public class MainActivity extends AppCompatActivity implements AlgorithmMobileLi
 
 					@Override
 					public final void onGranted() {
-						final Bundle dialogArgs = new Bundle();
-						dialogArgs.putString(FileDialog.EXTENSION, ".agg2");
-						dialog.setArguments(dialogArgs);
-						dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
-
-						final FragmentManager manager = MainActivity.this.getSupportFragmentManager();
-						if(manager.isStateSaved()) {
-							dialog.show(manager, dialog.getClass().getName());
+						try {
+							final Bundle dialogArgs = new Bundle();
+							dialogArgs.putString(FileDialog.EXTENSION, ".agg2");
+							dialog.setArguments(dialogArgs);
+							dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
+							dialog.show(MainActivity.this.getSupportFragmentManager(), dialog.getClass().getName());
 						}
+						catch(final IllegalStateException ex) {}
 					}
 
 				}

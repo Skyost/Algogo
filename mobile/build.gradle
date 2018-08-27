@@ -23,8 +23,8 @@ android {
         applicationId "fr.skyost.algo.mobile"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 11
-        versionName "v1.0.5"
+        versionCode 13
+        versionName "v1.0.7"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -51,7 +51,7 @@ dependencies {
     implementation group: 'com.github.dekoservidoni', name: 'omfm', version: '1.1.1'
     implementation group: 'com.github.rustamg', name: 'file-dialogs', version: '1.0'
     implementation group: 'com.github.matecode', name: 'Snacky', version: '1.0.3'
-    implementation group: 'com.nabinbhandari.android', name: 'permissions', version: '3.6'
+    implementation group: 'com.nabinbhandari.android', name: 'permissions', version: '3.7'
 
     implementation group: 'com.android.support', name: 'appcompat-v7', version: '27.1.1'
     implementation group: 'com.android.support', name: 'design', version: '27.1.1'

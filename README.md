@@ -12,6 +12,7 @@
 ![GitHub code size](https://img.shields.io/github/languages/code-size/Skyost/Algogo.svg?style=flat-square)
 
 ## Table of contents
+
 1. [Introduction](#introduction)
 2. [Features](#features)
 3. [Documentation](#documentation)

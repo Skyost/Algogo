@@ -58,10 +58,10 @@ public class ConsoleActivity extends AppCompatActivity implements InputListener,
 						output(null, Utils.fromStackTrace(ex));
 
 						final String message = ex.getMessage() == null ? "" : ex.getMessage();
-						new AlertDialog.Builder(this)
+						this.runOnUiThread(() -> new AlertDialog.Builder(this)
 								.setMessage(this.getString(R.string.console_error) + "\n" + (message.isEmpty() ? ex.getClass().getName() : message))
 								.setPositiveButton(android.R.string.ok, null)
-								.show();
+								.show());
 					}
 
 					this.runOnUiThread(this::setFabDefaultStyle);
