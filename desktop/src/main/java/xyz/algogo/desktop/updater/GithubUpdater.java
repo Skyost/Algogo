@@ -2,13 +2,15 @@ package xyz.algogo.desktop.updater;
 
 import com.goebl.david.Response;
 import com.goebl.david.Webb;
+
 import org.json.JSONObject;
-import xyz.algogo.desktop.AlgogoDesktop;
 
 import java.util.HashSet;
 
+import xyz.algogo.desktop.AlgogoDesktop;
+
 /**
- * Ore update checker.
+ * Github updates checker.
  */
 
 public class GithubUpdater extends Thread {

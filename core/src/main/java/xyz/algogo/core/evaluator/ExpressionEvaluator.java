@@ -1,5 +1,8 @@
 package xyz.algogo.core.evaluator;
 
+import java.math.MathContext;
+import java.util.HashMap;
+
 import ch.obermuhlner.math.big.BigDecimalMath;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.InterruptionAtom;
@@ -7,16 +10,33 @@ import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.evaluator.function.Function;
 import xyz.algogo.core.evaluator.function.neper.ExpFunction;
+import xyz.algogo.core.evaluator.function.neper.Log10Function;
+import xyz.algogo.core.evaluator.function.neper.Log2Function;
 import xyz.algogo.core.evaluator.function.neper.LogFunction;
-import xyz.algogo.core.evaluator.function.other.*;
+import xyz.algogo.core.evaluator.function.other.AbsFunction;
+import xyz.algogo.core.evaluator.function.other.BernoulliFunction;
+import xyz.algogo.core.evaluator.function.other.CeilingFunction;
+import xyz.algogo.core.evaluator.function.other.FactorialFunction;
+import xyz.algogo.core.evaluator.function.other.FloorFunction;
+import xyz.algogo.core.evaluator.function.other.MaxFunction;
+import xyz.algogo.core.evaluator.function.other.MinFunction;
+import xyz.algogo.core.evaluator.function.other.RandomFunction;
 import xyz.algogo.core.evaluator.function.root.RootFunction;
 import xyz.algogo.core.evaluator.function.root.SqrtFunction;
-import xyz.algogo.core.evaluator.function.trigonometric.*;
+import xyz.algogo.core.evaluator.function.trigonometric.ACosFunction;
+import xyz.algogo.core.evaluator.function.trigonometric.ACosHFunction;
+import xyz.algogo.core.evaluator.function.trigonometric.ASinFunction;
+import xyz.algogo.core.evaluator.function.trigonometric.ASinHFunction;
+import xyz.algogo.core.evaluator.function.trigonometric.ATanFunction;
+import xyz.algogo.core.evaluator.function.trigonometric.ATanHFunction;
+import xyz.algogo.core.evaluator.function.trigonometric.CosFunction;
+import xyz.algogo.core.evaluator.function.trigonometric.CosHFunction;
+import xyz.algogo.core.evaluator.function.trigonometric.SinFunction;
+import xyz.algogo.core.evaluator.function.trigonometric.SinHFunction;
+import xyz.algogo.core.evaluator.function.trigonometric.TanFunction;
+import xyz.algogo.core.evaluator.function.trigonometric.TanHFunction;
 import xyz.algogo.core.evaluator.variable.Variable;
 import xyz.algogo.core.evaluator.variable.VariableType;
-
-import java.math.MathContext;
-import java.util.HashMap;
 
 /**
  * Represents an expression evaluator which allows to parse, evaluate and return the result of given expression.
@@ -226,13 +246,17 @@ public class ExpressionEvaluator {
 	public final void addDefaultFunctions() {
 		putFunction(new ExpFunction());
 		putFunction(new LogFunction());
+		putFunction(new Log10Function());
+		putFunction(new Log2Function());
 
 		putFunction(new SqrtFunction());
 		putFunction(new RootFunction());
 
 		putFunction(new AbsFunction());
 		putFunction(new BernoulliFunction());
+		putFunction(new CeilingFunction());
 		putFunction(new FactorialFunction());
+		putFunction(new FloorFunction());
 		putFunction(new MaxFunction());
 		putFunction(new MinFunction());
 		putFunction(new RandomFunction());

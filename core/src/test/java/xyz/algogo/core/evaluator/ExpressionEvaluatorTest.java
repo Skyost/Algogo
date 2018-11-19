@@ -1,9 +1,14 @@
 package xyz.algogo.core.evaluator;
 
-import ch.obermuhlner.math.big.BigDecimalMath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.logging.Logger;
+
+import ch.obermuhlner.math.big.BigDecimalMath;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
@@ -12,11 +17,9 @@ import xyz.algogo.core.evaluator.function.Function;
 import xyz.algogo.core.evaluator.variable.Variable;
 import xyz.algogo.core.evaluator.variable.VariableType;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.logging.Logger;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ExpressionEvaluatorTest {
 
@@ -107,6 +110,8 @@ class ExpressionEvaluatorTest {
 		assertEquals(new BigDecimal("23.14069263277926"), evaluator.evaluate("EXP(pi)").getValue());
 		assertEquals(new BigDecimal(100), evaluator.evaluate("MAX(1 + 1, SQRT(2), 50 * 2)").getValue());
 		assertEquals(evaluator.evaluate("| 10 - 20 |").getValue(), evaluator.evaluate("ABS(10 - 20)").getValue());
+		assertEquals(new BigDecimal("42"), evaluator.evaluate("CEILING(41.1)").getValue());
+		assertEquals(new BigDecimal("42"), evaluator.evaluate("FLOOR(42.9)").getValue());
 	}
 
 	@Test
