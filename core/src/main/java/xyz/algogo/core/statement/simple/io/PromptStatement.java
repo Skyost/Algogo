@@ -36,7 +36,7 @@ public class PromptStatement extends VariableStatement {
 			}
 
 			final Object input = context.getInputListener().input(this, this.getIdentifier(), message);
-			if(input == null) {
+			if(input == null || input.toString().trim().isEmpty()) {
 				return null;
 			}
 
