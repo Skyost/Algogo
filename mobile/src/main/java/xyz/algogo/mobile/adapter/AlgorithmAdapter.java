@@ -1,16 +1,21 @@
 package xyz.algogo.mobile.adapter;
 
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.statement.Statement;
@@ -23,10 +28,6 @@ import xyz.algogo.mobile.R;
 import xyz.algogo.mobile.activity.MainActivity;
 import xyz.algogo.mobile.language.AlgorithmLocalization;
 import xyz.algogo.mobile.view.AlgorithmRecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
 
 /**
  * Represents a recycler view adapter that allows to display and control algorithms.
@@ -228,7 +229,12 @@ public class AlgorithmAdapter extends RecyclerView.Adapter<AlgorithmViewHolder> 
 	public final void refreshCurrentStatement() {
 		currentStatement = algorithm.getRootBlock();
 		for(int index : path) {
-			currentStatement = (BlockStatement)buildDisplayedStatements(currentStatement).get(index);
+			final List<Statement> statements = buildDisplayedStatements(currentStatement);
+			if(index < 0 || index >= statements.size()) {
+				continue;
+			}
+
+			currentStatement = (BlockStatement)statements.get(index);
 		}
 		displayedStatements = buildDisplayedStatements(currentStatement);
 
@@ -255,15 +261,18 @@ public class AlgorithmAdapter extends RecyclerView.Adapter<AlgorithmViewHolder> 
 	 */
 
 	public final int getTruePosition(final int position) {
-		int truePosition = position;
+		int truePosition = 0;
 		for(int i = 0; i < position; i++) {
-			if(displayedStatements.get(i).getStatementId() != ElseBlock.STATEMENT_ID) {
+			if(displayedStatements.get(i).getStatementId() == ElseBlock.STATEMENT_ID) {
 				continue;
 			}
 
-			truePosition--;
+			truePosition++;
 		}
 
+		if(displayedStatements.get(position).getStatementId() == ElseBlock.STATEMENT_ID) {
+			truePosition--;
+		}
 		return truePosition;
 	}
 
@@ -280,22 +289,26 @@ public class AlgorithmAdapter extends RecyclerView.Adapter<AlgorithmViewHolder> 
 	/**
 	 * Builds an array containing all variables identifier.
 	 *
-	 * @type Variables type.
+	 * @param type Variables type.
 	 *
 	 * @return An array containing all variables identifier.
 	 */
 
 	public final String[] buildVariablesList(final VariableType type) {
 		final List<String> variables = new ArrayList<>();
-		for(final Statement statement : algorithm.getVariablesBlock().listStatementsById(CreateVariableStatement.STATEMENT_ID)) {
-			final CreateVariableStatement createVariableStatement = (CreateVariableStatement)statement;
-			if(type != null && createVariableStatement.getType() != type) {
-				continue;
-			}
-			variables.add(createVariableStatement.getIdentifier());
-		}
 
-		return variables.toArray(new String[variables.size()]);
+		try {
+			for(final Statement statement : algorithm.getVariablesBlock().listStatementsById(CreateVariableStatement.STATEMENT_ID)) {
+				final CreateVariableStatement createVariableStatement = (CreateVariableStatement)statement;
+				if(type != null && createVariableStatement.getType() != type) {
+					continue;
+				}
+				variables.add(createVariableStatement.getIdentifier());
+			}
+		}
+		catch(final ArrayIndexOutOfBoundsException ex) {}
+
+		return variables.toArray(new String[0]);
 	}
 
 	@Override

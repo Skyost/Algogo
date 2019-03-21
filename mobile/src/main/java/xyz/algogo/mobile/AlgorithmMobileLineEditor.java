@@ -1,7 +1,6 @@
 package xyz.algogo.mobile;
 
 import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import androidx.appcompat.app.AlertDialog;
 import de.mateware.snacky.Snacky;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.evaluator.variable.VariableType;

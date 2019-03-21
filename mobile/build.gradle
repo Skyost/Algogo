@@ -11,7 +11,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.3.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
@@ -23,15 +23,19 @@ android {
         applicationId "fr.skyost.algo.mobile"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 14
-        versionName "v1.0.8"
-        vectorDrawables.useSupportLibrary = true
+        versionCode 15
+        versionName "v1.1"
+        resValue "string", "ADMOB_APP_ID", getLocalProperty("admob.appId")
+        resValue "string", "ADMOB_CONSOLE_AD", getLocalProperty("admob.consoleAd")
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            resValue "string", "ADMOB_CONSOLE_AD", "ca-app-pub-3940256099942544/6300978111"
         }
     }
 
@@ -44,15 +48,25 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.2'
+
     implementation project(':core')
 
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk7', version: '1.2.71'
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk7', version: '1.3.21'
 
-    implementation group: 'com.github.dekoservidoni', name: 'omfm', version: '1.1.1'
+    implementation group: 'com.leinardi.android', name: 'speed-dial', version: '2.0.1'
     implementation group: 'com.github.rustamg', name: 'file-dialogs', version: '1.0'
-    implementation group: 'com.github.matecode', name: 'Snacky', version: '1.0.3'
+    implementation group: 'com.github.matecode', name: 'Snacky', version: '1.1.4'
     implementation group: 'com.nabinbhandari.android', name: 'permissions', version: '3.7'
 
-    implementation group: 'com.android.support', name: 'appcompat-v7', version: '28.0.0'
-    implementation group: 'com.android.support', name: 'design', version: '28.0.0'
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.1.0-alpha03'
+    implementation group: 'com.google.android.material', name: 'material', version: '1.1.0-alpha04'
+
+    implementation group: 'com.google.android.gms', name: 'play-services-ads', version:'17.2.0'
+}
+
+def getLocalProperty(String name) {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty(name)
 }

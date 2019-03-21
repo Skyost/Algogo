@@ -1,17 +1,25 @@
 package xyz.algogo.mobile.activity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.context.InputListener;
@@ -32,11 +40,26 @@ public class ConsoleActivity extends AppCompatActivity implements InputListener,
 
 	private EvaluationContext currentContext;
 
+	/**
+	 * The ads preference key.
+	 */
+
+	private String PREFERENCES_ADS = "ads_enabled";
+
 	@Override
 	protected final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_console);
 		this.setSupportActionBar(findViewById(R.id.console_toolbar));
+
+		final AdView adView = findViewById(R.id.console_ad);
+		if(getPreferences(Context.MODE_PRIVATE).getBoolean(PREFERENCES_ADS, true)) {
+			adView.loadAd(new AdRequest.Builder().build());
+		}
+		else {
+			adView.setVisibility(View.GONE);
+		}
+
 
 		final FloatingActionButton fab = this.findViewById(R.id.console_fab);
 		fab.setOnClickListener(view -> {
@@ -84,7 +107,13 @@ public class ConsoleActivity extends AppCompatActivity implements InputListener,
 	}
 
 	@Override
-	public final void onSaveInstanceState(final Bundle outState) {
+	public final boolean onCreateOptionsMenu(final Menu menu) {
+		this.getMenuInflater().inflate(R.menu.menu_console, menu);
+		return true;
+	}
+
+	@Override
+	public final void onSaveInstanceState(@NotNull final Bundle outState) {
 		if(currentContext != null) {
 			currentContext.setStopped(true);
 			currentContext = null;
@@ -98,6 +127,23 @@ public class ConsoleActivity extends AppCompatActivity implements InputListener,
 		switch(item.getItemId()) {
 		case android.R.id.home:
 			this.onBackPressed();
+			break;
+		case R.id.menu_console_ads:
+			final SharedPreferences.Editor editor = getPreferences(Context.MODE_PRIVATE).edit();
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.console_dialog_ads_title)
+					.setMessage(R.string.console_dialog_ads_message)
+					.setPositiveButton(R.string.console_dialog_ads_positive, (dialog, selected) -> editor.putBoolean(PREFERENCES_ADS, true))
+					.setNegativeButton(R.string.console_dialog_ads_negative, (dialog, selected) -> editor.putBoolean(PREFERENCES_ADS, false))
+					.setCancelable(false)
+					.setOnDismissListener(dialog -> {
+						editor.apply();
+						new AlertDialog.Builder(this)
+								.setMessage(R.string.console_dialog_ads_confirmation)
+								.setPositiveButton(android.R.string.ok, null)
+								.show();
+					})
+					.show();
 			break;
 		}
 
@@ -139,7 +185,11 @@ public class ConsoleActivity extends AppCompatActivity implements InputListener,
 	@Override
 	public final void output(final Statement source, final String content) {
 		final EditText console = this.findViewById(R.id.console_content);
-		this.runOnUiThread(() -> console.append(content));
+		if(console == null) {
+			return;
+		}
+
+		this.runOnUiThread(() -> console.append(content == null ? "" : content));
 	}
 
 	/**

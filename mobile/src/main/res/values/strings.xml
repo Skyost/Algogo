@@ -15,6 +15,14 @@
     <string name="menu_main_fab_blocks">Blocks</string>
     <string name="menu_main_fab_comments">Comments</string>
 
+    <string name="menu_console_ads">Ads…</string>
+
+    <string name="console_dialog_ads_title">Ads</string>
+    <string name="console_dialog_ads_message">Algogo leaves you the choice to toggle ads. The only thing you have to know is that this application and its content are made available for free to anyone and that ads are the only incomes of this application.</string>
+    <string name="console_dialog_ads_positive">Enable ads</string>
+    <string name="console_dialog_ads_negative">Disable ads</string>
+    <string name="console_dialog_ads_confirmation">Saved ! It is possible that you have to restart the application to apply the changes.</string>
+
     <string name="popupmenu_statement_edit">Edit line…</string>
     <string name="popupmenu_statement_remove">Remove line</string>
     <string name="popupmenu_statement_up">Up</string>

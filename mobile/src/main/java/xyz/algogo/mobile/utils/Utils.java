@@ -7,10 +7,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.text.Html;
 import android.text.Spanned;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import de.mateware.snacky.Snacky;
 import xyz.algogo.mobile.R;
-
-import java.io.*;
 
 /**
  * Utilities methods.
@@ -83,6 +91,10 @@ public class Utils {
 	 */
 
 	public static String escapeHTML(final String string) {
+		if(string == null || string.isEmpty()) {
+			return "";
+		}
+
 		final StringBuilder out = new StringBuilder(Math.max(16, string.length()));
 		for(int i = 0; i < string.length(); i++) {
 			final char c = string.charAt(i);

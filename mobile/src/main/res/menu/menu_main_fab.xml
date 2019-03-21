@@ -3,11 +3,6 @@
       tools:activity="xyz.algogo.mobile.activity.MainActivity">
 
     <item
-        android:id="@+id/menu_main_fab"
-        android:icon="@drawable/menu_main_fab"
-        android:title=""/>
-
-    <item
         android:id="@+id/menu_main_fab_variables"
         android:icon="@drawable/menu_main_fab_variables"
         android:title="@string/menu_main_fab_variables"/>

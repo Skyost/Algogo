@@ -4,15 +4,13 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
-import com.dekoservidoni.omfm.OneMoreFabMenu;
+import com.google.android.gms.ads.MobileAds;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 import com.rustamg.filedialogs.FileDialog;
@@ -20,7 +18,11 @@ import com.rustamg.filedialogs.OpenFileDialog;
 import com.rustamg.filedialogs.SaveFileDialog;
 
 import java.io.File;
+import java.io.Serializable;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import de.mateware.snacky.Snacky;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.evaluator.variable.VariableType;
@@ -47,7 +49,7 @@ import xyz.algogo.mobile.view.AlgorithmRecyclerView;
  * Represents the launcher activity.
  */
 
-public class MainActivity extends AppCompatActivity implements AlgorithmMobileLineEditor.Listener, OneMoreFabMenu.OptionsClick, FileDialog.OnFileSelectedListener {
+public class MainActivity extends AppCompatActivity implements AlgorithmMobileLineEditor.Listener, FileDialog.OnFileSelectedListener, SpeedDialView.OnActionSelectedListener {
 
 	/**
 	 * Allows to pass current adapter path.
@@ -89,12 +91,14 @@ public class MainActivity extends AppCompatActivity implements AlgorithmMobileLi
 	protected final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 		this.setContentView(R.layout.activity_main);
 		this.setSupportActionBar(findViewById(R.id.main_toolbar));
 
-		final OneMoreFabMenu fab = this.findViewById(R.id.main_fab);
-		fab.setOptionsClick(this);
+		MobileAds.initialize(this, getString(R.string.ADMOB_APP_ID));
+
+		final SpeedDialView fab = findViewById(R.id.main_fab);
+		fab.inflate(R.menu.menu_main_fab);
+		fab.setOnActionSelectedListener(this);
 
 		algorithmPath = this.getIntent().getData() == null ? null : this.getIntent().getData().getEncodedPath();
 		if(algorithmPath != null) {
@@ -118,7 +122,10 @@ public class MainActivity extends AppCompatActivity implements AlgorithmMobileLi
 
 		final AlgorithmRecyclerView items = getAlgorithmRecyclerView();
 		if(savedInstanceState != null && savedInstanceState.containsKey(INTENT_ADAPTER_PATH)) {
-			items.setAdapter(new AlgorithmAdapter(this, algorithm, (Integer[])savedInstanceState.getSerializable(INTENT_ADAPTER_PATH)));
+			final Serializable path = savedInstanceState.getSerializable(INTENT_ADAPTER_PATH);
+			if(path instanceof Integer[]) {
+				items.setAdapter(new AlgorithmAdapter(this, algorithm, (Integer[])path));
+			}
 			return;
 		}
 
@@ -206,9 +213,9 @@ public class MainActivity extends AppCompatActivity implements AlgorithmMobileLi
 	}
 
 	@Override
-	public final void onOptionClick(final Integer optionId) {
+	public boolean onActionSelected(final SpeedDialActionItem actionItem) {
 		final AlgorithmMobileLineEditor editor = new AlgorithmMobileLineEditor(this, this);
-		switch(optionId) {
+		switch(actionItem.getId()) {
 		case R.id.menu_main_fab_variables:
 			createListDialog((dialog, selected) -> {
 				switch(selected) {
@@ -264,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements AlgorithmMobileLi
 			}, R.string.addLineDialog_singleLineComment, R.string.addLineDialog_multiLineComment);
 			break;
 		}
+		return true;
 	}
 
 	@Override

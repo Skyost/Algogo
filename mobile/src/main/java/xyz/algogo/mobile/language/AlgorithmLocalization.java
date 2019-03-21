@@ -1,8 +1,8 @@
 package xyz.algogo.mobile.language;
 
-import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.language.DefaultLanguageImplementation;

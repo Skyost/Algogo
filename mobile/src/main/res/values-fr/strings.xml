@@ -13,6 +13,14 @@
     <string name="menu_main_fab_blocks">Blocs</string>
     <string name="menu_main_fab_comments">Commentaires</string>
 
+    <string name="menu_console_ads">Publicités…</string>
+
+    <string name="console_dialog_ads_title">Publicités</string>
+    <string name="console_dialog_ads_message">Algogo vous laisse le choix d\'activer ou de désactiver les publicités. Sachez cependant que cette application et son contenu sont mis à disposition gratuitement pour les utilisateurs et que les publicités constituent les seuls revenus de cette application.</string>
+    <string name="console_dialog_ads_positive">Activer les publicités</string>
+    <string name="console_dialog_ads_negative">Désactiver les publicités</string>
+    <string name="console_dialog_ads_confirmation">Choix enregistré ! Il est possible que vous ayez à redémarrer l\'application pour que les changements soient pris en compte.</string>
+
     <string name="popupmenu_statement_edit">Éditer ligne…</string>
     <string name="popupmenu_statement_remove">Supprimer ligne</string>
     <string name="popupmenu_statement_up">Haut</string>

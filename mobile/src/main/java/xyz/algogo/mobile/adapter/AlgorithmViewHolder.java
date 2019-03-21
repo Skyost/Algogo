@@ -1,10 +1,11 @@
 package xyz.algogo.mobile.adapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.BlockStatement;
 import xyz.algogo.core.statement.block.conditional.ElseBlock;
@@ -101,7 +102,7 @@ public class AlgorithmViewHolder extends RecyclerView.ViewHolder {
 		popup.getMenuInflater().inflate(R.menu.popupmenu_statement, popup.getMenu());
 		popup.setOnMenuItemClickListener(item -> {
 			int truePosition = adapter.getTruePosition(position);
-			if(adapter.getDisplayedStatements()[truePosition].getStatementId() == ElseBlock.STATEMENT_ID) {
+			if(adapter.getCurrentStatement().getStatement(truePosition).getStatementId() == ElseBlock.STATEMENT_ID) {
 				truePosition--;
 			}
 
