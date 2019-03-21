@@ -44,7 +44,7 @@ public abstract class LeftOpRightExpression extends Expression {
 	 * @return The left side expression.
 	 */
 
-	public final Expression getLeft() {
+	public Expression getLeft() {
 		return left;
 	}
 
@@ -54,7 +54,7 @@ public abstract class LeftOpRightExpression extends Expression {
 	 * @param left The left side expression.
 	 */
 
-	public final void setLeft(final Expression left) {
+	public void setLeft(final Expression left) {
 		this.left = left;
 	}
 
@@ -64,7 +64,7 @@ public abstract class LeftOpRightExpression extends Expression {
 	 * @return The operator.
 	 */
 
-	public final String getOperator() {
+	public String getOperator() {
 		return operator;
 	}
 
@@ -74,7 +74,7 @@ public abstract class LeftOpRightExpression extends Expression {
 	 * @param operator The operator.
 	 */
 
-	public final void setOperator(final String operator) {
+	public void setOperator(final String operator) {
 		this.operator = operator;
 	}
 
@@ -84,7 +84,7 @@ public abstract class LeftOpRightExpression extends Expression {
 	 * @return The right side expression.
 	 */
 
-	public final Expression getRight() {
+	public Expression getRight() {
 		return right;
 	}
 
@@ -94,7 +94,7 @@ public abstract class LeftOpRightExpression extends Expression {
 	 * @param right The right side expression.
 	 */
 
-	public final void setRight(final Expression right) {
+	public void setRight(final Expression right) {
 		this.right = right;
 	}
 

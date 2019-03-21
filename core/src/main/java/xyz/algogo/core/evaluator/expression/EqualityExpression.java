@@ -24,7 +24,7 @@ public class EqualityExpression extends RelationalExpression {
 	}
 
 	@Override
-	public final BooleanAtom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public BooleanAtom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		final Atom left = this.getLeft().evaluate(evaluator, context);
 		final Atom right = this.getRight().evaluate(evaluator, context);
 
@@ -39,7 +39,7 @@ public class EqualityExpression extends RelationalExpression {
 	}
 
 	@Override
-	public final EqualityExpression copy() {
+	public EqualityExpression copy() {
 		return new EqualityExpression(this.getLeft().copy(), this.getOperator(), this.getRight().copy());
 	}
 

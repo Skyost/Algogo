@@ -31,12 +31,12 @@ public class PythonLanguage extends DefaultLanguageImplementation {
 	}
 
 	@Override
-	public final String getHeader() {
+	public String getHeader() {
 		return "";
 	}
 
 	@Override
-	public final String getFooter() {
+	public String getFooter() {
 		return "";
 	}
 

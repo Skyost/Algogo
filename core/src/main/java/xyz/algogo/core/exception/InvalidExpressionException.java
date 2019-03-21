@@ -30,7 +30,7 @@ public class InvalidExpressionException extends Exception {
 	 * @return The expression.
 	 */
 
-	public final Expression getExpression() {
+	public Expression getExpression() {
 		return expression;
 	}
 

@@ -1,12 +1,12 @@
 package xyz.algogo.core.evaluator.expression;
 
+import java.math.BigDecimal;
+
 import ch.obermuhlner.math.big.BigDecimalMath;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-
-import java.math.BigDecimal;
 
 /**
  * Represents a power expression.
@@ -44,7 +44,7 @@ public class PowerExpression extends Expression {
 	 * @return The base.
 	 */
 
-	public final Expression getBase() {
+	public Expression getBase() {
 		return base;
 	}
 
@@ -54,7 +54,7 @@ public class PowerExpression extends Expression {
 	 * @param base The base.
 	 */
 
-	public final void setBase(final Expression base) {
+	public void setBase(final Expression base) {
 		this.base = base;
 	}
 
@@ -64,7 +64,7 @@ public class PowerExpression extends Expression {
 	 * @return The exponent.
 	 */
 
-	public final Expression getExponent() {
+	public Expression getExponent() {
 		return exponent;
 	}
 
@@ -74,12 +74,12 @@ public class PowerExpression extends Expression {
 	 * @param exponent The exponent.
 	 */
 
-	public final void setExponent(final Expression exponent) {
+	public void setExponent(final Expression exponent) {
 		this.exponent = exponent;
 	}
 
 	@Override
-	public final NumberAtom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public NumberAtom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		final Atom base = this.base.evaluate(evaluator, context);
 		final Atom exponent = this.exponent.evaluate(evaluator, context);
 
@@ -91,7 +91,7 @@ public class PowerExpression extends Expression {
 	}
 
 	@Override
-	public final PowerExpression copy() {
+	public PowerExpression copy() {
 		return new PowerExpression(base.copy(), exponent.copy());
 	}
 

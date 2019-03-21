@@ -1,11 +1,11 @@
 package xyz.algogo.core.evaluator.expression;
 
+import java.math.BigDecimal;
+
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-
-import java.math.BigDecimal;
 
 /**
  * Represents an unary minus expression.
@@ -45,12 +45,12 @@ public class UnaryMinusExpression extends Expression {
 	 * @param expression Expression to hold.
 	 */
 
-	public final void setExpression(final Expression expression) {
+	public void setExpression(final Expression expression) {
 		this.expression = expression;
 	}
 
 	@Override
-	public final NumberAtom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public NumberAtom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		final Atom<?> atom = expression.evaluate(evaluator, context);
 
 		if(!NumberAtom.hasNumberType(atom)) {
@@ -61,7 +61,7 @@ public class UnaryMinusExpression extends Expression {
 	}
 
 	@Override
-	public final UnaryMinusExpression copy() {
+	public UnaryMinusExpression copy() {
 		return new UnaryMinusExpression(expression.copy());
 	}
 

@@ -48,7 +48,7 @@ public class AssignStatement extends VariableStatement {
 	 * @return The value.
 	 */
 
-	public final Expression getValue() {
+	public Expression getValue() {
 		return value;
 	}
 
@@ -58,12 +58,12 @@ public class AssignStatement extends VariableStatement {
 	 * @param value The value.
 	 */
 
-	public final void setValue(final Expression value) {
+	public void setValue(final Expression value) {
 		this.value = value;
 	}
 
 	@Override
-	public final Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		if(!evaluator.hasVariable(this.getIdentifier())) {
 			return new InvalidIdentifierException(this.getIdentifier());
 		}
@@ -79,17 +79,17 @@ public class AssignStatement extends VariableStatement {
 	}
 
 	@Override
-	public final Exception validate() {
+	public Exception validate() {
 		return value == null ? new NullPointerException("Value cannot be null.") : null;
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final AssignStatement copy() {
+	public AssignStatement copy() {
 		return new AssignStatement(this.getIdentifier(), value.copy());
 	}
 

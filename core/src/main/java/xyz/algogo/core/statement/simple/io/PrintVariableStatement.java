@@ -47,7 +47,7 @@ public class PrintVariableStatement extends PrintStatement {
 	 * @return The variable identifier.
 	 */
 
-	public final String getIdentifier() {
+	public String getIdentifier() {
 		return identifier;
 	}
 
@@ -57,12 +57,12 @@ public class PrintVariableStatement extends PrintStatement {
 	 * @param identifier The identifier.
 	 */
 
-	public final void setIdentifier(final String identifier) {
+	public void setIdentifier(final String identifier) {
 		this.identifier = identifier;
 	}
 
 	@Override
-	public final Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		final Variable variable = evaluator.getVariable(identifier);
 		if(variable == null) {
 			return new InvalidIdentifierException(this.getIdentifier());
@@ -91,17 +91,17 @@ public class PrintVariableStatement extends PrintStatement {
 	}
 
 	@Override
-	public final Exception validate() {
+	public Exception validate() {
 		return null;
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final PrintVariableStatement copy() {
+	public PrintVariableStatement copy() {
 		return new PrintVariableStatement(identifier, this.getMessage(), this.shouldLineBreak());
 	}
 

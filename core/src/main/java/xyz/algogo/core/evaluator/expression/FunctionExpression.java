@@ -1,12 +1,12 @@
 package xyz.algogo.core.evaluator.expression;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Represents a function expression.
@@ -44,7 +44,7 @@ public class FunctionExpression extends Expression {
 	 * @return The function identifier.
 	 */
 
-	public final String getIdentifier() {
+	public String getIdentifier() {
 		return identifier;
 	}
 
@@ -54,7 +54,7 @@ public class FunctionExpression extends Expression {
 	 * @param identifier The function identifier.
 	 */
 
-	public final void setIdentifier(final String identifier) {
+	public void setIdentifier(final String identifier) {
 		this.identifier = identifier;
 	}
 
@@ -64,7 +64,7 @@ public class FunctionExpression extends Expression {
 	 * @return The function arguments.
 	 */
 
-	public final Expression[] getArguments() {
+	public Expression[] getArguments() {
 		return arguments;
 	}
 
@@ -74,12 +74,12 @@ public class FunctionExpression extends Expression {
 	 * @param arguments The function arguments.
 	 */
 
-	public final void setArguments(final Expression... arguments) {
+	public void setArguments(final Expression... arguments) {
 		this.arguments = arguments;
 	}
 
 	@Override
-	public final Atom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Atom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		if(!evaluator.hasFunction(identifier)) {
 			return NumberAtom.ZERO;
 		}
@@ -93,7 +93,7 @@ public class FunctionExpression extends Expression {
 	}
 
 	@Override
-	public final FunctionExpression copy() {
+	public FunctionExpression copy() {
 		final List<Expression> copy = new ArrayList<>();
 		for(final Expression argument : arguments) {
 			copy.add(argument.copy());

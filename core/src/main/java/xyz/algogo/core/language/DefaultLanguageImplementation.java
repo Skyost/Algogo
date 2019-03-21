@@ -1,12 +1,30 @@
 package xyz.algogo.core.language;
 
-import xyz.algogo.core.evaluator.atom.*;
-import xyz.algogo.core.evaluator.expression.*;
+import java.util.regex.Pattern;
+
+import xyz.algogo.core.evaluator.atom.Atom;
+import xyz.algogo.core.evaluator.atom.BooleanAtom;
+import xyz.algogo.core.evaluator.atom.IdentifierAtom;
+import xyz.algogo.core.evaluator.atom.NumberAtom;
+import xyz.algogo.core.evaluator.atom.StringAtom;
+import xyz.algogo.core.evaluator.expression.AbsoluteValueExpression;
+import xyz.algogo.core.evaluator.expression.AdditiveExpression;
+import xyz.algogo.core.evaluator.expression.AndExpression;
+import xyz.algogo.core.evaluator.expression.AtomExpression;
+import xyz.algogo.core.evaluator.expression.EqualityExpression;
+import xyz.algogo.core.evaluator.expression.Expression;
+import xyz.algogo.core.evaluator.expression.FunctionExpression;
+import xyz.algogo.core.evaluator.expression.LeftOpRightExpression;
+import xyz.algogo.core.evaluator.expression.MultiplicationExpression;
+import xyz.algogo.core.evaluator.expression.NotExpression;
+import xyz.algogo.core.evaluator.expression.OrExpression;
+import xyz.algogo.core.evaluator.expression.ParenthesisExpression;
+import xyz.algogo.core.evaluator.expression.PowerExpression;
+import xyz.algogo.core.evaluator.expression.RelationalExpression;
+import xyz.algogo.core.evaluator.expression.UnaryMinusExpression;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.BlockStatement;
 import xyz.algogo.core.statement.block.root.AlgorithmRootBlock;
-
-import java.util.regex.Pattern;
 
 /**
  * Default language implementation, with default expression and atom implemented.
@@ -72,7 +90,10 @@ public abstract class DefaultLanguageImplementation extends Language {
 			for(final Expression argument : expression.getArguments()) {
 				builder.append(argument.toLanguage(this)).append(", ");
 			}
-			builder.setLength(builder.length() - 2);
+
+			if(builder.length() >= 2) {
+				builder.setLength(builder.length() - 2);
+			}
 
 			return expression.getIdentifier() + "(" + builder.toString() + ")";
 		});

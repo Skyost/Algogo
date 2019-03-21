@@ -71,7 +71,7 @@ public class EvaluationContext {
 	 * @return The current input listener.
 	 */
 
-	public final InputListener getInputListener() {
+	public InputListener getInputListener() {
 		return inputListener;
 	}
 
@@ -81,7 +81,7 @@ public class EvaluationContext {
 	 * @param inputListener The input listener.
 	 */
 
-	public final void setInputListener(final InputListener inputListener) {
+	public void setInputListener(final InputListener inputListener) {
 		this.inputListener = inputListener;
 	}
 
@@ -91,7 +91,7 @@ public class EvaluationContext {
 	 * @return The current output listener.
 	 */
 
-	public final OutputListener getOutputListener() {
+	public OutputListener getOutputListener() {
 		return outputListener;
 	}
 
@@ -101,7 +101,7 @@ public class EvaluationContext {
 	 * @param outputListener The output listener.
 	 */
 
-	public final void setOutputListener(final OutputListener outputListener) {
+	public void setOutputListener(final OutputListener outputListener) {
 		this.outputListener = outputListener;
 	}
 
@@ -111,7 +111,7 @@ public class EvaluationContext {
 	 * @return Whether the current evaluation should be stopped.
 	 */
 
-	public final synchronized boolean isStopped() {
+	public synchronized boolean isStopped() {
 		return isStopped;
 	}
 
@@ -121,7 +121,7 @@ public class EvaluationContext {
 	 * @param isStopped Whether the current evaluation should be stopped.
 	 */
 
-	public final synchronized void setStopped(final boolean isStopped) {
+	public synchronized void setStopped(final boolean isStopped) {
 		this.isStopped = isStopped;
 	}
 
@@ -131,7 +131,7 @@ public class EvaluationContext {
 	 * @return The math context of the current evaluation.
 	 */
 
-	public final MathContext getMathContext() {
+	public MathContext getMathContext() {
 		return mathContext;
 	}
 
@@ -141,7 +141,7 @@ public class EvaluationContext {
 	 * @param mathContext The math context.
 	 */
 
-	public final void setMathContext(final MathContext mathContext) {
+	public void setMathContext(final MathContext mathContext) {
 		this.mathContext = mathContext;
 	}
 

@@ -1,5 +1,7 @@
 package xyz.algogo.core.statement.block.loop;
 
+import java.math.BigDecimal;
+
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
@@ -11,8 +13,6 @@ import xyz.algogo.core.exception.InvalidIdentifierException;
 import xyz.algogo.core.exception.ParseException;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.BlockStatement;
-
-import java.math.BigDecimal;
 
 /**
  * Represents a FOR loop.
@@ -67,7 +67,7 @@ public class ForLoop extends BlockStatement {
 	 * @return The variable identifier.
 	 */
 
-	public final String getIdentifier() {
+	public String getIdentifier() {
 		return identifier;
 	}
 
@@ -77,7 +77,7 @@ public class ForLoop extends BlockStatement {
 	 * @param identifier The variable identifier.
 	 */
 
-	public final void setIdentifier(final String identifier) {
+	public void setIdentifier(final String identifier) {
 		this.identifier = identifier;
 	}
 
@@ -87,7 +87,7 @@ public class ForLoop extends BlockStatement {
 	 * @return The start expression.
 	 */
 
-	public final Expression getStart() {
+	public Expression getStart() {
 		return start;
 	}
 
@@ -97,7 +97,7 @@ public class ForLoop extends BlockStatement {
 	 * @param start The start expression.
 	 */
 
-	public final void setStart(final Expression start) {
+	public void setStart(final Expression start) {
 		this.start = start;
 	}
 
@@ -107,7 +107,7 @@ public class ForLoop extends BlockStatement {
 	 * @return The end expression.
 	 */
 
-	public final Expression getEnd() {
+	public Expression getEnd() {
 		return end;
 	}
 
@@ -117,12 +117,12 @@ public class ForLoop extends BlockStatement {
 	 * @param end The end expression.
 	 */
 
-	public final void setEnd(final Expression end) {
+	public void setEnd(final Expression end) {
 		this.end = end;
 	}
 
 	@Override
-	public final Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		final Variable variable = evaluator.getVariable(identifier);
 		if(variable == null) {
 			return new InvalidIdentifierException(identifier);
@@ -164,12 +164,12 @@ public class ForLoop extends BlockStatement {
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final ForLoop copy() {
+	public ForLoop copy() {
 		return new ForLoop(identifier, start.copy(), end.copy(), copyStatements());
 	}
 

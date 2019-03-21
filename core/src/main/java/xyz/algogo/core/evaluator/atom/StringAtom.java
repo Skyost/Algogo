@@ -17,7 +17,7 @@ public class StringAtom extends Atom<String> {
 	}
 
 	@Override
-	public final boolean hasSameType(final Atom atom) {
+	public boolean hasSameType(final Atom atom) {
 		return hasStringType(atom);
 	}
 

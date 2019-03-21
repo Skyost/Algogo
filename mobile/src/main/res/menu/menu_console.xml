@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:activity=".activity.MainActivity">
+
+    <item
+        android:icon="@drawable/menu_main_more"
+        android:orderInCategory="101"
+        android:title="@string/menu_main_more"
+        app:showAsAction="always">
+
+        <menu>
+
+            <item
+                android:id="@+id/menu_console_ads"
+                android:icon="@drawable/menu_console_ads"
+                android:orderInCategory="100"
+                android:title="@string/menu_console_ads"
+                app:showAsAction="ifRoom"/>
+
+        </menu>
+
+    </item>
+
+</menu>

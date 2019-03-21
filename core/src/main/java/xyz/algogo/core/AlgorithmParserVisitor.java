@@ -1,10 +1,32 @@
 package xyz.algogo.core;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import xyz.algogo.core.antlr.AlgogoBaseVisitor;
 import xyz.algogo.core.antlr.AlgogoParser;
-import xyz.algogo.core.evaluator.atom.*;
-import xyz.algogo.core.evaluator.expression.*;
+import xyz.algogo.core.evaluator.atom.Atom;
+import xyz.algogo.core.evaluator.atom.BooleanAtom;
+import xyz.algogo.core.evaluator.atom.IdentifierAtom;
+import xyz.algogo.core.evaluator.atom.NumberAtom;
+import xyz.algogo.core.evaluator.atom.StringAtom;
+import xyz.algogo.core.evaluator.expression.AbsoluteValueExpression;
+import xyz.algogo.core.evaluator.expression.AdditiveExpression;
+import xyz.algogo.core.evaluator.expression.AndExpression;
+import xyz.algogo.core.evaluator.expression.AtomExpression;
+import xyz.algogo.core.evaluator.expression.EqualityExpression;
+import xyz.algogo.core.evaluator.expression.Expression;
+import xyz.algogo.core.evaluator.expression.FunctionExpression;
+import xyz.algogo.core.evaluator.expression.MultiplicationExpression;
+import xyz.algogo.core.evaluator.expression.NotExpression;
+import xyz.algogo.core.evaluator.expression.OrExpression;
+import xyz.algogo.core.evaluator.expression.ParenthesisExpression;
+import xyz.algogo.core.evaluator.expression.PowerExpression;
+import xyz.algogo.core.evaluator.expression.RelationalExpression;
+import xyz.algogo.core.evaluator.expression.UnaryMinusExpression;
 import xyz.algogo.core.evaluator.variable.VariableType;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.conditional.ElseBlock;
@@ -24,10 +46,6 @@ import xyz.algogo.core.statement.simple.io.PromptStatement;
 import xyz.algogo.core.statement.simple.variable.AssignStatement;
 import xyz.algogo.core.statement.simple.variable.CreateVariableStatement;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * ANTLR parser visitor.
  */
@@ -35,7 +53,7 @@ import java.util.List;
 public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 
 	@Override
-	public final AlgorithmRootBlock visitScript(final AlgogoParser.ScriptContext context) {
+	public AlgorithmRootBlock visitScript(final AlgogoParser.ScriptContext context) {
 		final AlgorithmRootBlock algorithmRootBlock = new AlgorithmRootBlock();
 		for(final AlgogoParser.RootStatementContext rootStatementContext : context.rootStatement()) {
 			algorithmRootBlock.addStatement((Statement)visitRootStatement(rootStatementContext));
@@ -45,7 +63,7 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	}
 
 	@Override
-	public final VariablesBlock visitVariablesBlockRootStatement(final AlgogoParser.VariablesBlockRootStatementContext context) {
+	public VariablesBlock visitVariablesBlockRootStatement(final AlgogoParser.VariablesBlockRootStatementContext context) {
 		final VariablesBlock variablesBlock = new VariablesBlock();
 		for(final AlgogoParser.CreateVariableStatementContext createVariableStatementContext : context.createVariableStatement()) {
 			variablesBlock.addStatement(visitCreateVariableStatement(createVariableStatementContext));
@@ -55,7 +73,7 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	}
 
 	@Override
-	public final BeginningBlock visitBeginningBlockRootStatement(final AlgogoParser.BeginningBlockRootStatementContext context) {
+	public BeginningBlock visitBeginningBlockRootStatement(final AlgogoParser.BeginningBlockRootStatementContext context) {
 		final BeginningBlock beginningBlock = new BeginningBlock();
 		for(final AlgogoParser.StatementContext statementContext : context.statement()) {
 			beginningBlock.addStatement(visitStatement(statementContext));
@@ -65,12 +83,12 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	}
 
 	@Override
-	public final EndBlock visitEndBlockRootStatement(final AlgogoParser.EndBlockRootStatementContext context) {
+	public EndBlock visitEndBlockRootStatement(final AlgogoParser.EndBlockRootStatementContext context) {
 		return new EndBlock();
 	}
 
 	@Override
-	public final Statement visitCreateVariableStatement(final AlgogoParser.CreateVariableStatementContext context) {
+	public Statement visitCreateVariableStatement(final AlgogoParser.CreateVariableStatementContext context) {
 		final AlgogoParser.CommentContext commentContext = context.comment();
 		if(commentContext != null) {
 			return visitComment(commentContext);
@@ -80,27 +98,27 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	}
 
 	@Override
-	public final Statement visitStatement(final AlgogoParser.StatementContext context) {
+	public Statement visitStatement(final AlgogoParser.StatementContext context) {
 		return (Statement)super.visitStatement(context);
 	}
 
 	@Override
-	public final PromptStatement visitPromptStatement(final AlgogoParser.PromptStatementContext context) {
+	public PromptStatement visitPromptStatement(final AlgogoParser.PromptStatementContext context) {
 		return new PromptStatement(context.ID().getText(), getString(context.STRING()));
 	}
 
 	@Override
-	public final PrintStatement visitPrintStatement(final AlgogoParser.PrintStatementContext context) {
+	public PrintStatement visitPrintStatement(final AlgogoParser.PrintStatementContext context) {
 		return new PrintStatement(getString(context.STRING()), context.NO_LINE_BREAK() == null);
 	}
 
 	@Override
-	public final PrintVariableStatement visitPrintVariableStatement(final AlgogoParser.PrintVariableStatementContext context) {
+	public PrintVariableStatement visitPrintVariableStatement(final AlgogoParser.PrintVariableStatementContext context) {
 		return new PrintVariableStatement(context.ID().toString(), getString(context.STRING()), context.NO_LINE_BREAK() == null);
 	}
 
 	@Override
-	public final IfBlock visitIfBlockStatement(final AlgogoParser.IfBlockStatementContext context) {
+	public IfBlock visitIfBlockStatement(final AlgogoParser.IfBlockStatementContext context) {
 		final IfBlock ifBlock = new IfBlock(visitExpression(context.expression()), visitElseBlock(context.elseBlock()));
 		for(final AlgogoParser.StatementContext statementContext : context.statement()) {
 			ifBlock.addStatement(visitStatement(statementContext));
@@ -110,7 +128,7 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	}
 
 	@Override
-	public final WhileLoop visitWhileBlockStatement(final AlgogoParser.WhileBlockStatementContext context) {
+	public WhileLoop visitWhileBlockStatement(final AlgogoParser.WhileBlockStatementContext context) {
 		final WhileLoop whileLoop = new WhileLoop(visitExpression(context.expression()));
 		for(final AlgogoParser.StatementContext statementContext : context.statement()) {
 			whileLoop.addStatement(visitStatement(statementContext));
@@ -120,7 +138,7 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	}
 
 	@Override
-	public final ForLoop visitForBlockStatement(final AlgogoParser.ForBlockStatementContext context) {
+	public ForLoop visitForBlockStatement(final AlgogoParser.ForBlockStatementContext context) {
 		final ForLoop forLoop = new ForLoop(context.ID().getText(), visitExpression(context.start), visitExpression(context.end));
 		for(final AlgogoParser.StatementContext statementContext : context.statement()) {
 			forLoop.addStatement(visitStatement(statementContext));
@@ -130,12 +148,12 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	}
 
 	@Override
-	public final AssignStatement visitAssignStatement(final AlgogoParser.AssignStatementContext context) {
+	public AssignStatement visitAssignStatement(final AlgogoParser.AssignStatementContext context) {
 		return new AssignStatement(context.ID().getText(), visitExpression(context.expression()));
 	}
 
 	@Override
-	public final ElseBlock visitElseBlock(final AlgogoParser.ElseBlockContext context) {
+	public ElseBlock visitElseBlock(final AlgogoParser.ElseBlockContext context) {
 		if(context == null) {
 			return null;
 		}
@@ -149,7 +167,7 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	}
 
 	@Override
-	public final Comment visitComment(final AlgogoParser.CommentContext context) {
+	public Comment visitComment(final AlgogoParser.CommentContext context) {
 		final TerminalNode lineComment = context.LineComment();
 		if(lineComment == null) {
 			final String blockComment = context.BlockComment().getText();
@@ -160,57 +178,57 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	}
 
 	@Override
-	public final OrExpression visitOrExpression(final AlgogoParser.OrExpressionContext context) {
+	public OrExpression visitOrExpression(final AlgogoParser.OrExpressionContext context) {
 		return new OrExpression(visitExpression(context.expression(0)), visitExpression(context.expression(1)));
 	}
 
 	@Override
-	public final UnaryMinusExpression visitUnaryMinusExpression(final AlgogoParser.UnaryMinusExpressionContext context) {
+	public UnaryMinusExpression visitUnaryMinusExpression(final AlgogoParser.UnaryMinusExpressionContext context) {
 		return new UnaryMinusExpression(visitExpression(context.expression()));
 	}
 
 	@Override
-	public final AndExpression visitAndExpression(final AlgogoParser.AndExpressionContext context) {
+	public AndExpression visitAndExpression(final AlgogoParser.AndExpressionContext context) {
 		return new AndExpression(visitExpression(context.expression(0)), visitExpression(context.expression(1)));
 	}
 
 	@Override
-	public final AtomExpression visitAtomExpression(final AlgogoParser.AtomExpressionContext context) {
+	public AtomExpression visitAtomExpression(final AlgogoParser.AtomExpressionContext context) {
 		return new AtomExpression(visitAtom(context.atom()));
 	}
 
 	@Override
-	public final AdditiveExpression visitAdditiveExpression(final AlgogoParser.AdditiveExpressionContext context) {
+	public AdditiveExpression visitAdditiveExpression(final AlgogoParser.AdditiveExpressionContext context) {
 		return new AdditiveExpression(visitExpression(context.expression(0)), context.op.getText(), visitExpression(context.expression(1)));
 	}
 
 	@Override
-	public final PowerExpression visitPowExpression(final AlgogoParser.PowExpressionContext context) {
+	public PowerExpression visitPowExpression(final AlgogoParser.PowExpressionContext context) {
 		return new PowerExpression(visitExpression(context.expression(0)), visitExpression(context.expression(1)));
 	}
 
 	@Override
-	public final RelationalExpression visitRelationalExpression(final AlgogoParser.RelationalExpressionContext context) {
+	public RelationalExpression visitRelationalExpression(final AlgogoParser.RelationalExpressionContext context) {
 		return new RelationalExpression(visitExpression(context.expression(0)), context.op.getText(), visitExpression(context.expression(1)));
 	}
 
 	@Override
-	public final EqualityExpression visitEqualityExpression(final AlgogoParser.EqualityExpressionContext context) {
+	public EqualityExpression visitEqualityExpression(final AlgogoParser.EqualityExpressionContext context) {
 		return new EqualityExpression(visitExpression(context.expression(0)), context.op.getText(), visitExpression(context.expression(1)));
 	}
 
 	@Override
-	public final NotExpression visitNotExpression(final AlgogoParser.NotExpressionContext context) {
+	public NotExpression visitNotExpression(final AlgogoParser.NotExpressionContext context) {
 		return new NotExpression(visitExpression(context.expression()));
 	}
 
 	@Override
-	public final MultiplicationExpression visitMultiplicationExpression(final AlgogoParser.MultiplicationExpressionContext context) {
+	public MultiplicationExpression visitMultiplicationExpression(final AlgogoParser.MultiplicationExpressionContext context) {
 		return new MultiplicationExpression(visitExpression(context.expression(0)), context.op.getText(), visitExpression(context.expression(1)));
 	}
 
 	@Override
-	public final FunctionExpression visitFunctionExpression(final AlgogoParser.FunctionExpressionContext context) {
+	public FunctionExpression visitFunctionExpression(final AlgogoParser.FunctionExpressionContext context) {
 		final List<Expression> arguments = new ArrayList<>();
 		for(final AlgogoParser.ExpressionContext expressionContext : context.functionParams().expression()) {
 			arguments.add(visitExpression(expressionContext));
@@ -220,37 +238,37 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	}
 
 	@Override
-	public final ParenthesisExpression visitParenthesisExpression(final AlgogoParser.ParenthesisExpressionContext context) {
+	public ParenthesisExpression visitParenthesisExpression(final AlgogoParser.ParenthesisExpressionContext context) {
 		return new ParenthesisExpression(visitExpression(context.expression()));
 	}
 
 	@Override
-	public final AbsoluteValueExpression visitAbsoluteValueExpression(final AlgogoParser.AbsoluteValueExpressionContext context) {
+	public AbsoluteValueExpression visitAbsoluteValueExpression(final AlgogoParser.AbsoluteValueExpressionContext context) {
 		return new AbsoluteValueExpression(visitExpression(context.expression()));
 	}
 
 	@Override
-	public final Atom visitAtom(final AlgogoParser.AtomContext context) {
+	public Atom visitAtom(final AlgogoParser.AtomContext context) {
 		return (Atom)super.visitAtom(context);
 	}
 
 	@Override
-	public final NumberAtom visitNumberAtom(final AlgogoParser.NumberAtomContext context) {
+	public NumberAtom visitNumberAtom(final AlgogoParser.NumberAtomContext context) {
 		return new NumberAtom(new BigDecimal(context.number.getText()));
 	}
 
 	@Override
-	public final BooleanAtom visitBooleanAtom(final AlgogoParser.BooleanAtomContext context) {
+	public BooleanAtom visitBooleanAtom(final AlgogoParser.BooleanAtomContext context) {
 		return new BooleanAtom(context.bool.getText().equalsIgnoreCase("true"));
 	}
 
 	@Override
-	public final IdentifierAtom visitIdentifierAtom(final AlgogoParser.IdentifierAtomContext context) {
+	public IdentifierAtom visitIdentifierAtom(final AlgogoParser.IdentifierAtomContext context) {
 		return new IdentifierAtom(context.ID().getText());
 	}
 
 	@Override
-	public final StringAtom visitStringAtom(final AlgogoParser.StringAtomContext context) {
+	public StringAtom visitStringAtom(final AlgogoParser.StringAtomContext context) {
 		return new StringAtom(getString(context.STRING()));
 	}
 
@@ -262,7 +280,7 @@ public class AlgorithmParserVisitor extends AlgogoBaseVisitor<Object> {
 	 * @return The expected result of <em>visitExpression(...)</em>.
 	 */
 
-	public final Expression visitExpression(final AlgogoParser.ExpressionContext context) {
+	public Expression visitExpression(final AlgogoParser.ExpressionContext context) {
 		return (Expression)this.visit(context);
 	}
 

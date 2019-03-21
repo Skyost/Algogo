@@ -30,7 +30,7 @@ public class AlgorithmRootBlock extends BlockStatement {
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
@@ -40,7 +40,7 @@ public class AlgorithmRootBlock extends BlockStatement {
 	 * @return The variables block.
 	 */
 
-	public final VariablesBlock getVariablesBlock() {
+	public VariablesBlock getVariablesBlock() {
 		return (VariablesBlock)this.listStatementsById(VariablesBlock.STATEMENT_ID)[0];
 	}
 
@@ -50,12 +50,12 @@ public class AlgorithmRootBlock extends BlockStatement {
 	 * @return The beginning block.
 	 */
 
-	public final BeginningBlock getBeginningBlock() {
+	public BeginningBlock getBeginningBlock() {
 		return (BeginningBlock)this.listStatementsById(BeginningBlock.STATEMENT_ID)[0];
 	}
 
 	@Override
-	public final Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		try {
 			return super.evaluate(evaluator, context);
 		}
@@ -65,12 +65,12 @@ public class AlgorithmRootBlock extends BlockStatement {
 	}
 
 	@Override
-	public final AlgorithmRootBlock copy() {
+	public AlgorithmRootBlock copy() {
 		return new AlgorithmRootBlock(this.listStatements());
 	}
 
 	@Override
-	public final boolean isValidChild(final int statementId) {
+	public boolean isValidChild(final int statementId) {
 		return statementId == VariablesBlock.STATEMENT_ID || statementId == BeginningBlock.STATEMENT_ID || statementId == EndBlock.STATEMENT_ID || statementId == LineComment.STATEMENT_ID || statementId == BlockComment.STATEMENT_ID;
 	}
 

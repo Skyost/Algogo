@@ -40,7 +40,7 @@ public class InvalidVariableValueException extends Exception {
 	 * @return The identifier.
 	 */
 
-	public final String getIdentifier() {
+	public String getIdentifier() {
 		return identifier;
 	}
 

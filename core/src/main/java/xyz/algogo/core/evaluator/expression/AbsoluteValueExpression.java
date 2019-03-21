@@ -23,7 +23,7 @@ public class AbsoluteValueExpression extends ParenthesisExpression {
 	}
 
 	@Override
-	public final NumberAtom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public NumberAtom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		final Atom atom = super.evaluate(evaluator, context);
 		if(!NumberAtom.hasNumberType(atom)) {
 			return NumberAtom.ZERO;
@@ -33,7 +33,7 @@ public class AbsoluteValueExpression extends ParenthesisExpression {
 	}
 
 	@Override
-	public final AbsoluteValueExpression copy() {
+	public AbsoluteValueExpression copy() {
 		return new AbsoluteValueExpression(this.getExpression().copy());
 	}
 

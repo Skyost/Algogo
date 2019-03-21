@@ -39,12 +39,12 @@ public class PHPLanguage extends DefaultLanguageImplementation {
 	}
 
 	@Override
-	public final String getHeader() {
+	public String getHeader() {
 		return "<?php" + LINE_SEPARATOR + LINE_SEPARATOR;
 	}
 
 	@Override
-	public final String getFooter() {
+	public String getFooter() {
 		return LINE_SEPARATOR + "?>";
 	}
 

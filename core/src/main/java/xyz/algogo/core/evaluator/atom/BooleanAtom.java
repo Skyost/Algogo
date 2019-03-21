@@ -36,7 +36,7 @@ public class BooleanAtom extends NumberAtom {
 	 * @return The boolean value of this atom.
 	 */
 
-	public final boolean getBooleanValue() {
+	public boolean getBooleanValue() {
 		return this.getValue().equals(BigDecimal.ONE);
 	}
 
@@ -46,12 +46,12 @@ public class BooleanAtom extends NumberAtom {
 	 * @param value The boolean value of this atom.
 	 */
 
-	public final void setBooleanValue(final boolean value) {
+	public void setBooleanValue(final boolean value) {
 		super.setValue(value ? BigDecimal.ONE : BigDecimal.ZERO);
 	}
 
 	@Override
-	public final BooleanAtom copy() {
+	public BooleanAtom copy() {
 		return new BooleanAtom(getBooleanValue());
 	}
 

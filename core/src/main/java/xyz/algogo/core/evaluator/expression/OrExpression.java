@@ -1,10 +1,10 @@
 package xyz.algogo.core.evaluator.expression;
 
+import java.math.BigDecimal;
+
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.BooleanAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-
-import java.math.BigDecimal;
 
 /**
  * Represents a OR expression.
@@ -24,7 +24,7 @@ public class OrExpression extends RelationalExpression {
 	}
 
 	@Override
-	public final BooleanAtom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public BooleanAtom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		final Object left = this.getLeft().evaluate(evaluator, context).getValue();
 		final Object right = this.getRight().evaluate(evaluator, context).getValue();
 
@@ -32,7 +32,7 @@ public class OrExpression extends RelationalExpression {
 	}
 
 	@Override
-	public final OrExpression copy() {
+	public OrExpression copy() {
 		return new OrExpression(this.getLeft().copy(), this.getRight().copy());
 	}
 

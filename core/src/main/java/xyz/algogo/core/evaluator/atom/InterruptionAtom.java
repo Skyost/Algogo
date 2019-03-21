@@ -16,7 +16,7 @@ public class InterruptionAtom extends Atom<Integer> {
 	}
 
 	@Override
-	public final boolean hasSameType(final Atom atom) {
+	public boolean hasSameType(final Atom atom) {
 		return hasInterruptionType(atom);
 	}
 

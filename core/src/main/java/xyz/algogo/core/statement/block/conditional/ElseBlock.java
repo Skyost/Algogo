@@ -26,12 +26,12 @@ public class ElseBlock extends BlockStatement {
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final ElseBlock copy() {
+	public ElseBlock copy() {
 		return new ElseBlock(this.copyStatements());
 	}
 

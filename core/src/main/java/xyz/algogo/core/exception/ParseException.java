@@ -73,7 +73,7 @@ public class ParseException extends ParseCancellationException {
 	 * @return The symbol.
 	 */
 
-	public final Object getSymbol() {
+	public Object getSymbol() {
 		return symbol;
 	}
 
@@ -83,7 +83,7 @@ public class ParseException extends ParseCancellationException {
 	 * @return The line.
 	 */
 
-	public final int getLine() {
+	public int getLine() {
 		return line;
 	}
 
@@ -93,7 +93,7 @@ public class ParseException extends ParseCancellationException {
 	 * @return The position.
 	 */
 
-	public final int getPosition() {
+	public int getPosition() {
 		return position;
 	}
 
@@ -103,7 +103,7 @@ public class ParseException extends ParseCancellationException {
 	 * @return The error message.
 	 */
 
-	public final String getErrorMessage() {
+	public String getErrorMessage() {
 		return message;
 	}
 

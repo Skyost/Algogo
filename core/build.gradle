@@ -5,25 +5,23 @@ plugins {
     id 'maven'
 }
 
-version = '1.0.4'
+version = '1.0.5'
 
 sourceCompatibility = 1.8
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
 
-    antlr group: 'org.antlr', name: 'antlr4', version: '4.7.1'
-    compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.1'
+    antlr group: 'org.antlr', name: 'antlr4', version: '4.7.2'
+    implementation group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.2'
 
-    compile group: 'ch.obermuhlner', name: 'big-math', version: '2.0.1'
+    implementation group: 'ch.obermuhlner', name: 'big-math', version: '2.0.1'
 }
 
 shadowJar {
     destinationDir = new File(rootProject.projectDir, 'build/release/')
-    version = project.version
-    configurations = [project.configurations.compile]
 }
 
 javadoc {

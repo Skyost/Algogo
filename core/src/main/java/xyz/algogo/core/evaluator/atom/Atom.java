@@ -1,10 +1,10 @@
 package xyz.algogo.core.evaluator.atom;
 
+import java.io.Serializable;
+
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.language.Translatable;
-
-import java.io.Serializable;
 
 /**
  * Represents a simple atomic element.
@@ -81,7 +81,7 @@ public abstract class Atom<T extends Comparable<T>> implements Comparable<Atom>,
 	public abstract Atom<T> copy();
 
 	@Override
-	public final int compareTo(final Atom atom) {
+	public int compareTo(final Atom atom) {
 		if(!hasSameType(atom)) {
 			return -1;
 		}
@@ -90,7 +90,7 @@ public abstract class Atom<T extends Comparable<T>> implements Comparable<Atom>,
 	}
 
 	@Override
-	public final boolean equals(final Object object) {
+	public boolean equals(final Object object) {
 		if(!(object instanceof Atom) || !hasSameType((Atom)object)) {
 			return super.equals(object);
 		}

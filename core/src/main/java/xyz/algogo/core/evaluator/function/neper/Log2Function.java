@@ -9,7 +9,7 @@ import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.function.Function;
 
 /**
- * Represents the <a href="https://en.wikipedia.org/wiki/Common_logarithm">Binary logarithm function</a>.
+ * Represents the <a href="https://en.wikipedia.org/wiki/Binary_logarithm">Binary logarithm function</a>.
  */
 
 public class Log2Function extends Function {

@@ -47,7 +47,7 @@ public class JavaLanguage extends DefaultLanguageImplementation {
 	 * @return The current class name.
 	 */
 
-	public final String getClassName() {
+	public String getClassName() {
 		return className;
 	}
 
@@ -57,12 +57,12 @@ public class JavaLanguage extends DefaultLanguageImplementation {
 	 * @param className The current class name.
 	 */
 
-	public final void setClassName(final String className) {
+	public void setClassName(final String className) {
 		this.className = className;
 	}
 
 	@Override
-	public final String getHeader() {
+	public String getHeader() {
 		return "package xyz.algogo;" +
 				LINE_SEPARATOR +
 				LINE_SEPARATOR +
@@ -78,7 +78,7 @@ public class JavaLanguage extends DefaultLanguageImplementation {
 	}
 
 	@Override
-	public final String getFooter() {
+	public String getFooter() {
 		return "\t}" + LINE_SEPARATOR + LINE_SEPARATOR + "}";
 	}
 

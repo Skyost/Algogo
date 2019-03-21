@@ -23,12 +23,12 @@ public class LineComment extends Comment {
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final LineComment copy() {
+	public LineComment copy() {
 		return new LineComment(this.getContent());
 	}
 

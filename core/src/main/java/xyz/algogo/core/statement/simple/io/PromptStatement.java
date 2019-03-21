@@ -20,16 +20,16 @@ public class PromptStatement extends VariableStatement {
 		this.message = message;
 	}
 
-	public final String getMessage() {
+	public String getMessage() {
 		return message;
 	}
 
-	public final void setMessage(final String message) {
+	public void setMessage(final String message) {
 		this.message = message;
 	}
 
 	@Override
-	public final Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		try {
 			if(!evaluator.hasVariable(this.getIdentifier())) {
 				return new InvalidIdentifierException(this.getIdentifier());
@@ -55,17 +55,17 @@ public class PromptStatement extends VariableStatement {
 	}
 
 	@Override
-	public final Exception validate() {
+	public Exception validate() {
 		return null;
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final PromptStatement copy() {
+	public PromptStatement copy() {
 		return new PromptStatement(this.getIdentifier(), message);
 	}
 

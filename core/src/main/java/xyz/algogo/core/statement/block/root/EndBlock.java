@@ -18,33 +18,33 @@ public class EndBlock extends BlockStatement {
 	public static final int STATEMENT_ID = 3;
 
 	@Override
-	public final Statement getStatement(final int index) {
+	public Statement getStatement(final int index) {
 		return null;
 	}
 
 	@Override
-	public final void addStatement(final Statement statement) {}
+	public void addStatement(final Statement statement) {}
 
 	@Override
-	public final void insertStatement(final Statement statement, final int index) {}
+	public void insertStatement(final Statement statement, final int index) {}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final EndBlock copy() {
+	public EndBlock copy() {
 		return new EndBlock();
 	}
 
 	@Override
-	public final Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		return null;
 	}
 
 	@Override
-	public final boolean isValidChild(final int statementId) {
+	public boolean isValidChild(final int statementId) {
 		return false;
 	}
 

@@ -1,11 +1,11 @@
 package xyz.algogo.core.evaluator.expression;
 
+import java.math.BigDecimal;
+
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-
-import java.math.BigDecimal;
 
 /**
  * Represents a multiplication expression.
@@ -50,7 +50,7 @@ public class MultiplicationExpression extends LeftOpRightExpression {
 	}
 
 	@Override
-	public final MultiplicationExpression copy() {
+	public MultiplicationExpression copy() {
 		return new MultiplicationExpression(this.getLeft().copy(), this.getOperator(), this.getRight().copy());
 	}
 

@@ -23,7 +23,7 @@ public class FloorFunction extends Function {
 	}
 
 	@Override
-	public final NumberAtom evaluate(final EvaluationContext context, final Atom... arguments) {
+	public NumberAtom evaluate(final EvaluationContext context, final Atom... arguments) {
 		if(arguments.length == 0 || !NumberAtom.hasNumberType(arguments[0])) {
 			return NumberAtom.ZERO;
 		}

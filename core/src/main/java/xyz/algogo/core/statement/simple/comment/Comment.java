@@ -32,7 +32,7 @@ public abstract class Comment extends SimpleStatement {
 	 * @return The comment content.
 	 */
 
-	public final String getContent() {
+	public String getContent() {
 		return content;
 	}
 
@@ -42,7 +42,7 @@ public abstract class Comment extends SimpleStatement {
 	 * @param content The content.
 	 */
 
-	public final void setContent(final String content) {
+	public void setContent(final String content) {
 		this.content = content;
 	}
 

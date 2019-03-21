@@ -29,17 +29,17 @@ public class VariablesBlock extends BlockStatement {
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final VariablesBlock copy() {
+	public VariablesBlock copy() {
 		return new VariablesBlock(copyStatements());
 	}
 
 	@Override
-	public final boolean isValidChild(final int statementId) {
+	public boolean isValidChild(final int statementId) {
 		return statementId == CreateVariableStatement.STATEMENT_ID || statementId == LineComment.STATEMENT_ID || statementId == BlockComment.STATEMENT_ID;
 	}
 

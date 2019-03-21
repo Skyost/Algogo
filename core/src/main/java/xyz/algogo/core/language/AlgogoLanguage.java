@@ -110,7 +110,7 @@ public class AlgogoLanguage extends DefaultLanguageImplementation {
 	 * @return Whether credits should be added at the end of the file.
 	 */
 
-	public final boolean shouldAddCredits() {
+	public boolean shouldAddCredits() {
 		return addCredits;
 	}
 
@@ -120,7 +120,7 @@ public class AlgogoLanguage extends DefaultLanguageImplementation {
 	 * @param addCredits Whether credits should be added at the end of the file.
 	 */
 
-	public final void setAddCredits(final boolean addCredits) {
+	public void setAddCredits(final boolean addCredits) {
 		this.addCredits = addCredits;
 	}
 

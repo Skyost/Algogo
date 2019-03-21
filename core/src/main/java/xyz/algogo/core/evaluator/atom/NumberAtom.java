@@ -45,7 +45,7 @@ public class NumberAtom extends Atom<BigDecimal> {
 	}
 
 	@Override
-	public final boolean hasSameType(final Atom atom) {
+	public boolean hasSameType(final Atom atom) {
 		return hasNumberType(atom);
 	}
 

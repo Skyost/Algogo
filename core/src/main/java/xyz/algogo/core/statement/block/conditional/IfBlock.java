@@ -1,13 +1,13 @@
 package xyz.algogo.core.statement.block.conditional;
 
+import java.math.BigDecimal;
+
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.exception.InvalidExpressionException;
 import xyz.algogo.core.statement.Statement;
-
-import java.math.BigDecimal;
 
 /**
  * Represents an IF/ELSE block.
@@ -68,7 +68,7 @@ public class IfBlock extends ConditionalBlock {
 	 * @return The ELSE block.
 	 */
 
-	public final ElseBlock getElseBlock() {
+	public ElseBlock getElseBlock() {
 		return elseBlock;
 	}
 
@@ -78,7 +78,7 @@ public class IfBlock extends ConditionalBlock {
 	 * @param elseBlock The ELSE block.
 	 */
 
-	public final void setElseBlock(final ElseBlock elseBlock) {
+	public void setElseBlock(final ElseBlock elseBlock) {
 		this.elseBlock = elseBlock;
 	}
 
@@ -88,12 +88,12 @@ public class IfBlock extends ConditionalBlock {
 	 * @return Whether this IF block holds an ELSE block.
 	 */
 
-	public final boolean hasElseBlock() {
+	public boolean hasElseBlock() {
 		return elseBlock != null;
 	}
 
 	@Override
-	public final Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		final Atom result = this.getCondition().evaluate(evaluator, context);
 		if(result == null) {
 			return new InvalidExpressionException(this.getCondition());
@@ -111,12 +111,12 @@ public class IfBlock extends ConditionalBlock {
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final IfBlock copy() {
+	public IfBlock copy() {
 		return new IfBlock(this.getCondition().copy(), elseBlock == null ? null : elseBlock.copy(), this.copyStatements());
 	}
 

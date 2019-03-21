@@ -45,7 +45,7 @@ public abstract class ConditionalBlock extends BlockStatement {
 	 * @return The condition.
 	 */
 
-	public final Expression getCondition() {
+	public Expression getCondition() {
 		return condition;
 	}
 
@@ -55,7 +55,7 @@ public abstract class ConditionalBlock extends BlockStatement {
 	 * @param expression The condition.
 	 */
 
-	public final void setCondition(final Expression expression) {
+	public void setCondition(final Expression expression) {
 		this.condition = expression;
 	}
 

@@ -23,12 +23,12 @@ public class BlockComment extends Comment {
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final BlockComment copy() {
+	public BlockComment copy() {
 		return new BlockComment(this.getContent());
 	}
 

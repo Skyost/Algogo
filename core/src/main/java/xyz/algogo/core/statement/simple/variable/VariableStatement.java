@@ -30,7 +30,7 @@ public abstract class VariableStatement extends SimpleStatement {
 	 * @return The variable identifier.
 	 */
 
-	public final String getIdentifier() {
+	public String getIdentifier() {
 		return identifier;
 	}
 
@@ -40,7 +40,7 @@ public abstract class VariableStatement extends SimpleStatement {
 	 * @param identifier The identifier.
 	 */
 
-	public final void setIdentifier(final String identifier) {
+	public void setIdentifier(final String identifier) {
 		this.identifier = identifier;
 	}
 

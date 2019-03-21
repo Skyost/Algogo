@@ -26,12 +26,12 @@ public class BeginningBlock extends BlockStatement {
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final BeginningBlock copy() {
+	public BeginningBlock copy() {
 		return new BeginningBlock(copyStatements());
 	}
 

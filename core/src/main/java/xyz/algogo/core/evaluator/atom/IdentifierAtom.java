@@ -1,11 +1,11 @@
 package xyz.algogo.core.evaluator.atom;
 
+import java.math.BigDecimal;
+
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.variable.Variable;
 import xyz.algogo.core.evaluator.variable.VariableType;
-
-import java.math.BigDecimal;
 
 /**
  * Represents an identifier atom.
@@ -38,7 +38,7 @@ public class IdentifierAtom extends StringAtom {
 	}
 
 	@Override
-	public final IdentifierAtom copy() {
+	public IdentifierAtom copy() {
 		return new IdentifierAtom(this.getValue());
 	}
 

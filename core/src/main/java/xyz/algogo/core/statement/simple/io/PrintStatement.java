@@ -46,7 +46,7 @@ public class PrintStatement extends SimpleStatement {
 	 * @return The message.
 	 */
 
-	public final String getMessage() {
+	public String getMessage() {
 		return message;
 	}
 
@@ -56,7 +56,7 @@ public class PrintStatement extends SimpleStatement {
 	 * @param message The message.
 	 */
 
-	public final void setMessage(final String message) {
+	public void setMessage(final String message) {
 		this.message = message;
 	}
 
@@ -66,7 +66,7 @@ public class PrintStatement extends SimpleStatement {
 	 * @return Whether a line break should be appended.
 	 */
 
-	public final boolean shouldLineBreak() {
+	public boolean shouldLineBreak() {
 		return lineBreak;
 	}
 
@@ -76,7 +76,7 @@ public class PrintStatement extends SimpleStatement {
 	 * @param lineBreak Whether a line break should be appended.
 	 */
 
-	public final void setShouldLineBreak(final boolean lineBreak) {
+	public void setShouldLineBreak(final boolean lineBreak) {
 		this.lineBreak = lineBreak;
 	}
 

@@ -1,12 +1,12 @@
 package xyz.algogo.core.evaluator.expression;
 
+import java.math.BigDecimal;
+
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.atom.NumberAtom;
 import xyz.algogo.core.evaluator.atom.StringAtom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
-
-import java.math.BigDecimal;
 
 /**
  * Represents an additive expression.
@@ -53,7 +53,7 @@ public class AdditiveExpression extends LeftOpRightExpression {
 	}
 
 	@Override
-	public final AdditiveExpression copy() {
+	public AdditiveExpression copy() {
 		return new AdditiveExpression(this.getLeft().copy(), this.getOperator(), this.getRight().copy());
 	}
 

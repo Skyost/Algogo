@@ -1,13 +1,13 @@
 package xyz.algogo.core.statement.block.loop;
 
+import java.math.BigDecimal;
+
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
 import xyz.algogo.core.evaluator.atom.Atom;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.expression.Expression;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.core.statement.block.conditional.ConditionalBlock;
-
-import java.math.BigDecimal;
 
 /**
  * Represents a WHILE loop.
@@ -33,7 +33,7 @@ public class WhileLoop extends ConditionalBlock {
 	}
 
 	@Override
-	public final Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		final Expression expression = this.getCondition();
 
 		Atom result = expression.evaluate(evaluator, context);
@@ -50,12 +50,12 @@ public class WhileLoop extends ConditionalBlock {
 	}
 
 	@Override
-	public final int getStatementId() {
+	public int getStatementId() {
 		return STATEMENT_ID;
 	}
 
 	@Override
-	public final WhileLoop copy() {
+	public WhileLoop copy() {
 		return new WhileLoop(this.getCondition().copy(), copyStatements());
 	}
 

@@ -2,6 +2,11 @@ package xyz.algogo.core;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+
+import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import xyz.algogo.core.antlr.AlgogoLexer;
 import xyz.algogo.core.antlr.AlgogoParser;
 import xyz.algogo.core.evaluator.ExpressionEvaluator;
@@ -15,10 +20,6 @@ import xyz.algogo.core.statement.block.root.AlgorithmRootBlock;
 import xyz.algogo.core.statement.block.root.BeginningBlock;
 import xyz.algogo.core.statement.block.root.EndBlock;
 import xyz.algogo.core.statement.block.root.VariablesBlock;
-
-import java.io.Serializable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Represents an algorithm.
@@ -80,7 +81,7 @@ public class Algorithm implements Serializable, Translatable {
 	 * @return The algorithm title.
 	 */
 
-	public final String getTitle() {
+	public String getTitle() {
 		return title;
 	}
 
@@ -90,7 +91,7 @@ public class Algorithm implements Serializable, Translatable {
 	 * @param title The algorithm title.
 	 */
 
-	public final void setTitle(String title) {
+	public void setTitle(String title) {
 		if(title == null) {
 			title = "Untitled";
 		}
@@ -104,7 +105,7 @@ public class Algorithm implements Serializable, Translatable {
 	 * @return The algorithm author.
 	 */
 
-	public final String getAuthor() {
+	public String getAuthor() {
 		return author;
 	}
 
@@ -114,7 +115,7 @@ public class Algorithm implements Serializable, Translatable {
 	 * @param author The algorithm author.
 	 */
 
-	public final void setAuthor(String author) {
+	public void setAuthor(String author) {
 		if(author == null) {
 			author = "Anonymous";
 		}
@@ -128,7 +129,7 @@ public class Algorithm implements Serializable, Translatable {
 	 * @return The algorithm root block;
 	 */
 
-	public final AlgorithmRootBlock getRootBlock() {
+	public AlgorithmRootBlock getRootBlock() {
 		return rootBlock;
 	}
 
@@ -138,7 +139,7 @@ public class Algorithm implements Serializable, Translatable {
 	 * @return The variables block.
 	 */
 
-	public final VariablesBlock getVariablesBlock() {
+	public VariablesBlock getVariablesBlock() {
 		return rootBlock.getVariablesBlock();
 	}
 
@@ -148,7 +149,7 @@ public class Algorithm implements Serializable, Translatable {
 	 * @return The beginning block.
 	 */
 
-	public final BeginningBlock getBeginningBlock() {
+	public BeginningBlock getBeginningBlock() {
 		return rootBlock.getBeginningBlock();
 	}
 
@@ -161,7 +162,7 @@ public class Algorithm implements Serializable, Translatable {
 	 * @return Nothing if the execution is a success.
 	 */
 
-	public final Exception evaluate(final InputListener inputListener, final OutputListener outputListener) {
+	public Exception evaluate(final InputListener inputListener, final OutputListener outputListener) {
 		return evaluate(new EvaluationContext(inputListener, outputListener));
 	}
 
@@ -173,7 +174,7 @@ public class Algorithm implements Serializable, Translatable {
 	 * @return Nothing if the execution is a success.
 	 */
 
-	public final Exception evaluate(final EvaluationContext context) {
+	public Exception evaluate(final EvaluationContext context) {
 		return evaluate(new ExpressionEvaluator(), context);
 	}
 
@@ -186,7 +187,7 @@ public class Algorithm implements Serializable, Translatable {
 	 * @return Nothing if the execution is a success.
 	 */
 
-	public final Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Exception evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		return rootBlock.evaluate(evaluator, context);
 	}
 
@@ -198,7 +199,7 @@ public class Algorithm implements Serializable, Translatable {
 	 * @return The translated algorithm.
 	 */
 
-	public final String toLanguage(final Language language) {
+	public String toLanguage(final Language language) {
 		return language.translate(this);
 	}
 

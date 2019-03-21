@@ -32,7 +32,7 @@ public class AtomExpression extends Expression {
 	 * @return The atom.
 	 */
 
-	public final Atom getAtom() {
+	public Atom getAtom() {
 		return atom;
 	}
 
@@ -42,17 +42,17 @@ public class AtomExpression extends Expression {
 	 * @param atom The atom.
 	 */
 
-	public final void setAtom(final Atom atom) {
+	public void setAtom(final Atom atom) {
 		this.atom = atom;
 	}
 
 	@Override
-	public final Atom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
+	public Atom evaluate(final ExpressionEvaluator evaluator, final EvaluationContext context) {
 		return atom.evaluate(evaluator, context);
 	}
 
 	@Override
-	public final AtomExpression copy() {
+	public AtomExpression copy() {
 		return new AtomExpression(atom.copy());
 	}
 
