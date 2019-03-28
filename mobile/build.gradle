@@ -23,8 +23,8 @@ android {
         applicationId "fr.skyost.algo.mobile"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 15
-        versionName "v1.1"
+        versionCode 16
+        versionName "v1.1.1"
         resValue "string", "ADMOB_APP_ID", getLocalProperty("admob.appId")
         resValue "string", "ADMOB_CONSOLE_AD", getLocalProperty("admob.consoleAd")
     }

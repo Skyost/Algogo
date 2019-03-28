@@ -7,19 +7,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import org.jetbrains.annotations.NotNull;
 import xyz.algogo.core.Algorithm;
 import xyz.algogo.core.evaluator.context.EvaluationContext;
 import xyz.algogo.core.evaluator.context.InputListener;
@@ -27,6 +21,9 @@ import xyz.algogo.core.evaluator.context.OutputListener;
 import xyz.algogo.core.statement.Statement;
 import xyz.algogo.mobile.R;
 import xyz.algogo.mobile.utils.Utils;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 
 /**
  * Represents the console activity.
@@ -54,7 +51,11 @@ public class ConsoleActivity extends AppCompatActivity implements InputListener,
 
 		final AdView adView = findViewById(R.id.console_ad);
 		if(getPreferences(Context.MODE_PRIVATE).getBoolean(PREFERENCES_ADS, true)) {
-			adView.loadAd(new AdRequest.Builder().build());
+			adView.loadAd(
+					new AdRequest.Builder()
+							.setMaxAdContentRating(AdRequest.MAX_AD_CONTENT_RATING_T)
+							.build()
+			);
 		}
 		else {
 			adView.setVisibility(View.GONE);
