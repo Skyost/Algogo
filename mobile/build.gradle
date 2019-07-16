@@ -59,7 +59,7 @@ dependencies {
     implementation group: 'com.github.matecode', name: 'Snacky', version: '1.1.4'
     implementation group: 'com.nabinbhandari.android', name: 'permissions', version: '3.8'
 
-    implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.1.0-alpha05'
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.1.0-rc01'
     implementation group: 'com.google.android.material', name: 'material', version: '1.1.0-alpha08'
 
     implementation group: 'com.google.android.gms', name: 'play-services-ads', version:'18.1.0'
