@@ -54,7 +54,7 @@ dependencies {
 
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk7', version: '1.3.50'
 
-    implementation group: 'com.leinardi.android', name: 'speed-dial', version: '2.0.1'
+    implementation group: 'com.leinardi.android', name: 'speed-dial', version: '3.1.0'
     implementation group: 'com.github.rustamg', name: 'file-dialogs', version: '1.0'
     implementation group: 'com.github.matecode', name: 'Snacky', version: '1.1.4'
     implementation group: 'com.nabinbhandari.android', name: 'permissions', version: '3.8'
