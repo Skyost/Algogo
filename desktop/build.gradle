@@ -23,7 +23,7 @@ dependencies {
     implementation group: 'org.kordamp.ikonli', name: 'ikonli-swing', version: '2.4.0'
     implementation group: 'org.kordamp.ikonli', name: 'ikonli-materialdesign-pack', version: '2.4.0'
 
-    implementation group: 'com.jtattoo', name: 'JTattoo', version: '1.6.11'
+    implementation group: 'com.jtattoo', name: 'JTattoo', version: '1.6.12'
 
     implementation group: 'com.goebl', name: 'david-webb', version: '1.3.0'
     implementation group: 'org.json', name: 'json', version: '20180813'
