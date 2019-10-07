@@ -60,7 +60,7 @@ dependencies {
     implementation group: 'com.nabinbhandari.android', name: 'permissions', version: '3.8'
 
     implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.1.0'
-    implementation group: 'com.google.android.material', name: 'material', version: '1.1.0-alpha10'
+    implementation group: 'com.google.android.material', name: 'material', version: '1.1.0-beta01'
 
     implementation group: 'com.google.android.gms', name: 'play-services-ads', version:'18.2.0'
 }
