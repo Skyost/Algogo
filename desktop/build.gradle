@@ -26,7 +26,7 @@ dependencies {
     implementation group: 'com.jtattoo', name: 'JTattoo', version: '1.6.12'
 
     implementation group: 'com.goebl', name: 'david-webb', version: '1.3.0'
-    implementation group: 'org.json', name: 'json', version: '20180813'
+    implementation group: 'org.json', name: 'json', version: '20190722'
 
     implementation group: 'com.fifesoft', name: 'rsyntaxtextarea', version: '3.0.4'
     implementation group: 'com.fifesoft', name: 'autocomplete', version: '3.0.2'
